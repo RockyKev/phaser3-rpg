@@ -1,4 +1,6 @@
-class GameScene extends Phaser.Scene {
+import {Player} from "../classes/Player.js";
+
+export class GameScene extends Phaser.Scene {
   constructor() {
     super('Game');
   }
@@ -59,10 +61,6 @@ class GameScene extends Phaser.Scene {
     }
   }
 
-  // createWalls() {
-  //   this.wall = this.physics.add.image(500, 100, 'button1');
-  //   this.wall.setImmovable();
-  // }
 
   createInput() {
     this.cursors = this.input.keyboard.createCursorKeys();
@@ -88,29 +86,23 @@ class GameScene extends Phaser.Scene {
     this.time.delayedCall(1000, this.spawnChest, [], this);
   }
 
+
   createMap() {
-    // create the tile map 
-    this.map = this.make.tilemap({ key: 'tilesetJson'});
+    // create the tile map
+    // this.map = this.make.tilemap({ key: 'map' });
+    this.map = this.make.tilemap({ key: 'tilesetJSON' });
 
     // add the tileset image to our map
-    this.tiles = this.map.addTilesetImage('background', 'tilesetBackground', 32, 32, 1, 2);
+    // this.tiles = this.map.addTilesetImage('background', 'background', 32, 32, 1, 2);
+    this.tiles = this.map.addTilesetImage('background', 'tilesetPNG', 32, 32, 1, 2);
 
-    console.log("what are you?")
-    console.log(this.map);
+    
+    // create our background (layer name within JSON)
+    this.bottomLayer = this.map.createLayer('bottom', this.tiles, 0, 0);
+    this.bottomLayer.setScale(2);
 
-
-    // create our background
-    this.backgroundLayer = this.map.createStaticLayer('bottom', this.tiles, 0, 0);
-    this.backgroundLayer.setScale(2);
-
-    console.log("what are youbackgroundLayer?")
-    console.log(this.backgroundLayer);
-
-
-    // create block layer
-    this.blockedLayer = this.map.createStaticLayer('blocked', this.tiles, 0, 0);
-    this.blockedLayer.setScale(2);
-    console.log("what are youblockedLayer?")
-    console.log(this.blockedLayer);
+    this.blockLayer = this.map.createLayer('blocked', this.tiles, 0, 0);
+    this.blockLayer.setScale(2);
   }
+
 }

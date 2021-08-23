@@ -1,4 +1,4 @@
-class Player extends Phaser.Physics.Arcade.Image {
+export class Player extends Phaser.Physics.Arcade.Image {
   constructor(scene, x, y, key, frame) {
     super(scene, x, y, key, frame);
     this.scene = scene; // the scene this container will be added to
@@ -14,20 +14,31 @@ class Player extends Phaser.Physics.Arcade.Image {
     this.setCollideWorldBounds(true);
     // add the player to our existing scene
     this.scene.add.existing(this);
+     // have the camera follow the player
+     this.scene.cameras.main.startFollow(this);   
   }
 
   update(cursors) {
     this.body.setVelocity(0);
 
-    if (cursors.left.isDown) {
+    const key = {
+      pressLeft : cursors.left.isDown,
+      pressRight : cursors.right.isDown,
+      pressUp: cursors.up.isDown,
+      pressDown: cursors.down.isDown
+    }
+
+
+
+    if (key['pressLeft']) {
       this.body.setVelocityX(-this.velocity);
-    } else if (cursors.right.isDown) {
+    } else if (key['pressRight']) {
       this.body.setVelocityX(this.velocity);
     }
 
-    if (cursors.up.isDown) {
+    if (key['pressUp']) {
       this.body.setVelocityY(-this.velocity);
-    } else if (cursors.down.isDown) {
+    } else if (key['pressDown']) {
       this.body.setVelocityY(this.velocity);
     }
   }

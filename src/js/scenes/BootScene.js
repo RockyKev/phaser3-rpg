@@ -19,7 +19,10 @@ class BootScene extends Phaser.Scene {
     this.load.image('button2', 'src/images/ui/blue_button02.png');
 
     // load the map tileset image
-    this.load.image('tilesetBackground', 'src/levels/background.png');
+    this.load.image('tilesetPNG', 'src/levels/background-extruded.png');
+    // this.load.image('tilesetPng', 'src/levels/background.png');
+    // this.load.image('background', 'src/levels/background-extruded.png');
+
   }
 
   loadSpriteSheets() {
@@ -32,10 +35,13 @@ class BootScene extends Phaser.Scene {
   }
 
   loadTileMap() {
-    this.load.tilemapTiledJSON('tilesetJson', 'src/levels/large_level2.json');
+    this.load.tilemapTiledJSON('tilesetJSON', 'src/levels/large_level2.json');
+    // this.load.tilemapTiledJSON('map', 'src/levels/large_level.json');
+
   }
 
   create() {
-    this.scene.start('Title');
+//    this.scene.start('Title');
+    this.scene.start('Game');
   }
 }
