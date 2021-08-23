@@ -90,21 +90,29 @@ export class GameScene extends Phaser.Scene {
 
 
   createMap() {
+    // 32 x 32. 
+    const mapScale = 2;
+
     // create the tile map
-    // this.map = this.make.tilemap({ key: 'map' });
     this.map = this.make.tilemap({ key: 'tilesetJSON' });
 
     // add the tileset image to our map
-    // this.tiles = this.map.addTilesetImage('background', 'background', 32, 32, 1, 2);
-    this.tiles = this.map.addTilesetImage('background', 'tilesetPNG', 32, 32, 1, 2);
+    // The first param is the json->tilesets.name 
+    this.tiles = this.map.addTilesetImage('rogue-bkgd', 'tilesetPNG', 32, 32, 1, 2);
 
-    
     // create our background (layer name within JSON)
     this.bottomLayer = this.map.createLayer('bottom', this.tiles, 0, 0);
-    this.bottomLayer.setScale(2);
+    this.bottomLayer.setScale(mapScale);
 
     this.blockLayer = this.map.createLayer('blocked', this.tiles, 0, 0);
-    this.blockLayer.setScale(2);
+    this.blockLayer.setScale(mapScale);
+
+    // make the world the size of our map element
+    this.physics.world.bounds.width = this.map.widthInPixels * mapScale;
+    this.physics.world.bounds.height = this.map.heightInPixels * mapScale;
+
+    this.cameras.main.setBounds(0, 0, this.map.widthInPixels * mapScale, this.map.heightInPixels * mapScale)
+
   }
 
 }
