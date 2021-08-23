@@ -14,6 +14,8 @@ Side-scroller: https://github.com/RockyKev/phaser3-platformer
 - src folder - where the real stuff lives. Should compile to a `dist/` folder.
  
 
+It has been updated to use ES modules. 
+
 
 ## Lesson notes
 

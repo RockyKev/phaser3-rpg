@@ -1,4 +1,5 @@
-class TitleScene extends Phaser.Scene {
+import { UIButton } from "../classes/UIButton.js"
+export class TitleScene extends Phaser.Scene {
   constructor() {
     super('Title');
   }
@@ -9,7 +10,7 @@ class TitleScene extends Phaser.Scene {
     this.titleText.setOrigin(0.5);
 
     // create the Play game button
-    this.startGameButton = new UiButton(this, this.scale.width / 2, this.scale.height * 0.65, 'button1', 'button2', 'Start', this.startScene.bind(this, 'Game'));
+    this.startGameButton = new UIButton(this, this.scale.width / 2, this.scale.height * 0.65, 'button1', 'button2', 'Start', this.startScene.bind(this, 'Game'));
   }
 
   startScene(targetScene) {

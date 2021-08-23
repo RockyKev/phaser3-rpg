@@ -1,4 +1,6 @@
 import {Player} from "../classes/Player.js";
+import {Chest} from "../classes/Chest.js";
+
 
 export class GameScene extends Phaser.Scene {
   constructor() {

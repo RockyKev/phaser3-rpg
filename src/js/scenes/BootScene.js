@@ -1,4 +1,4 @@
-class BootScene extends Phaser.Scene {
+export class BootScene extends Phaser.Scene {
   constructor() {
     super('Boot');
   }
@@ -41,7 +41,7 @@ class BootScene extends Phaser.Scene {
   }
 
   create() {
-//    this.scene.start('Title');
-    this.scene.start('Game');
+   this.scene.start('Title');
+    // this.scene.start('Game');
   }
 }
