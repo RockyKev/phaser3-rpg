@@ -1,3 +1,5 @@
+import { Spawner } from "./Spawner.js";
+
 export class GameManager {
     constructor(scene, MapData) {
         this.scene = scene;
@@ -18,6 +20,16 @@ export class GameManager {
         this.spawnPlayer();
     }
 
+    addChest(id, chest) {
+        this.chests[id] = chest; 
+        console.log(chest);
+
+    }
+
+    deleteChest() {
+
+    }
+
     parseMapData() {
         // The parseMapData method will be used to parse the layer data that was exported from Tiled, which will be used to generate the three locations.
 
@@ -36,20 +48,23 @@ export class GameManager {
 
                 // TODO: Maybe MAP?
                 layer.objects.forEach( obj => {
-                    const spawnProps = obj.properties.spawner;
-  
+
+                    // const spawnProps = obj.properties.spawner; // TILED broke this
+                    const spawnProps = obj.properties[0].value;
+                    console.log("in the forEach line 52 -- ", spawnProps);
                     if (this.chestLocations[spawnProps]) {
                         this.chestLocations[spawnProps].push([obj.x, obj.y]);
                     } else {
                         this.chestLocations[spawnProps] = [[obj.x, obj.y]]
                     }
-                })
+            })
 
             } else if (layer.name === 'monster_locations') {
 
                 layer.objects.forEach( obj => {
-                    const spawnProps = obj.properties.spawner;
-  
+                    // const spawnProps = obj.properties.spawner;
+                    const spawnProps = obj.properties[0].value;
+
                     if (this.monsterLocations[spawnProps]) {
                         this.monsterLocations[spawnProps].push([obj.x, obj.y]);
                     } else {
@@ -62,9 +77,9 @@ export class GameManager {
 
         }
 
-        console.log("player", this.playerLocations);
-        console.log("mon", this.monsterLocations);
-        console.log("chest", this.chestLocations);
+        // console.log("player", this.playerLocations);
+        // console.log("mon", this.monsterLocations);
+        // console.log("chest", this.chestLocations);
     }
 
     setupEventListener() {
@@ -75,6 +90,27 @@ export class GameManager {
 
     setupSpawners() {
 
+        // TODO: WTF is this code? 
+        Object.keys(this.chestLocations).forEach( key => {
+
+            const config = {
+                spawnInterval: 3000,
+                limit: 3, 
+                objectType: 'CHEST',
+                id: `chest-${key}`
+            }
+            console.log(this.chestLocations)
+
+            const spawner = new Spawner(
+                config, 
+                this.chestLocations[key],
+                this.addChest.bind(this),
+                this.deleteChest.bind(this)
+            );
+
+            this.spawners[spawner.id] = spawner;
+
+        })
     }
 
     spawnPlayer() {
