@@ -8,7 +8,7 @@ export class ChestModel {
 
         this.id = `${spawnerId}-${uuid.v4()}`;
         this.x = x;
-        this.y = y; 
+        this.y = y;
         this.gold = gold;
     }
 }
