@@ -16,7 +16,7 @@ export class GameScene extends Phaser.Scene {
   create() {
     this.createMap();
     this.createAudio();
-    this.createChests();
+    this.createGroups();
     this.createInput();
 
     this.createGameManager();
@@ -50,17 +50,11 @@ export class GameScene extends Phaser.Scene {
     this.player = new Player(this, playerX, playerY, 'characters', 0);
   }
 
-  createChests() {
+  createGroups() {
     // create a chest group
     this.chestGroup = this.physics.add.group();
-    // create chest positions array
-    this.chestPositions = [[100, 100], [200, 200], [300, 300], [400, 400], [500, 500]];
-    // specify the max number of chest we can have
-    this.maxNumberOfChests = 3;
-    // spawn a chest
-    for (let i = 0; i < this.maxNumberOfChests; i += 1) {
-      this.spawnChest();
-    }
+
+
   }
 
   createGameManager() {
@@ -70,7 +64,14 @@ export class GameScene extends Phaser.Scene {
       this.addCollisions();
     })
 
-    this.gameManager = new GameManager(this, this.map.map.objects);
+    this.events.on('chestSpawned', (chest) => {
+      this.spawnChest(chest);
+    })
+
+
+    const scene = this;
+    const mapData = this.map.map.objects;
+    this.gameManager = new GameManager(scene, mapData);
     this.gameManager.setup();
   }
 
@@ -81,33 +82,33 @@ export class GameScene extends Phaser.Scene {
 
 
   collectChest(player, chest) {
-    // play gold pickup sound
+
     this.goldPickupAudio.play();
-    // update our score
     this.score += chest.coins;
-    // update score in the ui
+
     this.events.emit('updateScore', this.score);
-    // make chest game object inactive
     chest.makeInactive();
-    // spawn a new chest
-    this.time.delayedCall(1000, this.spawnChest, [], this);
+
+    this.events.emit('pickUpChest', chest.id);
+    // this.time.delayedCall(1000, this.spawnChest, [], this);
   }
 
 
   createMap() {
 
     this.map = new Map(this, 'tilesetJSON', 'tilesetPNG', 'bottom', 'blocked');
-
-   
+    
   }
 
-  spawnChest() {
-    const location = this.chestPositions[Math.floor(Math.random() * this.chestPositions.length)];
+  spawnChest(chestObject) {
+    // const location = this.chestPositions[Math.floor(Math.random() * this.chestPositions.length)];
+    const location = [chestObject.x * 2, chestObject.y * 2]
 
     let chest = this.chestGroup.getFirstDead();
 
     if (!chest) {
-      const chest = new Chest(this, location[0], location[1], 'items', 0);
+      // TODO: convert to object params
+      const chest = new Chest(this, location[0], location[1], 'items', 0, chestObject.gold, chestObject.id);
       // add chest to chests group
       this.chestGroup.add(chest);
     } else {

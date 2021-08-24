@@ -1,4 +1,5 @@
 import { Spawner } from "./Spawner.js";
+import { SpawnerType } from "./utils.js";
 
 export class GameManager {
     constructor(scene, MapData) {
@@ -20,13 +21,15 @@ export class GameManager {
         this.spawnPlayer();
     }
 
-    addChest(id, chest) {
-        this.chests[id] = chest; 
+    addChest(chestId, chest) {
+        this.chests[chestId] = chest; 
+        this.scene.events.emit('chestSpawned', chest);
         console.log(chest);
 
     }
 
-    deleteChest() {
+    deleteChest(chestId) {
+        delete this.chests[chestId];
 
     }
 
@@ -85,6 +88,11 @@ export class GameManager {
     setupEventListener() {
         // The setupEventListener method will be used to create any event listeners that will need to be hooked up to the GameManager object, such as when a player picks up a chest. 
 
+        this.scene.events.on('pickUpChest', chestId => {
+            if (this.chests[chestId]) {                
+                this.spawners[this.chests[chestId].spawnerId].removeObject(chestId);
+            }
+        })
 
     }
 
@@ -96,7 +104,7 @@ export class GameManager {
             const config = {
                 spawnInterval: 3000,
                 limit: 3, 
-                objectType: 'CHEST',
+                objectType: SpawnerType.CHEST,
                 id: `chest-${key}`
             }
             console.log(this.chestLocations)

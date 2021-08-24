@@ -1,5 +1,5 @@
 import { ChestModel } from "./ChestModel.js";
-import { randomNumber } from "./utils.js"
+import { randomNumber, SpawnerType } from "./utils.js"
 
 export class Spawner {
     constructor(config, spawnLocations, addObject, deleteObject ) {
@@ -29,10 +29,9 @@ export class Spawner {
     }
 
     spawnObject() {
-        if (this.objectType === 'CHEST') {
+        if (this.objectType === SpawnerType.CHEST) {
             this.spawnChest();
         }
-
     }
 
     spawnChest() {
@@ -42,6 +41,8 @@ export class Spawner {
         const chest = new ChestModel(location[0], location[1], gold, this.id);
 
         this.objectsCreated.push(chest);
+
+        // this grabs the addObject function that's passed into here. (this.addObject)
         this.addObject(chest.id, chest);
 
     }
@@ -65,8 +66,10 @@ export class Spawner {
 
     }
 
-    removeObject() {
-
+    removeObject(id) {
+        // this grabs the delete function that's passed into here. (this.deleteObject)
+        this.objectsCreated = this.objectsCreated.filter(obj => obj.id !== id);
+        this.deleteObject(id);
     }
 
 }
