@@ -2,6 +2,7 @@ import { Player } from '../classes/Player.js';
 import { Chest } from '../classes/Chest.js';
 import { Map } from '../classes/Map.js';
 import { GameManager } from '../game_manager/GameManager.js';
+import { Monster } from '../classes/Monster.js';
 
 export class GameScene extends Phaser.Scene {
     constructor() {
@@ -59,6 +60,8 @@ export class GameScene extends Phaser.Scene {
     createGroups() {
         // create a chest group
         this.chestGroup = this.physics.add.group();
+
+        this.monsterGroup = this.physics.add.group();
     }
 
     createGameManager() {
@@ -70,6 +73,11 @@ export class GameScene extends Phaser.Scene {
         this.events.on('chestSpawned', (chest) => {
             this.spawnChest(chest);
         });
+
+        this.events.on('monsterSpawned', (monster) => {
+            this.spawnMonster(monster);
+        });
+
 
         const scene = this;
         const mapData = this.map.map.objects;
@@ -110,7 +118,7 @@ export class GameScene extends Phaser.Scene {
 
         if (!chest) {
             // TODO: convert to object params
-            const chest = new Chest(
+            chest = new Chest(
                 this,
                 location[0],
                 location[1],
@@ -125,5 +133,36 @@ export class GameScene extends Phaser.Scene {
             chest.setPosition(location[0], location[1]);
             chest.makeActive();
         }
+    }
+
+    spawnMonster(monsterObject) {
+ 
+        let monster = this.monsterGroup.getFirstDead();
+        // console.log({monster})
+        // console.log({monsterObject});
+
+        if (!monster) {
+            
+            monster = new Monster(
+                this,
+                monsterObject.x * 2, 
+                monsterObject.y * 2,
+                'monsters',
+                monsterObject.frame, 
+                monsterObject.id, 
+                monsterObject.health, 
+                monsterObject.maxHealth
+            );
+
+            this.monsterGroup.add(monster);
+        } else {
+            monster.id = monsterObject.id; 
+            monster.health = monsterObject.health; 
+            monster.maxHealth = monsterObject.maxHealth;
+            monster.setTexture('monsters', monsterObject.frame);
+            monster.setPosition(monsterObject.x * 2, monsterObject.y * 2);
+            monster.makeActive();
+        }
+
     }
 }
