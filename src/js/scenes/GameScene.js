@@ -53,12 +53,15 @@ export class GameScene extends Phaser.Scene {
 
         // check for collision between player's weapon and monster group
         if (this.player.weapon){
-            this.physics.add.overlap(this.player.weapon, this.monsters, this.enemyOverlap, null, this);
+            this.physics.add.overlap(this.player.weapon, this.monsterGroup, this.enemyOverlap, null, this);
         }
 
     }
 
     enemyOverlap(player, enemy) {
+        // callbacks have two params. The initial collider and what it's hitting (sword -> enemy)
+        // console.log('this overlaps');
+        // console.log(enemy);
         enemy.makeInactive();
 
         // pass this event to the GameManager

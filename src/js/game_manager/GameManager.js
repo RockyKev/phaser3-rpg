@@ -9,9 +9,9 @@ export class GameManager {
         this.scene = scene;
         this.MapData = MapData;
 
-        this.spawners = {};
-        this.chests = {};
-        this.monsters = {};
+        this.sceneSpawners = {};
+        this.sceneChests = {};
+        this.sceneMonsters = {};
 
         this.playerLocations = [];
         this.chestLocations = {};
@@ -27,28 +27,28 @@ export class GameManager {
 
 
     // METHODS THAT GET BINDED
-    // chests
+    // sceneChests
     addChest(chestId, chest) {
-        this.chests[chestId] = chest;
+        this.sceneChests[chestId] = chest;
         this.scene.events.emit('chestSpawned', chest);
         console.log(chest);
     }
 
     deleteChest(chestId) {
-        delete this.chests[chestId];
+        delete this.sceneChests[chestId];
     }
 
-    // monsters
+    // sceneMonsters
     addMonster(monsterId, monster) {
         // console.log("am i in addMonster?");
         console.log(monster);
-        this.monsters[monsterId] = monster;
+        this.sceneMonsters[monsterId] = monster;
         this.scene.events.emit('monsterSpawned', monster);
 
     }
 
     deleteMonster(monsterId) {
-        delete this.monsters[monsterId];
+        delete this.sceneMonsters[monsterId];
     }
 
     parseMapData() {
@@ -102,16 +102,30 @@ export class GameManager {
         // The setupEventListener method will be used to create any event listeners that will need to be hooked up to the GameManager object, such as when a player picks up a chest.
 
         this.scene.events.on('pickUpChest', (chestId) => {
-            if (this.chests[chestId]) {
-                this.spawners[this.chests[chestId].spawnerId].removeObject(
+            if (this.sceneChests[chestId]) {
+                // console.log("hit chest")
+                // console.log("chestId", chestId);                
+                // console.log(this.spawners);
+                // console.log("this", this);
+
+                const sceneChests = this.sceneChests[chestId];
+
+                this.sceneSpawners[sceneChests.spawnerId].removeObject(
                     chestId
                 );
             }
         });
 
         this.scene.events.on('destroyEnemy', (monsterId) => {
-            if (this.monsters[monsterId]) {
-                this.spawners[this.monsters[monsterId].spawnerId].removeObject(monsterId);
+            if (this.sceneMonsters[monsterId]) {
+                // console.log("hit monster")
+                // console.log("monsterId", monsterId)
+                // console.log(this.spawners);
+                // console.log("this", this);
+
+                const sceneMonsters = this.sceneMonsters[monsterId];
+
+                this.sceneSpawners[sceneMonsters.spawnerId].removeObject(monsterId);
             }
         })
     }
@@ -119,11 +133,14 @@ export class GameManager {
     // The goal of this code is to declare all the spawners for monsters and chests
     setupSpawners() {
 
+        const monsterLimit = 10;
+        const chestLimit = 10; 
+
         // TODO: WTF is this code?
         Object.keys(this.chestLocations).forEach((key) => {
             const config = {
                 spawnInterval: 3000,
-                limit: 3,
+                limit: chestLimit,
                 objectType: SpawnerType.CHEST,
                 id: `chest-${key}`,
             };
@@ -136,14 +153,14 @@ export class GameManager {
                 this.deleteChest.bind(this)
             );
 
-            this.spawners[spawner.id] = spawner;
+            this.sceneSpawners[spawner.id] = spawner;
         });
 
         // monsters version
         Object.keys(this.monsterLocations).forEach((key) => {
             const config = {
                 spawnInterval: 3000,
-                limit: 3,
+                limit: monsterLimit,
                 objectType: SpawnerType.MONSTER,
                 id: `monster-${key}`,
               };
@@ -157,7 +174,7 @@ export class GameManager {
               );
 
                 // console.log(spawner);
-              this.spawners[spawner.id] = spawner;
+              this.sceneSpawners[spawner.id] = spawner;
         });
 
 
