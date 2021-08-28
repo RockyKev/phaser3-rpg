@@ -108,6 +108,12 @@ export class GameManager {
                 );
             }
         });
+
+        this.scene.events.on('destroyEnemy', (monsterId) => {
+            if (this.monsters[monsterId]) {
+                this.spawners[this.monsters[monsterId].spawnerId].removeObject(monsterId);
+            }
+        })
     }
 
     // The goal of this code is to declare all the spawners for monsters and chests

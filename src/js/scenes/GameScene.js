@@ -1,4 +1,4 @@
-import { Player } from '../classes/Player.js';
+import { PlayerContainer } from '../classes/player/PlayerContainer.js';
 import { Chest } from '../classes/Chest.js';
 import { Map } from '../classes/Map.js';
 import { GameManager } from '../game_manager/GameManager.js';
@@ -28,9 +28,15 @@ export class GameScene extends Phaser.Scene {
     }
 
     addCollisions() {
+        // add a collider between the monster and the blocked layer. That way the monsters won’t be moving over the blocked tiles
         // check for collisions between player and wall objects
         // console.log("player", this.player)
         // console.log("map", this.map)
+
+        // check for collisions beteen player and tiled block layer
+        // DOES THIS WORK? 
+        // this.physics.add.collider([this.player, this.monsters], this.map.blockedLayer);
+
         this.physics.add.collider(this.player, this.map.blockedLayer);
 
         // check for overlaps between player and chest game objects
@@ -41,6 +47,22 @@ export class GameScene extends Phaser.Scene {
             null,
             this
         );
+
+        // check for collisions between monster group and tiled block layer
+        this.physics.add.collider(this.monsterGroup, this.map.blockedLayer);    
+
+        // check for collision between player's weapon and monster group
+        if (this.player.weapon){
+            this.physics.add.overlap(this.player.weapon, this.monsters, this.enemyOverlap, null, this);
+        }
+
+    }
+
+    enemyOverlap(player, enemy) {
+        enemy.makeInactive();
+
+        // pass this event to the GameManager
+        this.events.emit('destroyEnemy', enemy.id)    
     }
 
     createAudio() {
@@ -54,7 +76,8 @@ export class GameScene extends Phaser.Scene {
         const playerX = location[0] * 2;
         const playerY = location[1] * 2;
 
-        this.player = new Player(this, playerX, playerY, 'characters', 0);
+        this.player = new PlayerContainer(this, playerX, playerY, 'characters', 0);
+        console.log(this.player);
     }
 
     createGroups() {

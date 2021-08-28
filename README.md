@@ -33,5 +33,28 @@ Layer types:
 
 Export as a JSON.
 
+## Key terms
+
+**Collider**
+`this.physics.add.collider({options})`
+
+When 2 elements' points hit each other.
+
+**Overlapping**
+`this.physics.add.overlap({options});`
+
+When 2 elements points overlap. 
+
+
+Atlas
+Asset Pack
+Scene
+Animation
+Tilemap 
+Container (in Phaser terms)
+
+**Container VS direct image**
+The reason for that is, you are going to switch your player from an arcade image to a container. A container is preferred because now your player objects will be made of two separate sprites. The first will be the player itself, and the second will be the weapon. Instead of having to keep track of these separately, you can easily put them in the container and have that be your player. That way, you can reference both of those game objects relatively easily.
+
 ## Random links
 Phaser Editor: https://phasereditor2d.itch.io/ide
