@@ -3,7 +3,7 @@ export class Monster extends Phaser.Physics.Arcade.Image {
         super(scene, x, y, key, frame); 
 
         this.scene = scene;
-        this.id = id; 
+        this.spawnerId = id; 
         this.health = health;
         this.maxHealth = maxHealth; 
 

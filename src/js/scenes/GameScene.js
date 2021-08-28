@@ -34,7 +34,7 @@ export class GameScene extends Phaser.Scene {
         // console.log("map", this.map)
 
         // check for collisions beteen player and tiled block layer
-        // DOES THIS WORK? 
+        // DOES THIS WORK?
         // this.physics.add.collider([this.player, this.monsters], this.map.blockedLayer);
 
         this.physics.add.collider(this.player, this.map.blockedLayer);
@@ -49,12 +49,16 @@ export class GameScene extends Phaser.Scene {
         );
 
         // check for collisions between monster group and tiled block layer
-        this.physics.add.collider(this.monsterGroup, this.map.blockedLayer);    
+        this.physics.add.collider(this.monsterGroup, this.map.blockedLayer);
 
         // check for collision between player's weapon and monster group
-        if (this.player.weapon){
-            this.physics.add.overlap(this.player.weapon, this.monsterGroup, this.enemyOverlap, null, this);
-        }
+        this.physics.add.overlap(
+            this.player.weapon,
+            this.monsterGroup,
+            this.enemyOverlap,
+            null,
+            this
+        );
 
     }
 
@@ -62,10 +66,14 @@ export class GameScene extends Phaser.Scene {
         // callbacks have two params. The initial collider and what it's hitting (sword -> enemy)
         // console.log('this overlaps');
         // console.log(enemy);
-        enemy.makeInactive();
+        if (this.player.playerAttacking && !this.player.swordHit) {
+            this.player.swordHit = true; 
+            enemy.makeInactive();
+            // pass this event to the GameManager
+            this.events.emit('destroyEnemy', enemy.id);
 
-        // pass this event to the GameManager
-        this.events.emit('destroyEnemy', enemy.id)    
+        }
+
     }
 
     createAudio() {
@@ -79,7 +87,13 @@ export class GameScene extends Phaser.Scene {
         const playerX = location[0] * 2;
         const playerY = location[1] * 2;
 
-        this.player = new PlayerContainer(this, playerX, playerY, 'characters', 0);
+        this.player = new PlayerContainer(
+            this,
+            playerX,
+            playerY,
+            'characters',
+            0
+        );
         console.log(this.player);
     }
 
@@ -103,7 +117,6 @@ export class GameScene extends Phaser.Scene {
         this.events.on('monsterSpawned', (monster) => {
             this.spawnMonster(monster);
         });
-
 
         const scene = this;
         const mapData = this.map.map.objects;
@@ -162,33 +175,30 @@ export class GameScene extends Phaser.Scene {
     }
 
     spawnMonster(monsterObject) {
- 
         let monster = this.monsterGroup.getFirstDead();
         // console.log({monster})
         // console.log({monsterObject});
 
         if (!monster) {
-            
             monster = new Monster(
                 this,
-                monsterObject.x * 2, 
+                monsterObject.x * 2,
                 monsterObject.y * 2,
                 'monsters',
-                monsterObject.frame, 
-                monsterObject.id, 
-                monsterObject.health, 
+                monsterObject.frame,
+                monsterObject.id,
+                monsterObject.health,
                 monsterObject.maxHealth
             );
 
             this.monsterGroup.add(monster);
         } else {
-            monster.id = monsterObject.id; 
-            monster.health = monsterObject.health; 
+            monster.id = monsterObject.id;
+            monster.health = monsterObject.health;
             monster.maxHealth = monsterObject.maxHealth;
             monster.setTexture('monsters', monsterObject.frame);
             monster.setPosition(monsterObject.x * 2, monsterObject.y * 2);
             monster.makeActive();
         }
-
     }
 }

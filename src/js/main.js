@@ -5,8 +5,10 @@ import { UIScene } from './scenes/UIScene.js';
 
 var config = {
     type: Phaser.AUTO,
-    width: 800,
-    height: 600,
+    // width: 800,
+    // height: 600,
+    width: 1400,
+    height: 800,
     scene: [BootScene, TitleScene, GameScene, UIScene],
     physics: {
         default: 'arcade',
