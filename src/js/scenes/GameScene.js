@@ -66,11 +66,20 @@ export class GameScene extends Phaser.Scene {
         // callbacks have two params. The initial collider and what it's hitting (sword -> enemy)
         // console.log('this overlaps');
         // console.log(enemy);
+
+        // emits will pass this event to the GameManager
+
         if (this.player.playerAttacking && !this.player.swordHit) {
             this.player.swordHit = true; 
-            enemy.makeInactive();
-            // pass this event to the GameManager
-            this.events.emit('destroyEnemy', enemy.id);
+
+            // One hit kill
+            // enemy.makeInactive();
+            // this.events.emit('destroyEnemy', enemy.id);
+
+            // with health points
+            // this.player.swordHit = true; 
+            console.log("sword hitting this enemy->", enemy);
+            this.events.emit('monsterAttacked', enemy.spawnerId, this.player.id);
 
         }
 
@@ -110,6 +119,12 @@ export class GameScene extends Phaser.Scene {
             this.addCollisions();
         });
 
+        // this.events.on('spawnPlayer', (playerObject) => {
+        //     this.createPlayer(playerObject);
+        //     this.addCollisions();
+        // });
+
+
         this.events.on('chestSpawned', (chest) => {
             this.spawnChest(chest);
         });
@@ -117,6 +132,24 @@ export class GameScene extends Phaser.Scene {
         this.events.on('monsterSpawned', (monster) => {
             this.spawnMonster(monster);
         });
+
+        // make monster inactive on event monsterRemoved
+        this.events.on('monsterRemoved', (monsterId) => {
+
+            // TODO: clean this up!
+            console.log("in monsterRemoved", monsterId);
+            console.log("this.monsterGroup", this.monsterGroup);
+            this.monsterGroup.getChildren().forEach( (monster) => {
+
+                console.log("in forloop", monster)
+                console.log("Comparison of: " + monster.spawnerId + "--" + monsterId);
+                if (monster.spawnerId === monsterId) {
+                    console.log("MONSTER HAS BEEN DESTROYED!!!!!!!!!!!!!!!!!!!!!!")
+                    monster.makeInactive();
+                }
+            })
+
+        })
 
         const scene = this;
         const mapData = this.map.map.objects;

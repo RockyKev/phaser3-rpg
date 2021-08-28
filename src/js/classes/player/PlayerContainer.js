@@ -67,11 +67,12 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
             this.body.setVelocityX(-this.velocity);
             this.currentDirection = direction.LEFT; 
             this.weapon.setPosition(...weaponPosition.LEFT)
-
+            this.player.flipX = false;
         } else if (key.PRESS_RIGHT) {
             this.body.setVelocityX(this.velocity);
             this.currentDirection = direction.RIGHT; 
             this.weapon.setPosition(...weaponPosition.RIGHT)
+            this.player.flipX = true;
         }
 
         // MOVEMENT - X direction
@@ -101,6 +102,9 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
 
         // TODO: Fix this
         if (this.playerAttacking) {
+
+            // Attack animation
+            this.weapon.angle = (this.weapon.flipX) ? (this.weapon.angle - 10) : (this.weapon.angle + 10)
 
         } else {
             // X direction - moving with the weapon

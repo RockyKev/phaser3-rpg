@@ -102,29 +102,46 @@ export class GameManager {
         // The setupEventListener method will be used to create any event listeners that will need to be hooked up to the GameManager object, such as when a player picks up a chest.
 
         this.scene.events.on('pickUpChest', (chestId) => {
-            if (this.sceneChests[chestId]) {
+            const thisChest = this.sceneChests[chestId];
+
+            if (thisChest) {
                 // console.log("hit chest")
                 // console.log("chestId", chestId);                
                 // console.log(this.spawners);
                 // console.log("this", this);
 
-                const sceneChests = this.sceneChests[chestId];
-
-                this.sceneSpawners[sceneChests.spawnerId].removeObject(
+                this.sceneSpawners[thisChest.spawnerId].removeObject(
                     chestId
                 );
             }
         });
 
+        this.scene.events.on('monsterAttacked', (monsterId, playerId) => {
+
+            console.log("monster is being attacked!")
+            const thisMonster = this.sceneMonsters[monsterId];
+            console.log("thisMonster", thisMonster);
+            console.log("this", this);           
+            console.log("monsterId", monsterId);
+           
+            
+            if (thisMonster) {
+             
+                
+                thisMonster.loseHealth();
+
+                if (thisMonster.health <= 0) {
+                    console.log("monster emit monsterRemoved")
+                    this.sceneSpawners[thisMonster.spawnerId].removeObject(monsterId);
+                    this.scene.events.emit('monsterRemoved', monsterId);
+                }
+
+            }
+        })
+
         this.scene.events.on('destroyEnemy', (monsterId) => {
             if (this.sceneMonsters[monsterId]) {
-                // console.log("hit monster")
-                // console.log("monsterId", monsterId)
-                // console.log(this.spawners);
-                // console.log("this", this);
-
                 const sceneMonsters = this.sceneMonsters[monsterId];
-
                 this.sceneSpawners[sceneMonsters.spawnerId].removeObject(monsterId);
             }
         })
@@ -133,7 +150,7 @@ export class GameManager {
     // The goal of this code is to declare all the spawners for monsters and chests
     setupSpawners() {
 
-        const monsterLimit = 10;
+        const monsterLimit = 4;
         const chestLimit = 10; 
 
         // TODO: WTF is this code?
