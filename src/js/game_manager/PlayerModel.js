@@ -1,6 +1,6 @@
 export class PlayerModel {
     constructor(spawnLocations) {
-        this.health = 1;
+        this.health = 10;
         this.maxHealth = 10;
         this.gold = 0;        
         this.id = `player-${uuid.v4()}`;
@@ -20,6 +20,12 @@ export class PlayerModel {
 
     updateHealth(health) {
         this.health += health;
+
+        // so it never goes over the max health limit
+        if (this.health > this.maxHealth) {
+            this.health = this.maxHealth; 
+        }
+
         console.log("PLAYER HEALTH", this.health);
     }
 

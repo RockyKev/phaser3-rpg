@@ -9,7 +9,7 @@ const direction = {
 
 // export class PlayerContainer extends Phaser.Physics.Arcade.Image {
 export class PlayerContainer extends Phaser.GameObjects.Container {
-    constructor(scene, x, y, key, frame, health, maxHealth, id) {
+    constructor(scene, x, y, key, frame, health, maxHealth, id, attackAudio) {
         super(scene, x, y);
         this.scene = scene; // the scene this container will be added to
         this.velocity = 400; // DEFAULT was 160 -- the velocity when moving our player
@@ -22,6 +22,8 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
         this.health = health;
         this.maxHealth = maxHealth; 
         this.id = id; 
+
+        this.attackAudio = attackAudio; 
 
         // set the size of our container
         this.setSize(64, 64);
@@ -99,6 +101,8 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
         if (key.PRESS_ATTACK && !this.playerAttacking) {
             this.weapon.alpha = 1;
             this.playerAttacking = true;
+            this.attackAudio.play();
+
             this.scene.time.delayedCall(150, () => {
                 this.weapon.alpha = 0;
                 this.playerAttacking = false;

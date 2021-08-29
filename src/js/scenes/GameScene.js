@@ -60,6 +60,7 @@ export class GameScene extends Phaser.Scene {
             this.monsterGroup.getChildren().forEach( (monster) => {
                 if (monster.spawnerId === monsterId) {
                     console.log("MONSTER DESTROYED: Comparison->: " + monster.spawnerId + "->" + monsterId)
+                    this.monsterDeathAudio.play();
                     monster.makeInactive();
                 }
             })
@@ -79,11 +80,15 @@ export class GameScene extends Phaser.Scene {
 
         
         this.events.on('playerUpdateHealth', (playerId, health) => {
+            if (health < this.playerHealth) {
+                this.playerDeathAudio.play();
+            }
             this.player.updateHealth(health);
         })
 
 
         this.events.on('playerRespawn', (playerObject) => {
+            this.playerDeathAudio.play();
             this.player.respawn(playerObject);
         })
 
@@ -132,6 +137,7 @@ export class GameScene extends Phaser.Scene {
 
         // emits will pass this event to the GameManager
 
+        // TODO: Wtf is weapon?
         if (this.player.playerAttacking && !this.player.swordHit) {
             this.player.swordHit = true; 
 
@@ -150,10 +156,17 @@ export class GameScene extends Phaser.Scene {
     }
 
     createAudio() {
-        this.goldPickupAudio = this.sound.add('goldSound', {
+
+        const defaultOpts =  {
             loop: false,
             volume: 0.2,
-        });
+        };
+
+        this.goldPickupAudio = this.sound.add('goldSound', defaultOpts);
+        this.playerAttackAudio = this.sound.add('playerAttack', { loop: false, volume: 0.01 });
+        this.playerDamageAudio = this.sound.add('playerDamage', defaultOpts);
+        this.playerDeathAudio = this.sound.add('playerDeath', defaultOpts);
+        this.monsterDeathAudio = this.sound.add('enemyDeath', defaultOpts);
     }
 
     createPlayer(playerObject) {
@@ -166,7 +179,8 @@ export class GameScene extends Phaser.Scene {
             0, 
             playerObject.health, 
             playerObject.maxHealth, 
-            playerObject.id
+            playerObject.id, 
+            this.playerAttackAudio
         )
 
         // const playerX = location[0] * 2;
