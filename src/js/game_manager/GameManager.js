@@ -1,7 +1,6 @@
 import { Spawner } from './Spawner.js';
 import { SpawnerType, getAnchorPoints } from './utils.js';
 
-
 // Goal of GameManager
 // This keeps track of all the elements and their IDs. If things aren't created, it makes it.
 export class GameManager {
@@ -25,13 +24,12 @@ export class GameManager {
         this.spawnPlayer();
     }
 
-
     // METHODS THAT GET BINDED
     // sceneChests
     addChest(chestId, chest) {
         this.sceneChests[chestId] = chest;
         this.scene.events.emit('chestSpawned', chest);
-        console.log(chest);
+        console.log({ chest });
     }
 
     deleteChest(chestId) {
@@ -40,11 +38,9 @@ export class GameManager {
 
     // sceneMonsters
     addMonster(monsterId, monster) {
-        // console.log("am i in addMonster?");
-        console.log(monster);
         this.sceneMonsters[monsterId] = monster;
         this.scene.events.emit('monsterSpawned', monster);
-
+        console.log({ monster });
     }
 
     deleteMonster(monsterId) {
@@ -61,11 +57,12 @@ export class GameManager {
             // const layerType = ['player_locations', 'chest_locations', 'monster_locations'];
             if (layer.name === 'player_locations') {
                 layer.objects.forEach((obj) => {
-
                     const playerCoordinates = getAnchorPoints(obj);
 
-                    this.playerLocations.push([playerCoordinates.x, playerCoordinates.y])
-
+                    this.playerLocations.push([
+                        playerCoordinates.x,
+                        playerCoordinates.y,
+                    ]);
                 });
             } else if (layer.name === 'chest_locations') {
                 // TODO: Maybe MAP?
@@ -75,83 +72,84 @@ export class GameManager {
                     const spawnCoordinates = getAnchorPoints(obj);
 
                     if (this.chestLocations[spawnProps]) {
-                        this.chestLocations[spawnProps].push([spawnCoordinates.x, spawnCoordinates.y]);
+                        this.chestLocations[spawnProps].push([
+                            spawnCoordinates.x,
+                            spawnCoordinates.y,
+                        ]);
                     } else {
-                        this.chestLocations[spawnProps] = [[spawnCoordinates.x, spawnCoordinates.y]];                        
+                        this.chestLocations[spawnProps] = [
+                            [spawnCoordinates.x, spawnCoordinates.y],
+                        ];
                     }
                 });
             } else if (layer.name === 'monster_locations') {
                 layer.objects.forEach((obj) => {
                     // const spawnProps = obj.properties.spawner;
                     const spawnProps = obj.properties[0].value;
-                    const spawnCoordinates = getAnchorPoints(obj);                    
+                    const spawnCoordinates = getAnchorPoints(obj);
 
                     if (this.monsterLocations[spawnProps]) {
-                        this.monsterLocations[spawnProps].push([spawnCoordinates.x, spawnCoordinates.y]);
+                        this.monsterLocations[spawnProps].push([
+                            spawnCoordinates.x,
+                            spawnCoordinates.y,
+                        ]);
                     } else {
-                        this.monsterLocations[spawnProps] = [[spawnCoordinates.x, spawnCoordinates.y]];                        
+                        this.monsterLocations[spawnProps] = [
+                            [spawnCoordinates.x, spawnCoordinates.y],
+                        ];
                     }
                 });
             }
         }
-
-
     }
 
     setupEventListener() {
+        // TODO: When is it a GameManager event, and when is it a GameScene event? 
+
         // The setupEventListener method will be used to create any event listeners that will need to be hooked up to the GameManager object, such as when a player picks up a chest.
 
         this.scene.events.on('pickUpChest', (chestId) => {
             const thisChest = this.sceneChests[chestId];
 
             if (thisChest) {
-                // console.log("hit chest")
-                // console.log("chestId", chestId);                
-                // console.log(this.spawners);
-                // console.log("this", this);
-
-                this.sceneSpawners[thisChest.spawnerId].removeObject(
-                    chestId
-                );
+                this.sceneSpawners[thisChest.spawnerId].removeObject(chestId);
             }
         });
 
         this.scene.events.on('monsterAttacked', (monsterId, playerId) => {
-
-            console.log("monster is being attacked!")
             const thisMonster = this.sceneMonsters[monsterId];
-            console.log("thisMonster", thisMonster);
-            console.log("this", this);           
-            console.log("monsterId", monsterId);
-           
-            
+            console.log('Attacking thisMonster:', thisMonster);
+
             if (thisMonster) {
-             
-                
                 thisMonster.loseHealth();
 
                 if (thisMonster.health <= 0) {
-                    console.log("monster emit monsterRemoved")
-                    this.sceneSpawners[thisMonster.spawnerId].removeObject(monsterId);
-                    this.scene.events.emit('monsterRemoved', monsterId);
-                }
+                    this.sceneSpawners[thisMonster.spawnerId].removeObject(
+                        monsterId
+                    );
 
+                    this.scene.events.emit('monsterRemoved', monsterId);
+                } else {
+
+                    this.scene.events.emit('monsterTakingDamage', monsterId, thisMonster.health);
+                }
             }
-        })
+        });
 
         this.scene.events.on('destroyEnemy', (monsterId) => {
             if (this.sceneMonsters[monsterId]) {
                 const sceneMonsters = this.sceneMonsters[monsterId];
-                this.sceneSpawners[sceneMonsters.spawnerId].removeObject(monsterId);
+                this.sceneSpawners[sceneMonsters.spawnerId].removeObject(
+                    monsterId
+                );
             }
-        })
+        });
     }
 
     // The goal of this code is to declare all the spawners for monsters and chests
     setupSpawners() {
-
         const monsterLimit = 4;
-        const chestLimit = 10; 
+        const chestLimit = 10;
 
         // TODO: WTF is this code?
         Object.keys(this.chestLocations).forEach((key) => {
@@ -180,21 +178,18 @@ export class GameManager {
                 limit: monsterLimit,
                 objectType: SpawnerType.MONSTER,
                 id: `monster-${key}`,
-              };
+            };
 
+            const spawner = new Spawner(
+                config,
+                this.monsterLocations[key],
+                this.addMonster.bind(this),
+                this.deleteMonster.bind(this)
+            );
 
-              const spawner = new Spawner(
-                  config,
-                  this.monsterLocations[key],
-                  this.addMonster.bind(this),
-                  this.deleteMonster.bind(this)
-              );
-
-                // console.log(spawner);
-              this.sceneSpawners[spawner.id] = spawner;
+            // console.log(spawner);
+            this.sceneSpawners[spawner.id] = spawner;
         });
-
-
     }
 
     spawnPlayer() {

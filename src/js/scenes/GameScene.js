@@ -27,15 +27,60 @@ export class GameScene extends Phaser.Scene {
         if (this.player) this.player.update(this.cursors);
     }
 
+    createGameManager() {
+        this.events.on('spawnPlayer', (location) => {
+            this.createPlayer(location);
+            this.addCollisions();
+        });
+
+        this.events.on('chestSpawned', (chest) => {
+            this.spawnChest(chest);
+        });
+
+        this.events.on('monsterSpawned', (monster) => {
+            this.spawnMonster(monster);
+        });
+
+        // make monster inactive on event monsterRemoved
+        this.events.on('monsterRemoved', (monsterId) => {
+
+            // TODO: clean this up!
+            this.monsterGroup.getChildren().forEach( (monster) => {
+
+                if (monster.spawnerId === monsterId) {
+                    console.log("MONSTER DESTROYED: Comparison->: " + monster.spawnerId + "->" + monsterId)
+                    monster.makeInactive();
+                }
+            })
+
+        })
+
+        this.events.on('monsterTakingDamage', (monsterId, health) => {
+
+            // TODO: clean this up - FILTER!
+            this.monsterGroup.getChildren().forEach( (monster) => {
+
+                if (monster.spawnerId === monsterId) {
+                    console.log("MONSTER HEALTH UPDATE");
+                    monster.updateHealth(health);
+                }
+            })
+
+        })
+
+        const scene = this;
+        const mapData = this.map.map.objects;
+        this.gameManager = new GameManager(scene, mapData);
+        this.gameManager.setup();
+    }
+
+
     addCollisions() {
         // add a collider between the monster and the blocked layer. That way the monsters won’t be moving over the blocked tiles
         // check for collisions between player and wall objects
-        // console.log("player", this.player)
-        // console.log("map", this.map)
 
         // check for collisions beteen player and tiled block layer
         // DOES THIS WORK?
-        // this.physics.add.collider([this.player, this.monsters], this.map.blockedLayer);
 
         this.physics.add.collider(this.player, this.map.blockedLayer);
 
@@ -64,8 +109,6 @@ export class GameScene extends Phaser.Scene {
 
     enemyOverlap(player, enemy) {
         // callbacks have two params. The initial collider and what it's hitting (sword -> enemy)
-        // console.log('this overlaps');
-        // console.log(enemy);
 
         // emits will pass this event to the GameManager
 
@@ -113,50 +156,7 @@ export class GameScene extends Phaser.Scene {
         this.monsterGroup = this.physics.add.group();
     }
 
-    createGameManager() {
-        this.events.on('spawnPlayer', (location) => {
-            this.createPlayer(location);
-            this.addCollisions();
-        });
-
-        // this.events.on('spawnPlayer', (playerObject) => {
-        //     this.createPlayer(playerObject);
-        //     this.addCollisions();
-        // });
-
-
-        this.events.on('chestSpawned', (chest) => {
-            this.spawnChest(chest);
-        });
-
-        this.events.on('monsterSpawned', (monster) => {
-            this.spawnMonster(monster);
-        });
-
-        // make monster inactive on event monsterRemoved
-        this.events.on('monsterRemoved', (monsterId) => {
-
-            // TODO: clean this up!
-            console.log("in monsterRemoved", monsterId);
-            console.log("this.monsterGroup", this.monsterGroup);
-            this.monsterGroup.getChildren().forEach( (monster) => {
-
-                console.log("in forloop", monster)
-                console.log("Comparison of: " + monster.spawnerId + "--" + monsterId);
-                if (monster.spawnerId === monsterId) {
-                    console.log("MONSTER HAS BEEN DESTROYED!!!!!!!!!!!!!!!!!!!!!!")
-                    monster.makeInactive();
-                }
-            })
-
-        })
-
-        const scene = this;
-        const mapData = this.map.map.objects;
-        this.gameManager = new GameManager(scene, mapData);
-        this.gameManager.setup();
-    }
-
+  
     createInput() {
         this.cursors = this.input.keyboard.createCursorKeys();
     }

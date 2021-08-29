@@ -17,7 +17,7 @@ export class MonsterModel {
     }
 
     loseHealth() {
-        console.log("enemy lose health", this.health);
+        // console.log("Enemy HP: " + (this.health - 1) + " / " + this.health + " left.");
         this.health -= 1;
     }
 }

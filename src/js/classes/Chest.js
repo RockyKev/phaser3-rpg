@@ -3,6 +3,8 @@ export class Chest extends Phaser.Physics.Arcade.Image {
         super(scene, x, y, key, frame);
         this.scene = scene; // the scene this game object will be added to
         this.coins = coins; // the amount of coins this chest contains
+
+        // TODO: this should be switched to spawnerId, instanceID, or explain in more details
         this.id = id;
 
         // enable physics

@@ -53,6 +53,20 @@ Animation
 Tilemap 
 Container (in Phaser terms)
 
+**Class->Model->Spawner pattern**
+
+The class defines the basic attributes of the element. It's the blueprint.
+
+> An enemy Class should contain just the basic stats, and shared functions.
+
+Where a Model is is more specific, controlling the instance of that class. 
+
+> An enemy Instance has functions that control it's attack patterns, movement, and actual health.
+
+To add enemies to the enemy army, you would create a Model of it.
+
+Finally, the spawner is just a mechanism to control it's spawn behavior. It also controls callbacks for what happens after certain behaviors. Like when it's created and when it's destroyed.
+
 **Container VS direct image**
 The reason for that is, you are going to switch your player from an arcade image to a container. A container is preferred because now your player objects will be made of two separate sprites. The first will be the player itself, and the second will be the weapon. Instead of having to keep track of these separately, you can easily put them in the container and have that be your player. That way, you can reference both of those game objects relatively easily.
 
