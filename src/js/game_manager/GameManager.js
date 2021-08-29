@@ -1,3 +1,4 @@
+import { PlayerModel } from './PlayerModel.js';
 import { Spawner } from './Spawner.js';
 import { SpawnerType, getAnchorPoints } from './utils.js';
 
@@ -11,7 +12,9 @@ export class GameManager {
         this.sceneSpawners = {};
         this.sceneChests = {};
         this.sceneMonsters = {};
+        this.scenePlayers = {};
 
+        // TODO: rename these
         this.playerLocations = [];
         this.chestLocations = {};
         this.monsterLocations = {};
@@ -83,6 +86,9 @@ export class GameManager {
                     }
                 });
             } else if (layer.name === 'monster_locations') {
+
+                // TODO: This spawner code seems fucked
+                // It doesn't look like it's generating multiple spawn points.
                 layer.objects.forEach((obj) => {
                     // const spawnProps = obj.properties.spawner;
                     const spawnProps = obj.properties[0].value;
@@ -118,6 +124,7 @@ export class GameManager {
 
         this.scene.events.on('monsterAttacked', (monsterId, playerId) => {
             const thisMonster = this.sceneMonsters[monsterId];
+            console.log('this.sceneMonsters:', this.sceneMonsters);            
             console.log('Attacking thisMonster:', thisMonster);
 
             if (thisMonster) {
@@ -194,10 +201,10 @@ export class GameManager {
 
     spawnPlayer() {
         // console.log('spawn player starting');
-        const location =
-            this.playerLocations[
-                Math.floor(Math.random() * this.playerLocations.length)
-            ];
-        this.scene.events.emit('spawnPlayer', location);
+
+        const player = new PlayerModel(this.playerLocations);
+        this.scenePlayers[player.id] = player;
+
+        this.scene.events.emit('spawnPlayer', player);
     }
 }

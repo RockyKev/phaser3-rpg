@@ -16,6 +16,12 @@ Side-scroller: https://github.com/RockyKev/phaser3-platformer
 
 It has been updated to use ES modules. 
 
+## Tasks and : 
+
+[] - update and handle all the TODOS
+[] - change image to Link.
+[] - change map to temporary Zelda
+[] - properly use ES Modules and remove all the extra script calls. 
 
 ## Lesson notes
 

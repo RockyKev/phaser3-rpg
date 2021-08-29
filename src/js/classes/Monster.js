@@ -4,9 +4,11 @@ export class Monster extends Phaser.Physics.Arcade.Image {
         super(scene, x, y, key, frame); 
 
         this.scene = scene;
-
         // TODO: In Chest.js this should be switched to spawnerId, instanceID, or explain in more details
+        // TODO: BUG - It's also a bug here. this is supposed to be the group ID. When enemies die it doesn't update this.
         this.spawnerId = id; 
+        // this.id = id; 
+
         this.health = health;
         this.maxHealth = maxHealth; 
 
