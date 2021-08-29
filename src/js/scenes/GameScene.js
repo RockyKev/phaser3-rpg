@@ -42,7 +42,6 @@ export class GameScene extends Phaser.Scene {
         });
 
         this.events.on('chestRemoved', (chestId) => {
-            
              // TODO: clean this up - FILTER!
             this.chestGroup.getChildren().forEach( (chest) => {
                 if (chest.id === chestId) {
@@ -54,10 +53,8 @@ export class GameScene extends Phaser.Scene {
 
         // make monster inactive on event monsterRemoved
         this.events.on('monsterRemoved', (monsterId) => {
-
             // TODO: clean this up - FILTER!
             this.monsterGroup.getChildren().forEach( (monster) => {
-
                 if (monster.spawnerId === monsterId) {
                     console.log("MONSTER DESTROYED: Comparison->: " + monster.spawnerId + "->" + monsterId)
                     monster.makeInactive();
@@ -66,11 +63,9 @@ export class GameScene extends Phaser.Scene {
 
         })
 
-        this.events.on('monsterTakingDamage', (monsterId, health) => {
-
+        this.events.on('monsterUpdateHealth', (monsterId, health) => {
             // TODO: clean this up - FILTER!
             this.monsterGroup.getChildren().forEach( (monster) => {
-
                 if (monster.spawnerId === monsterId) {
                     console.log("MONSTER HEALTH UPDATE");
                     monster.updateHealth(health);
@@ -78,6 +73,13 @@ export class GameScene extends Phaser.Scene {
             })
 
         })
+
+        
+        this.events.on('playerUpdateHealth', (playerId, health) => {
+            // TODO: clean this up - FILTER!
+            this.player.updateHealth(health);
+        })
+
 
         const scene = this;
         const mapData = this.map.map.objects;

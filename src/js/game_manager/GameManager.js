@@ -122,11 +122,11 @@ export class GameManager {
 
             // TODO: will thisChest.gold work?
                 const { gold } = thisChest; 
-                console.log({gold})
+                // console.log({gold})
 
                 // update player gold
                 thePlayer.updateGold(gold);
-                console.log({thePlayer})
+                // console.log({thePlayer})
                 this.scene.events.emit('updateScore', thePlayer.gold)
 
                 this.sceneSpawners[thisChest.spawnerId].removeObject(chestId);
@@ -147,19 +147,20 @@ export class GameManager {
 
                 if (thisMonster.health <= 0) {
 
+                    // update score
                     thisPlayer.updateGold(thisMonster.gold);
                     this.scene.events.emit('updateScore', thisPlayer.gold)
 
-
                     // remove it
-                    this.sceneSpawners[thisMonster.spawnerId].removeObject(
-                        monsterId
-                    );
-
+                    this.sceneSpawners[thisMonster.spawnerId].removeObject(monsterId);
                     this.scene.events.emit('monsterRemoved', monsterId);
+
                 } else {
 
-                    this.scene.events.emit('monsterTakingDamage', monsterId, thisMonster.health);
+                    // monster auto-attacks players back
+                    thisPlayer.updateHealth( -thisMonster.attack )
+                    this.scene.events.emit('playerUpdateHealth', playerId, thisPlayer.health);
+                    this.scene.events.emit('monsterUpdateHealth', monsterId, thisMonster.health);
                 }
             }
         });

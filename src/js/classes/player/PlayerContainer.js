@@ -48,9 +48,10 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
         this.add(this.weapon);
         this.weapon.alpha = 0;
 
-        // this.createhealthBar();
+        this.createhealthBar();
     }
 
+    // TODO: This shit is bananas
     update(cursors) {
         this.body.setVelocity(0);
 
@@ -132,5 +133,33 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
 
         }
 
+
+        this.updateHealthBar();  // update player’s health bar
+    }
+
+    // health bar
+    createhealthBar() {
+        this.healthBar = this.scene.add.graphics();
+        this.updateHealthBar();
+
+    }
+
+    updateHealthBar() {
+        this.healthBar.clear();
+
+        // this is the white part behind the healthbar
+        // TODO: Make player Healthbar on HUD
+        this.healthBar.fillStyle(0xffffff, 1);
+        this.healthBar.fillRect(this.x - 32, this.y - 40, 64, 5);
+
+        // this is the health itself
+        this.healthBar.fillGradientStyle(0xff0000, 0xffffff, 4);
+        this.healthBar.fillRect(this.x - 32, this.y - 40, 64 * (this.health / this.maxHealth), 5)
+
+    }
+
+    updateHealth(health) {
+        this.health = health; 
+        this.updateHealthBar();
     }
 }
