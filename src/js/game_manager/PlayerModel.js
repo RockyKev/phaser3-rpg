@@ -14,13 +14,8 @@ export class PlayerModel {
 
     }
     
-   // spawnPlayer() {
-    //     // console.log('spawn player starting');
-    //     const location =
-    //         this.playerLocations[
-    //             Math.floor(Math.random() * this.playerLocations.length)
-    //         ];
-    //     this.scene.events.emit('spawnPlayer', location);
-    // }
+    updateGold(gold) {
+        this.gold += gold;
+    }
 
 }

@@ -114,15 +114,27 @@ export class GameManager {
 
         // The setupEventListener method will be used to create any event listeners that will need to be hooked up to the GameManager object, such as when a player picks up a chest.
 
-        this.scene.events.on('pickUpChest', (chestId) => {
+        this.scene.events.on('pickUpChest', (chestId, playerId) => {
             const thisChest = this.sceneChests[chestId];
+            const thePlayer = this.scenePlayers[playerId];
 
-            if (thisChest) {
+            if (thisChest && thePlayer) {
+
+                const { gold } = thisChest; 
+                console.log({gold})
+
+                // update player gold
+                thePlayer.updateGold(gold);
+                console.log({thePlayer})
+                this.scene.events.emit('updateScore', thePlayer.gold)
+
                 this.sceneSpawners[thisChest.spawnerId].removeObject(chestId);
+                this.scene.events.emit('chestRemoved', chestId);
             }
+
         });
 
-        this.scene.events.on('monsterAttacked', (monsterId, playerId) => {
+        this.scene.events.on('monsterAttacked', (monsterId) => {
             const thisMonster = this.sceneMonsters[monsterId];
             console.log('this.sceneMonsters:', this.sceneMonsters);            
             console.log('Attacking thisMonster:', thisMonster);

@@ -70,6 +70,7 @@ Where a Model is is more specific, controlling the instance of that class.
 > An enemy Instance has functions that control it's attack patterns, movement, and actual health.
 
 To add enemies to the enemy army, you would create a Model of it.
+It should try to handle anything that the gameScene is doing for that model. 
 
 Finally, the spawner is just a mechanism to control it's spawn behavior. It also controls callbacks for what happens after certain behaviors. Like when it's created and when it's destroyed.
 
