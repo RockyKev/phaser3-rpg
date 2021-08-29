@@ -1,6 +1,6 @@
 export class PlayerModel {
     constructor(spawnLocations) {
-        this.health = 10;
+        this.health = 1;
         this.maxHealth = 10;
         this.gold = 0;        
         this.id = `player-${uuid.v4()}`;
@@ -21,6 +21,14 @@ export class PlayerModel {
     updateHealth(health) {
         this.health += health;
         console.log("PLAYER HEALTH", this.health);
+    }
+
+    respawnInstance() {
+        this.health = this.maxHealth;
+        const location = this.spawnLocations[Math.floor(Math.random() * this.spawnLocations.length)];
+        [this.x, this.y] = [ location[0] * 2, location[1] * 2];
+        console.log("this-x", this.x);
+
     }
 
 }

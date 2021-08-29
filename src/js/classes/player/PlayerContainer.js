@@ -162,4 +162,12 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
         this.health = health; 
         this.updateHealthBar();
     }
+
+    respawn(playerObject) {
+        this.health = playerObject.health; 
+        this.setPosition(playerObject.x, playerObject.y);
+        this.updateHealthBar();
+    }
+
+
 }

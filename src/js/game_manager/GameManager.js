@@ -155,12 +155,32 @@ export class GameManager {
                     this.sceneSpawners[thisMonster.spawnerId].removeObject(monsterId);
                     this.scene.events.emit('monsterRemoved', monsterId);
 
+
+                    // add bonus health to the player
+                    thisPlayer.updateHealth(2);
+                    this.scene.events.emit('playerUpdateHealth', playerId, thisPlayer.health);
+
                 } else {
+
+                    
 
                     // monster auto-attacks players back
                     thisPlayer.updateHealth( -thisMonster.attack )
                     this.scene.events.emit('playerUpdateHealth', playerId, thisPlayer.health);
                     this.scene.events.emit('monsterUpdateHealth', monsterId, thisMonster.health);
+                    
+                    // TODO: do the health check somewhere else?
+                    if (thisPlayer.health <= 0) {
+
+                        
+                        thisPlayer.updateGold( parseInt(-thisPlayer.gold / 2), 10);
+                        this.scene.events.emit('updateScore', thisPlayer.gold);
+
+                        // respawn the player
+                        thisPlayer.respawnInstance();
+                        this.scene.events.emit('playerRespawn', thisPlayer);
+                    }
+
                 }
             }
         });

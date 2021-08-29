@@ -28,6 +28,9 @@ export class GameScene extends Phaser.Scene {
     }
 
     createGameManager() {
+
+        // TODO: When does an event appear in GameScenes VS GameManager?
+        // maybe when the scene needs to be cleaned.
         this.events.on('spawnPlayer', (playerObject) => {
             this.createPlayer(playerObject);
             this.addCollisions();
@@ -76,8 +79,12 @@ export class GameScene extends Phaser.Scene {
 
         
         this.events.on('playerUpdateHealth', (playerId, health) => {
-            // TODO: clean this up - FILTER!
             this.player.updateHealth(health);
+        })
+
+
+        this.events.on('playerRespawn', (playerObject) => {
+            this.player.respawn(playerObject);
         })
 
 
