@@ -118,7 +118,7 @@ export class GameScene extends Phaser.Scene {
 
     }
 
-    enemyOverlap(player, enemy) {
+    enemyOverlap(weapon, enemy) {
         // callbacks have two params. The initial collider and what it's hitting (sword -> enemy)
 
         // emits will pass this event to the GameManager
@@ -133,6 +133,7 @@ export class GameScene extends Phaser.Scene {
             // with health points
             // this.player.swordHit = true; 
             console.log("sword hitting this enemy->", enemy);
+            // this.events.emit('monsterAttacked', enemy.spawnerId, this.player.id);
             this.events.emit('monsterAttacked', enemy.spawnerId, this.player.id);
 
         }

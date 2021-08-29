@@ -120,6 +120,7 @@ export class GameManager {
 
             if (thisChest && thePlayer) {
 
+            // TODO: will thisChest.gold work?
                 const { gold } = thisChest; 
                 console.log({gold})
 
@@ -134,15 +135,23 @@ export class GameManager {
 
         });
 
-        this.scene.events.on('monsterAttacked', (monsterId) => {
+        this.scene.events.on('monsterAttacked', (monsterId, playerId) => {
             const thisMonster = this.sceneMonsters[monsterId];
+            const thisPlayer = this.scenePlayers[playerId];
             console.log('this.sceneMonsters:', this.sceneMonsters);            
             console.log('Attacking thisMonster:', thisMonster);
 
+            // update the monsterInstance
             if (thisMonster) {
                 thisMonster.loseHealth();
 
                 if (thisMonster.health <= 0) {
+
+                    thisPlayer.updateGold(thisMonster.gold);
+                    this.scene.events.emit('updateScore', thisPlayer.gold)
+
+
+                    // remove it
                     this.sceneSpawners[thisMonster.spawnerId].removeObject(
                         monsterId
                     );

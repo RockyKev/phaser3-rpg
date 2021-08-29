@@ -4,6 +4,7 @@
 export class ChestModel {
     constructor(x, y, gold, spawnerId) {
         // tracks which spawner this belongs to
+        // TODO: BUG: New chests don't seem to be pickup-able
         this.spawnerId = spawnerId;
 
         this.id = `${spawnerId}-${uuid.v4()}`;
