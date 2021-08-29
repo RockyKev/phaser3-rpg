@@ -39,6 +39,20 @@ Layer types:
 
 Export as a JSON.
 
+## Lesson 30
+> A benefit of having the monsters in a group is, you will be able to use this runChildUpdate property that Phaser has. This property is set to false by default. However, if there is an update method defined on that class, Phaser will automatically run that method for you if you set runChildUpdate property to true.
+
+```
+// in GameScene.js
+this.monsters.runChildUpdate = true;
+
+
+// in Monster.js 
+update() {
+    //...
+}
+```
+
 ## Key terms
 
 **Collider**
@@ -58,6 +72,10 @@ Scene
 Animation
 Tilemap 
 Container (in Phaser terms)
+
+**setPosition() vs this.physics.moveToObject()**
+In addition to using setPosition(), we can use this.physics.moveToObject() to move game objects.
+While setPosition() will move a game object to the provided position, Phaser will use physics to move the game object to the provided position when you use this.physics.moveToObject().
 
 **Class->Model->Spawner pattern**
 
