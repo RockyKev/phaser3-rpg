@@ -57,8 +57,9 @@ export class GameScene extends Phaser.Scene {
         // make monster inactive on event monsterRemoved
         this.events.on('monsterRemoved', (monsterId) => {
             // TODO: clean this up - FILTER!
+
             this.monsterGroup.getChildren().forEach( (monster) => {
-                if (monster.spawnerId === monsterId) {
+                if (monster.id === monsterId) {
                     console.log("MONSTER DESTROYED: Comparison->: " + monster.spawnerId + "->" + monsterId)
                     this.monsterDeathAudio.play();
                     monster.makeInactive();
@@ -70,7 +71,8 @@ export class GameScene extends Phaser.Scene {
         this.events.on('monsterUpdateHealth', (monsterId, health) => {
             // TODO: clean this up - FILTER!
             this.monsterGroup.getChildren().forEach( (monster) => {
-                if (monster.spawnerId === monsterId) {
+                
+                if (monster.id === monsterId) {
                     console.log("MONSTER HEALTH UPDATE");
                     monster.updateHealth(health);
                 }
@@ -165,7 +167,7 @@ export class GameScene extends Phaser.Scene {
             // this.player.swordHit = true; 
             console.log("sword hitting this enemy->", enemy);
             // this.events.emit('monsterAttacked', enemy.spawnerId, this.player.id);
-            this.events.emit('monsterAttacked', enemy.spawnerId, this.player.id);
+            this.events.emit('monsterAttacked', enemy.id, this.player.id);
 
         }
 

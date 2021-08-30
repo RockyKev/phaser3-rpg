@@ -7,7 +7,6 @@ export class MonsterModel {
 
         this.id = `${spawnerId}-${uuid.v4()}`;
         
-        
         this.spawnerId = spawnerId;
 
         this.x = x * 2;
@@ -25,7 +24,6 @@ export class MonsterModel {
     }
 
     move() {
-
         const randomPosition = randomNumber(1, 8);
         const distance = 64;
 
@@ -62,8 +60,6 @@ export class MonsterModel {
             default:
               break;
           }
-
-        
 
     }
 }

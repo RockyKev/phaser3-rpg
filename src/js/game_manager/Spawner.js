@@ -26,8 +26,8 @@ export class Spawner {
 
     start() {
         this.interval = setInterval(() => {
-            if (this.objectsCreated < this.spawnLimit) {
-                this.determineSpawnType();
+            if (this.objectsCreated.length < this.spawnLimit) {
+                this.spawnObjectBasedOnType();
             }
         }, this.spawnInterval);
 
@@ -36,7 +36,7 @@ export class Spawner {
         }
     }
 
-    determineSpawnType() {
+    spawnObjectBasedOnType() {
         // console.log("in determineSpawnType", this.objectType)
         if (this.objectType === SpawnerType.CHEST) {
             this.spawnChest();
@@ -101,6 +101,7 @@ export class Spawner {
 
     removeObject(id) {
         // this grabs the delete function that's passed into here. (this.deleteObject)
+        console.log("deleting this object", id);
         this.objectsCreated = this.objectsCreated.filter(
             (obj) => obj.id !== id
         );
