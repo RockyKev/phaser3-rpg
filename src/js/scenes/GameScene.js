@@ -11,7 +11,6 @@ export class GameScene extends Phaser.Scene {
 
     init() {
         this.scene.launch('Ui');
-        // this.score = 0;
     }
 
     create() {
@@ -44,8 +43,9 @@ export class GameScene extends Phaser.Scene {
         });
 
         this.events.on('chestRemoved', (chestId) => {
-            // TODO: clean this up - FILTER!
-            this.chestGroup.getChildren().forEach((chest) => {
+            const chestGroup = this.chestGroup.getChildren();
+
+            chestGroup.forEach((chest) => {
                 if (chest.id === chestId) {
                     chest.makeInactive();
                 }
@@ -54,16 +54,14 @@ export class GameScene extends Phaser.Scene {
 
         // make monster inactive on event monsterRemoved
         this.events.on('monsterRemoved', (monsterId) => {
-            // TODO: clean this up - FILTER!
+            const monsterGroup = this.monsterGroup.getChildren();
 
-            this.monsterGroup.getChildren().forEach((monster) => {
+            monsterGroup.forEach((monster) => {
                 if (monster.id === monsterId) {
                     console.log(
-                        'MONSTER DESTROYED: Comparison->: ' +
-                            monster.spawnerId +
-                            '->' +
-                            monsterId
+                        `MONSTER DESTROYED: Comparison-> ${monster.id}->${monsterId}`
                     );
+
                     this.monsterDeathAudio.play();
                     monster.makeInactive();
                 }
@@ -71,15 +69,16 @@ export class GameScene extends Phaser.Scene {
         });
 
         this.events.on('monsterUpdateHealth', (monsterId, health) => {
-            // TODO: clean this up - FILTER!
-            this.monsterGroup.getChildren().forEach((monster) => {
+            const monsterGroup = this.monsterGroup.getChildren();
+
+            monsterGroup.forEach((monster) => {
                 if (monster.id === monsterId) {
-                    console.log('MONSTER HEALTH UPDATE');
                     monster.updateHealth(health);
                 }
             });
         });
 
+        // TODO: playerId not being used?
         this.events.on('playerUpdateHealth', (playerId, health) => {
             if (health < this.playerHealth) {
                 this.playerDeathAudio.play();
@@ -92,21 +91,20 @@ export class GameScene extends Phaser.Scene {
             this.player.respawn(playerObject);
         });
 
-        // TODO: JESUS WHAT A MESS
-        this.events.on('monsterMovement', (monsters) => {
-            // console.log("starting monsters", monsters)
-            this.monsterGroup.getChildren().forEach((monster) => {
-                Object.keys(monsters).forEach((monsterId) => {
-                    // console.log("second foreach", monsterId);
+        this.events.on('monsterMovement', (sceneMonsters) => {
+            const monsterGroup = this.monsterGroup.getChildren();
 
-                    if (monster.id === monsterId) {
-                        this.physics.moveToObject(
-                            monster,
-                            monsters[monsterId],
-                            40
-                        );
-                    }
-                });
+            monsterGroup.forEach((monster) => {
+
+                if (sceneMonsters[monster.id]) {
+                    // https://photonstorm.github.io/phaser3-docs/Phaser.Physics.Arcade.ArcadePhysics.html#moveToObject__anchor
+                    this.physics.moveToObject(
+                        monster,
+                        sceneMonsters[monster.id],
+                        40
+                    );
+                }
+
             });
         });
 
@@ -150,9 +148,6 @@ export class GameScene extends Phaser.Scene {
     enemyOverlap(weapon, enemy) {
         // callbacks have two params. The initial collider and what it's hitting (sword -> enemy)
         // weapon doesn't need to be triggered.
-
-        // emits will pass this event to the GameManager
-
         if (this.player.playerAttacking && !this.player.swordHit) {
             this.player.swordHit = true;
 
@@ -161,7 +156,7 @@ export class GameScene extends Phaser.Scene {
             // this.events.emit('destroyEnemy', enemy.id);
 
             // with health points
-            console.log('weapon hitting', weapon)
+            console.log('weapon hitting', weapon);
             console.log('sword hitting this enemy->', enemy);
             this.events.emit('monsterAttacked', enemy.id, this.player.id);
         }
@@ -184,7 +179,6 @@ export class GameScene extends Phaser.Scene {
     }
 
     createPlayer(playerObject) {
-
         this.player = new PlayerContainer({
             scene: this,
             x: playerObject.x * 2,
@@ -228,7 +222,6 @@ export class GameScene extends Phaser.Scene {
     }
 
     spawnChest(chestObject) {
-        // const location = this.chestPositions[Math.floor(Math.random() * this.chestPositions.length)];
         const location = [chestObject.x * 2, chestObject.y * 2];
 
         let chest = this.chestGroup.getFirstDead();
