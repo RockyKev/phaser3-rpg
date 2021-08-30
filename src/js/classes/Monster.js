@@ -24,6 +24,9 @@ export class Monster extends Phaser.Physics.Arcade.Image {
         this.createHealthBar();
     }
 
+    update() {
+        this.updateHealthBar();
+    }
 
     // make Active/Inactive 
     makeActive() {

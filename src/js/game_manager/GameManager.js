@@ -171,9 +171,8 @@ export class GameManager {
                     
                     // TODO: do the health check somewhere else?
                     if (thisPlayer.health <= 0) {
-
                         
-                        thisPlayer.updateGold( parseInt(-thisPlayer.gold / 2), 10);
+                        thisPlayer.updateGold( parseInt(-thisPlayer.gold / 2));
                         this.scene.events.emit('updateScore', thisPlayer.gold);
 
                         // respawn the player
@@ -193,6 +192,10 @@ export class GameManager {
                 );
             }
         });
+    }
+
+    moveMonsters() {
+        this.scene.events.emit('monsterMovement', this.sceneMonsters);
     }
 
     // The goal of this code is to declare all the spawners for monsters and chests
@@ -233,7 +236,8 @@ export class GameManager {
                 config,
                 this.monsterLocations[key],
                 this.addMonster.bind(this),
-                this.deleteMonster.bind(this)
+                this.deleteMonster.bind(this),
+                this.moveMonsters.bind(this)
             );
 
             // console.log(spawner);

@@ -92,6 +92,22 @@ export class GameScene extends Phaser.Scene {
             this.player.respawn(playerObject);
         })
 
+        // TODO: JESUS WHAT A MESS
+        this.events.on('monsterMovement', (monsters) => {
+
+            // console.log("starting monsters", monsters)
+            this.monsterGroup.getChildren().forEach( (monster) => {
+
+                Object.keys(monsters).forEach( (monsterId) => {
+                    // console.log("second foreach", monsterId);
+
+                    if (monster.id === monsterId) {
+                        this.physics.moveToObject(monster, monsters[monsterId], 40);
+                    }
+                })
+
+            })
+        })
 
         const scene = this;
         const mapData = this.map.map.objects;
@@ -201,6 +217,7 @@ export class GameScene extends Phaser.Scene {
         this.chestGroup = this.physics.add.group();
 
         this.monsterGroup = this.physics.add.group();
+        this.monsterGroup.runChildUpdate = true;
     }
 
   
@@ -262,8 +279,8 @@ export class GameScene extends Phaser.Scene {
         if (!monster) {
             monster = new Monster(
                 this,
-                monsterObject.x * 2,
-                monsterObject.y * 2,
+                monsterObject.x,
+                monsterObject.y,
                 'monsters',
                 monsterObject.frame,
                 monsterObject.id,
@@ -277,7 +294,7 @@ export class GameScene extends Phaser.Scene {
             monster.health = monsterObject.health;
             monster.maxHealth = monsterObject.maxHealth;
             monster.setTexture('monsters', monsterObject.frame);
-            monster.setPosition(monsterObject.x * 2, monsterObject.y * 2);
+            monster.setPosition(monsterObject.x, monsterObject.y);
             monster.makeActive();
         }
     }
