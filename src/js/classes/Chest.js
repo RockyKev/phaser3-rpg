@@ -1,8 +1,8 @@
 export class Chest extends Phaser.Physics.Arcade.Image {
-    constructor(scene, x, y, key, frame, coins, id) {
+    constructor({scene, x, y, key, frame, coins, id}) {
         super(scene, x, y, key, frame);
-        this.scene = scene; // the scene this game object will be added to
-        this.coins = coins; // the amount of coins this chest contains
+        this.scene = scene; 
+        this.coins = coins; 
 
         // TODO: this should be switched to spawnerId, instanceID, or explain in more details
         this.id = id;

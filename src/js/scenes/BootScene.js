@@ -4,13 +4,13 @@ export class BootScene extends Phaser.Scene {
     }
 
     preload() {
-        // load images
+
         this.loadImages();
-        // load spritesheets
+
         this.loadSpriteSheets();
-        // load audio
+
         this.loadAudio();
-        // load tilemap
+
         this.loadTileMap();
     }
 
@@ -20,8 +20,6 @@ export class BootScene extends Phaser.Scene {
 
         // load the map tileset image
         this.load.image('tilesetPNG', 'src/levels/background-extruded.png');
-        // this.load.image('tilesetPng', 'src/levels/background.png');
-        // this.load.image('background', 'src/levels/background-extruded.png');
     }
 
     loadSpriteSheets() {
@@ -55,11 +53,11 @@ export class BootScene extends Phaser.Scene {
             'tilesetJSON',
             'src/levels/large_level2.json'
         );
-        // this.load.tilemapTiledJSON('map', 'src/levels/large_level.json');
+
     }
 
     create() {
-         this.scene.start('Title');
-        // this.scene.start('Game');
+        //  this.scene.start('Title');
+        this.scene.start('Game');
     }
 }

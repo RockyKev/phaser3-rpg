@@ -45,34 +45,29 @@ export class Spawner {
         }
     }
 
-
-
     spawnChest() {
         const location = this.pickRandomLocation();
         const gold = randomNumber(10, 20);
 
-         // TODO: Move this code into a object
-        const chest = new ChestModel(location[0], location[1], gold, this.id);
+        const chest = new ChestModel({x: location[0], y: location[1], gold: gold, spawnerId: this.id})
 
         this.objectsCreated.push(chest);
 
-        // this grabs the addObject function that's passed into here. (this.addObject)
         this.addObject(chest.id, chest);
     }
 
     spawnMonster() {
         const location = this.pickRandomLocation();
 
-        // TODO: Move this code into a object
-        const monster = new MonsterModel(
-            location[0],
-            location[1],
-            randomNumber(10, 20), 
-            this.id, 
-            randomNumber(0, 20),
-            randomNumber(3, 5),
-            1
-        )
+        const monster = new MonsterModel({
+            x: location[0],
+            y: location[1],
+            gold: randomNumber(10, 20),
+            spawnerId: this.id,
+            frame: randomNumber(0, 20),
+            health: randomNumber(3, 5),
+            attack: 1,
+        });
 
         this.objectsCreated.push(monster);
         this.addObject(monster.id, monster);
@@ -101,7 +96,7 @@ export class Spawner {
 
     removeObject(id) {
         // this grabs the delete function that's passed into here. (this.deleteObject)
-        console.log("deleting this object", id);
+        console.log('deleting this object', id);
         this.objectsCreated = this.objectsCreated.filter(
             (obj) => obj.id !== id
         );
@@ -110,9 +105,8 @@ export class Spawner {
 
     // This should be in the game manager?
     moveMonsters() {
-
-        this.moveMonsterInterval = setInterval( () => {
-            this.objectsCreated.forEach( (monster) => {
+        this.moveMonsterInterval = setInterval(() => {
+            this.objectsCreated.forEach((monster) => {
                 monster.move();
             });
 

@@ -2,7 +2,7 @@
 // import {uuid} from 'https://cdnjs.cloudflare.com/ajax/libs/node-uuid/1.4.8/uuid.min.js';
 
 export class ChestModel {
-    constructor(x, y, gold, spawnerId) {
+    constructor({x, y, gold, spawnerId}) {
         // tracks which spawner this belongs to
         // TODO: BUG: New chests don't seem to be pickup-able
         this.spawnerId = spawnerId;

@@ -28,7 +28,6 @@ export class GameScene extends Phaser.Scene {
     }
 
     createGameManager() {
-
         // TODO: When does an event appear in GameScenes VS GameManager?
         // maybe when the scene needs to be cleaned.
         this.events.on('spawnPlayer', (playerObject) => {
@@ -45,78 +44,77 @@ export class GameScene extends Phaser.Scene {
         });
 
         this.events.on('chestRemoved', (chestId) => {
-             // TODO: clean this up - FILTER!
-            this.chestGroup.getChildren().forEach( (chest) => {
+            // TODO: clean this up - FILTER!
+            this.chestGroup.getChildren().forEach((chest) => {
                 if (chest.id === chestId) {
                     chest.makeInactive();
                 }
-            })
-
-        })
+            });
+        });
 
         // make monster inactive on event monsterRemoved
         this.events.on('monsterRemoved', (monsterId) => {
             // TODO: clean this up - FILTER!
 
-            this.monsterGroup.getChildren().forEach( (monster) => {
+            this.monsterGroup.getChildren().forEach((monster) => {
                 if (monster.id === monsterId) {
-                    console.log("MONSTER DESTROYED: Comparison->: " + monster.spawnerId + "->" + monsterId)
+                    console.log(
+                        'MONSTER DESTROYED: Comparison->: ' +
+                            monster.spawnerId +
+                            '->' +
+                            monsterId
+                    );
                     this.monsterDeathAudio.play();
                     monster.makeInactive();
                 }
-            })
-
-        })
+            });
+        });
 
         this.events.on('monsterUpdateHealth', (monsterId, health) => {
             // TODO: clean this up - FILTER!
-            this.monsterGroup.getChildren().forEach( (monster) => {
-                
+            this.monsterGroup.getChildren().forEach((monster) => {
                 if (monster.id === monsterId) {
-                    console.log("MONSTER HEALTH UPDATE");
+                    console.log('MONSTER HEALTH UPDATE');
                     monster.updateHealth(health);
                 }
-            })
+            });
+        });
 
-        })
-
-        
         this.events.on('playerUpdateHealth', (playerId, health) => {
             if (health < this.playerHealth) {
                 this.playerDeathAudio.play();
             }
             this.player.updateHealth(health);
-        })
-
+        });
 
         this.events.on('playerRespawn', (playerObject) => {
             this.playerDeathAudio.play();
             this.player.respawn(playerObject);
-        })
+        });
 
         // TODO: JESUS WHAT A MESS
         this.events.on('monsterMovement', (monsters) => {
-
             // console.log("starting monsters", monsters)
-            this.monsterGroup.getChildren().forEach( (monster) => {
-
-                Object.keys(monsters).forEach( (monsterId) => {
+            this.monsterGroup.getChildren().forEach((monster) => {
+                Object.keys(monsters).forEach((monsterId) => {
                     // console.log("second foreach", monsterId);
 
                     if (monster.id === monsterId) {
-                        this.physics.moveToObject(monster, monsters[monsterId], 40);
+                        this.physics.moveToObject(
+                            monster,
+                            monsters[monsterId],
+                            40
+                        );
                     }
-                })
-
-            })
-        })
+                });
+            });
+        });
 
         const scene = this;
         const mapData = this.map.map.objects;
         this.gameManager = new GameManager(scene, mapData);
         this.gameManager.setup();
     }
-
 
     addCollisions() {
         // add a collider between the monster and the blocked layer. That way the monsters won’t be moving over the blocked tiles
@@ -147,41 +145,39 @@ export class GameScene extends Phaser.Scene {
             null,
             this
         );
-
     }
 
     enemyOverlap(weapon, enemy) {
         // callbacks have two params. The initial collider and what it's hitting (sword -> enemy)
+        // weapon doesn't need to be triggered.
 
         // emits will pass this event to the GameManager
 
-        // TODO: Wtf is weapon?
         if (this.player.playerAttacking && !this.player.swordHit) {
-            this.player.swordHit = true; 
+            this.player.swordHit = true;
 
             // One hit kill
             // enemy.makeInactive();
             // this.events.emit('destroyEnemy', enemy.id);
 
             // with health points
-            // this.player.swordHit = true; 
-            console.log("sword hitting this enemy->", enemy);
-            // this.events.emit('monsterAttacked', enemy.spawnerId, this.player.id);
+            console.log('weapon hitting', weapon)
+            console.log('sword hitting this enemy->', enemy);
             this.events.emit('monsterAttacked', enemy.id, this.player.id);
-
         }
-
     }
 
     createAudio() {
-
-        const defaultOpts =  {
+        const defaultOpts = {
             loop: false,
             volume: 0.2,
         };
 
         this.goldPickupAudio = this.sound.add('goldSound', defaultOpts);
-        this.playerAttackAudio = this.sound.add('playerAttack', { loop: false, volume: 0.01 });
+        this.playerAttackAudio = this.sound.add('playerAttack', {
+            loop: false,
+            volume: 0.01,
+        });
         this.playerDamageAudio = this.sound.add('playerDamage', defaultOpts);
         this.playerDeathAudio = this.sound.add('playerDeath', defaultOpts);
         this.monsterDeathAudio = this.sound.add('enemyDeath', defaultOpts);
@@ -189,63 +185,46 @@ export class GameScene extends Phaser.Scene {
 
     createPlayer(playerObject) {
 
-        this.player = new PlayerContainer(
-            this, 
-            playerObject.x * 2, 
-            playerObject.y * 2,
-            'characters', 
-            0, 
-            playerObject.health, 
-            playerObject.maxHealth, 
-            playerObject.id, 
-            this.playerAttackAudio
-        )
-
-        // const playerX = location[0] * 2;
-        // const playerY = location[1] * 2;
-
-        // this.player = new PlayerContainer(
-        //     this,
-        //     playerX,
-        //     playerY,
-        //     'characters',
-        //     0
-        // );
-        console.log(this.player);
+        this.player = new PlayerContainer({
+            scene: this,
+            x: playerObject.x * 2,
+            y: playerObject.y * 2,
+            key: 'characters',
+            frame: 0,
+            health: playerObject.health,
+            maxHealth: playerObject.maxHealth,
+            id: playerObject.id,
+            attackAudio: this.playerAttackAudio,
+        });
+        // console.log(this.player);
     }
 
     createGroups() {
-        // create a chest group
         this.chestGroup = this.physics.add.group();
-
         this.monsterGroup = this.physics.add.group();
+
+        // this feature causes update() to run automatically
         this.monsterGroup.runChildUpdate = true;
     }
 
-  
     createInput() {
         this.cursors = this.input.keyboard.createCursorKeys();
     }
 
     collectChest(player, chest) {
         this.goldPickupAudio.play();
-        // this.score += chest.coins;
-
-        // this.events.emit('updateScore', this.score);
-        // chest.makeInactive();
 
         this.events.emit('pickUpChest', chest.id, player.id);
-        // this.time.delayedCall(1000, this.spawnChest, [], this);
     }
 
     createMap() {
-        this.map = new Map(
-            this,
-            'tilesetJSON',
-            'tilesetPNG',
-            'bottom',
-            'blocked'
-        );
+        this.map = new Map({
+            scene: this,
+            tileMapkey: 'tilesetJSON',
+            tileSetName: 'tilesetPNG',
+            bottomLayerName: 'bottom',
+            blockedLayerName: 'blocked',
+        });
     }
 
     spawnChest(chestObject) {
@@ -255,17 +234,16 @@ export class GameScene extends Phaser.Scene {
         let chest = this.chestGroup.getFirstDead();
 
         if (!chest) {
-            // TODO: convert to object params
-            chest = new Chest(
-                this,
-                location[0],
-                location[1],
-                'items',
-                0,
-                chestObject.gold,
-                chestObject.id
-            );
-            // add chest to chests group
+            chest = new Chest({
+                scene: this,
+                x: location[0],
+                y: location[1],
+                key: 'items',
+                frame: 0,
+                coins: chestObject.gold,
+                id: chestObject.id,
+            });
+
             this.chestGroup.add(chest);
         } else {
             chest.setPosition(location[0], location[1]);
@@ -279,16 +257,16 @@ export class GameScene extends Phaser.Scene {
         // console.log({monsterObject});
 
         if (!monster) {
-            monster = new Monster(
-                this,
-                monsterObject.x,
-                monsterObject.y,
-                'monsters',
-                monsterObject.frame,
-                monsterObject.id,
-                monsterObject.health,
-                monsterObject.maxHealth
-            );
+            monster = new Monster({
+                scene: this,
+                x: monsterObject.x,
+                y: monsterObject.y,
+                key: 'monsters',
+                frame: monsterObject.frame,
+                id: monsterObject.id,
+                health: monsterObject.health,
+                maxHealth: monsterObject.maxHealth,
+            });
 
             this.monsterGroup.add(monster);
         } else {

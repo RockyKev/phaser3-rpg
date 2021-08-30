@@ -1,5 +1,5 @@
 export class Monster extends Phaser.Physics.Arcade.Image {
-    constructor(scene, x, y, key, frame, id, health, maxHealth) {
+    constructor({scene, x, y, key, frame, id, health, maxHealth}) {
 
         super(scene, x, y, key, frame); 
 
