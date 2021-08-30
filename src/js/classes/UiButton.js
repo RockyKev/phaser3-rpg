@@ -1,5 +1,5 @@
 export class UIButton extends Phaser.GameObjects.Container {
-  constructor(scene, x, y, key, hoverKey, text, targetCallback) {
+  constructor({scene, x, y, key, hoverKey, text, targetCallback}) {
     super(scene, x, y);
     this.scene = scene; // the scene this container will be added to
     this.x = x; // the x position of our container

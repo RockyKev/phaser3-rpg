@@ -14,17 +14,15 @@ export class TitleScene extends Phaser.Scene {
         );
         this.titleText.setOrigin(0.5);
 
-        // create the Play game button
-        // TODO: Refactor to param options
-        this.startGameButton = new UIButton(
-            this,
-            this.scale.width / 2,
-            this.scale.height * 0.65,
-            'button1',
-            'button2',
-            'Start',
-            this.startScene.bind(this, 'Game')
-        );
+        this.startGameButton = new UIButton({
+            scene: this,
+            x: this.scale.width / 2,
+            y: this.scale.height * 0.65,
+            key: 'button1',
+            hoverKey: 'button2',
+            text: 'Start!',
+            targetCallback: this.startScene.bind(this, 'Game'),
+        });
     }
 
     startScene(targetScene) {
