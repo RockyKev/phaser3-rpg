@@ -1,5 +1,4 @@
-// TODO: figure out how to properly import UUID
-// import {uuid} from 'https://cdnjs.cloudflare.com/ajax/libs/node-uuid/1.4.8/uuid.min.js';
+import { v4 as uuidv4 } from 'https://jspm.dev/uuid';
 
 export class ChestModel {
     constructor({x, y, gold, spawnerId}) {
@@ -7,7 +6,8 @@ export class ChestModel {
         // TODO: BUG: New chests don't seem to be pickup-able
         this.spawnerId = spawnerId;
 
-        this.id = `${spawnerId}-${uuid.v4()}`;
+        this.id = `${spawnerId}-${uuidv4()}`;
+        // this.id = `${spawnerId}-${uuid.v4()}`;
         this.x = x;
         this.y = y;
         this.gold = gold;

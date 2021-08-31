@@ -1,11 +1,10 @@
-// TODO: same as ChestModel - figure out how to properly import UUID
-// import {uuid} from 'https://cdnjs.cloudflare.com/ajax/libs/node-uuid/1.4.8/uuid.min.js';
+import { v4 as uuidv4 } from 'https://jspm.dev/uuid';
 import { randomNumber } from './utils.js';
 
 export class MonsterModel {
     constructor({x, y, gold, spawnerId, frame, health, attack}) {
 
-        this.id = `${spawnerId}-${uuid.v4()}`;
+        this.id = `${spawnerId}-${uuidv4()}`;
         
         this.spawnerId = spawnerId;
 

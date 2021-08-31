@@ -1,9 +1,11 @@
+import { v4 as uuidv4 } from 'https://jspm.dev/uuid';
+
 export class PlayerModel {
     constructor(spawnLocations) {
         this.health = 10;
         this.maxHealth = 10;
         this.gold = 0;        
-        this.id = `player-${uuid.v4()}`;
+        this.id = `player-${uuidv4()}`;
         console
         this.spawnLocations = spawnLocations;
 
