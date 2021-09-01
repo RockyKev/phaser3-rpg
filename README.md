@@ -26,18 +26,6 @@ It has been updated to use ES modules.
 ## Lesson notes
 
 ### Lesson 1 & 2:
-Use Tiled -- https://www.mapeditor.org/
-
-Tiled > New Map > Tile Render order - Right down
-![](https://i.imgur.com/RT6MLZE.png)
-
-Layer types:
-    * Tile layer - just graphics
-    * Tile Layer - Blocked (to symbolize layers that stop the user)
-    * Object layer - Spawn points for chests, monsters, entery exit. (How to use ![](https://i.imgur.com/MttKym6.png))
-        * You can add custom properties.
-
-Export as a JSON.
 
 ## Lesson 30
 > A benefit of having the monsters in a group is, you will be able to use this runChildUpdate property that Phaser has. This property is set to false by default. However, if there is an update method defined on that class, Phaser will automatically run that method for you if you set runChildUpdate property to true.
@@ -96,4 +84,24 @@ Finally, the spawner is just a mechanism to control it's spawn behavior. It also
 The reason for that is, you are going to switch your player from an arcade image to a container. A container is preferred because now your player objects will be made of two separate sprites. The first will be the player itself, and the second will be the weapon. Instead of having to keep track of these separately, you can easily put them in the container and have that be your player. That way, you can reference both of those game objects relatively easily.
 
 ## Random links
+
+### Tiled
+Use Tiled -- https://www.mapeditor.org/
+https://medium.com/swlh/grid-based-movement-in-a-top-down-2d-rpg-with-phaser-3-e3a3486eb2fd
+Tiled > New Map > Tile Render order - Right down
+![](https://i.imgur.com/RT6MLZE.png)
+
+Layer types:
+    * Tile layer - just graphics
+    * Tile Layer - Blocked (to symbolize layers that stop the user)
+    * Object layer - Spawn points for chests, monsters, entery exit. (How to use ![](https://i.imgur.com/MttKym6.png))
+        * You can add custom properties.
+
+Export as a JSON.
+
+How to use Tiled
+
+
+### Phaser Editor 2D
 Phaser Editor: https://phasereditor2d.itch.io/ide
+
