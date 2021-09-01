@@ -27,21 +27,16 @@ export class GameManager {
     }
 
     parseMapData() {
-        // The parseMapData method will be used to parse the layer data that was exported from Tiled, which will be used to generate the three locations.
+        // The parseMapData method will be used to parse the layer data that was exported from Tiled, which will be used to generate the three layers. I
 
         // console.log(this.mapData); Will show all the objects made in Tiled.
 
         for (let layer of this.mapData) {
-            // TODO: Refactor the if/else out
-            // const layerType = ['player_locations', 'chest_locations', 'monster_locations'];
 
             if (layer.name === 'player_locations') {
                 
-                layer.objects.forEach((obj) => {
-                    // const playerCoordinates = getAnchorPoints(obj);
+                layer.objects.forEach((obj) => this.locationsOfPlayer.push([obj.x, obj.y]) );
 
-                    this.locationsOfPlayer.push([obj.x, obj.y]);
-                });
             } else if (layer.name === 'chest_locations') {
                 // TODO: Maybe MAP?
                 layer.objects.forEach(
@@ -100,9 +95,6 @@ export class GameManager {
         this.scene.events.on('monsterAttacked', (monsterId, playerId) => {
             const thisMonster = this.sceneMonsters[monsterId];
             const thisPlayer = this.scenePlayers[playerId];
-            // console.log('this.sceneMonsters:', this.sceneMonsters);            
-            // console.log("this sceneSpawners", this.sceneSpawners);
-            // console.log('Attacking thisMonster:', thisMonster);
 
             // update the monsterInstance
             if (thisMonster) {
@@ -126,7 +118,6 @@ export class GameManager {
                 } else {
 
                     
-
                     // monster auto-attacks players back
                     thisPlayer.updateHealth( -thisMonster.attack )
                     this.scene.events.emit('playerUpdateHealth', thisPlayer.health);
@@ -216,7 +207,6 @@ export class GameManager {
 
         this.scene.events.emit('spawnPlayer', player);
     }
-
     
     // METHODS THAT GET BINDED
     // sceneChests

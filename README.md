@@ -25,8 +25,6 @@ It has been updated to use ES modules.
 
 ## Lesson notes
 
-### Lesson 1 & 2:
-
 ## Lesson 30
 > A benefit of having the monsters in a group is, you will be able to use this runChildUpdate property that Phaser has. This property is set to false by default. However, if there is an update method defined on that class, Phaser will automatically run that method for you if you set runChildUpdate property to true.
 
