@@ -121,7 +121,7 @@ export class GameManager {
 
                     // add bonus health to the player
                     thisPlayer.updateHealth(2);
-                    this.scene.events.emit('playerUpdateHealth', playerId, thisPlayer.health);
+                    this.scene.events.emit('playerUpdateHealth', thisPlayer.health);
 
                 } else {
 
@@ -129,7 +129,7 @@ export class GameManager {
 
                     // monster auto-attacks players back
                     thisPlayer.updateHealth( -thisMonster.attack )
-                    this.scene.events.emit('playerUpdateHealth', playerId, thisPlayer.health);
+                    this.scene.events.emit('playerUpdateHealth', thisPlayer.health);
                     this.scene.events.emit('monsterUpdateHealth', monsterId, thisMonster.health);
                     
                     // TODO: do the health check somewhere else?

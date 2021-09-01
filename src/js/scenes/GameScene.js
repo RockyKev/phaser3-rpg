@@ -78,8 +78,7 @@ export class GameScene extends Phaser.Scene {
             });
         });
 
-        // TODO: playerId not being used?
-        this.events.on('playerUpdateHealth', (playerId, health) => {
+        this.events.on('playerUpdateHealth', (health) => {
             if (health < this.playerHealth) {
                 this.playerDeathAudio.play();
             }
