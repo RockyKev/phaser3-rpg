@@ -9,21 +9,43 @@ export class UIScene extends Phaser.Scene {
   }
 
   create() {
-    this.setupUiElements();
+    this.setupUIElements();
     this.setupEvents();
   }
 
-  setupUiElements() {
-    // create the score text game object
-    this.scoreText = this.add.text(35, 8, 'Coins: 0', { fontSize: '16px', fill: '#fff' });
-    // creaet coin icon
+  setupUIElements() {
+    // create the score text game object and coin icon
+    this.scoreText = this.add.text(36, 8, 'Coins: 0', { fontSize: '16px', fill: '#fff' });
     this.coinIcon = this.add.image(15, 15, 'items', 3);
+
+    this.playerHealthBar = this.add.graphics();
   }
 
   setupEvents() {
+    // TODO: change this name
     // listen for the updateScore event from the game scene
     this.gameScene.events.on('updateScore', (score) => {
       this.scoreText.setText(`Coins: ${score}`);
     });
+
+    // listen for the updateHealth event from the game scene
+    this.gameScene.events.on('updateUIHealth', (player) => {
+
+      let hb = {
+        width: 64 * 4,
+        height: 12,
+        x: 140,
+        y: 10
+    }
+
+      this.playerHealthBar.clear();
+      this.playerHealthBar.fillStyle(0xffffff, 1);
+      this.playerHealthBar.fillRect(hb.x, hb.y, hb.width, hb.height);
+
+      this.playerHealthBar.fillGradientStyle(0xff0000, 0xffffff, 4);
+      this.playerHealthBar.fillRect(hb.x, hb.y, hb.width * (player.health / player.maxHealth), hb.height)
+
+    });
+
   }
 }

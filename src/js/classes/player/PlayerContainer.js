@@ -53,6 +53,25 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
 
     // TODO: This shit is bananas
     update(cursors) {
+        // this.body.setVelocity(0);
+
+        // handles movement
+        this.updateMovement(cursors);
+
+        // handles attacking
+        if (Phaser.Input.Keyboard.JustDown(cursors.space)) {
+            this.initiateAttack(true);
+        }
+
+        // handles weapon animation
+        this.updateWeaponAnimation();
+
+        // update player’s health bar
+        this.updateHealthBar();  
+    }
+
+
+    updateMovement(cursors) {
         this.body.setVelocity(0);
 
         const key = {
@@ -60,7 +79,6 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
             PRESS_RIGHT: cursors.right.isDown,
             PRESS_UP: cursors.up.isDown,
             PRESS_DOWN: cursors.down.isDown,
-            PRESS_ATTACK: Phaser.Input.Keyboard.JustDown(cursors.space)
         };
 
         const weaponPosition = {
@@ -94,29 +112,16 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
             this.weapon.setPosition(...weaponPosition.DOWN)
         }
 
-        // ATTACKING
+    }
 
-        if (key.PRESS_ATTACK && !this.playerAttacking) {
-            this.weapon.alpha = 1;
-            this.playerAttacking = true;
-            this.attackAudio.play();
-
-            this.scene.time.delayedCall(150, () => {
-                this.weapon.alpha = 0;
-                this.playerAttacking = false;
-                this.swordHit = false;
-            }, [], this)
-        }
-
-
-
-        // TODO: Fix this
+    updateWeaponAnimation() {
         if (this.playerAttacking) {
 
             // Attack animation
             this.weapon.angle = (this.weapon.flipX) ? (this.weapon.angle - 10) : (this.weapon.angle + 10)
 
         } else {
+
             // X direction - moving with the weapon
             if (this.currentDirection === direction.DOWN) {
                 this.weapon.setAngle(-270);
@@ -131,33 +136,34 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
             if (this.currentDirection === direction.LEFT) {
                 this.weapon.flipX = true;
             }
-
-
         }
+    }
 
+    initiateAttack(attackPressed) {
 
-        this.updateHealthBar();  // update player’s health bar
+        console.log(this.currentDirection);
+        if (attackPressed && !this.playerAttacking) {
+            this.weapon.alpha = 1;
+            this.playerAttacking = true;
+            this.attackAudio.play();
+
+            this.scene.time.delayedCall(150, () => {
+                this.weapon.alpha = 0;
+                this.playerAttacking = false;
+                this.swordHit = false;
+            }, [], this)
+        }
+ 
     }
 
     // health bar
     createhealthBar() {
         this.healthBar = this.scene.add.graphics();
         this.updateHealthBar();
-
     }
 
     updateHealthBar() {
-        this.healthBar.clear();
-
-        // this is the white part behind the healthbar
-        // TODO: Make player Healthbar on HUD
-        this.healthBar.fillStyle(0xffffff, 1);
-        this.healthBar.fillRect(this.x - 32, this.y - 40, 64, 5);
-
-        // this is the health itself
-        this.healthBar.fillGradientStyle(0xff0000, 0xffffff, 4);
-        this.healthBar.fillRect(this.x - 32, this.y - 40, 64 * (this.health / this.maxHealth), 5)
-
+        this.scene.events.emit('updateUIHealth', this);
     }
 
     updateHealth(health) {

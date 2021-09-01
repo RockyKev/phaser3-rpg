@@ -119,8 +119,6 @@ export class GameScene extends Phaser.Scene {
         // check for collisions between player and wall objects
 
         // check for collisions beteen player and tiled block layer
-        // DOES THIS WORK?
-
         this.physics.add.collider(this.player, this.map.blockedLayer);
 
         // check for overlaps between player and chest game objects
