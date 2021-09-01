@@ -51,9 +51,7 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
         this.createhealthBar();
     }
 
-    // TODO: This shit is bananas
     update(cursors) {
-        // this.body.setVelocity(0);
 
         // handles movement
         this.updateMovement(cursors);
@@ -141,7 +139,6 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
 
     initiateAttack(attackPressed) {
 
-        console.log(this.currentDirection);
         if (attackPressed && !this.playerAttacking) {
             this.weapon.alpha = 1;
             this.playerAttacking = true;

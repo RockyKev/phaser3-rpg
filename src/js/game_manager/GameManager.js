@@ -89,7 +89,7 @@ export class GameManager {
                 // update player gold
                 thePlayer.updateGold(thisChest.gold);
 
-                this.scene.events.emit('updateScore', thePlayer.gold)
+                this.scene.events.emit('updateUIGold', thePlayer.gold)
 
                 this.scene.events.emit('chestRemoved', chestId);
                 this.sceneSpawners[thisChest.spawnerId].removeObject(chestId);
@@ -113,7 +113,7 @@ export class GameManager {
                     console.log("this sceneSpawners", this.sceneSpawners)
                     // update score
                     thisPlayer.updateGold(thisMonster.gold);
-                    this.scene.events.emit('updateScore', thisPlayer.gold)
+                    this.scene.events.emit('updateUIGold', thisPlayer.gold)
 
                     // remove it
                     this.scene.events.emit('monsterRemoved', monsterId);
@@ -136,7 +136,7 @@ export class GameManager {
                     if (thisPlayer.health <= 0) {
                         
                         thisPlayer.updateGold( parseInt(-thisPlayer.gold / 2));
-                        this.scene.events.emit('updateScore', thisPlayer.gold);
+                        this.scene.events.emit('updateUIGold', thisPlayer.gold);
 
                         // respawn the player
                         thisPlayer.respawnInstance();

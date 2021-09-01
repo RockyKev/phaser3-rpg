@@ -23,8 +23,8 @@ export class UIScene extends Phaser.Scene {
 
   setupEvents() {
     // TODO: change this name
-    // listen for the updateScore event from the game scene
-    this.gameScene.events.on('updateScore', (score) => {
+    // listen for the updateUIGold event from the game scene
+    this.gameScene.events.on('updateUIGold', (score) => {
       this.scoreText.setText(`Coins: ${score}`);
     });
 
