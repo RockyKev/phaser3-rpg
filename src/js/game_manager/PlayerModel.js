@@ -12,8 +12,6 @@ export class PlayerModel {
         const location = this.spawnLocations[Math.floor(Math.random() * this.spawnLocations.length)];
 
         [this.x, this.y] = location; 
-        console.log("player this", this)
-
     }
     
     updateGold(gold) {
@@ -28,15 +26,14 @@ export class PlayerModel {
             this.health = this.maxHealth; 
         }
 
-        console.log("PLAYER HEALTH", this.health);
+        // console.log("PLAYER HEALTH", this.health);
     }
 
     respawnInstance() {
         this.health = this.maxHealth;
         const location = this.spawnLocations[Math.floor(Math.random() * this.spawnLocations.length)];
         [this.x, this.y] = [ location[0] * 2, location[1] * 2];
-        console.log("this-x", this.x);
-
+        // console.log("this-x", this.x);
     }
 
 }

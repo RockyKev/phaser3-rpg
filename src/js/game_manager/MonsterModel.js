@@ -23,42 +23,52 @@ export class MonsterModel {
     }
 
     move() {
-        const randomPosition = randomNumber(1, 8);
+        const positions = [
+          'up',
+          'up-right',
+          'right', 
+          'down-right',
+          'down',
+          'down-left',
+          'left',
+          'up-left'
+        ]
+        
+        const randomPosition = positions[randomNumber(1, 8)];
         const distance = 64;
-
-        // TODO: WTF IS THIS.
+ 
         switch (randomPosition) {
-            case 1:
-              this.x += distance;
-              break;
-            case 2:
-              this.x -= distance;
-              break;
-            case 3:
-              this.y += distance;
-              break;
-            case 4:
-              this.y -= distance;
-              break;
-            case 5:
-              this.x += distance;
-              this.y += distance;
-              break;
-            case 6:
-              this.x += distance;
-              this.y -= distance;
-              break;
-            case 7:
-              this.x -= distance;
-              this.y += distance;
-              break;
-            case 8:
-              this.x -= distance;
-              this.y -= distance;
-              break;
-            default:
-              break;
-          }
-
+          case "left":
+            this.x += distance;
+            break;
+          case "right":
+            this.x -= distance;
+            break;
+          case "up":
+            this.y += distance;
+            break;
+          case "down":
+            this.y -= distance;
+            break;
+          case "up-right":
+            this.x += distance;
+            this.y += distance;
+            break;
+          case "down-right":
+            this.x += distance;
+            this.y -= distance;
+            break;
+          case "up-left":
+            this.x -= distance;
+            this.y += distance;
+            break;
+          case "down-right":
+            this.x -= distance;
+            this.y -= distance;
+            break;
+          default:
+            break;
+        }
+  
     }
 }
