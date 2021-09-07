@@ -29,6 +29,8 @@ export class GameScene extends Phaser.Scene {
     createGameManager() {
         // TODO: When does an event appear in GameScenes VS GameManager?
         // maybe when the scene needs to be cleaned.
+
+        // TODO: Create a addEventListener method?
         this.events.on('spawnPlayer', (playerObject) => {
             this.createPlayer(playerObject);
             this.addCollisions();
@@ -52,8 +54,9 @@ export class GameScene extends Phaser.Scene {
             });
         });
 
-        // make monster inactive on event monsterRemoved
+  
         this.events.on('monsterRemoved', (monsterId) => {
+            // make monster inactive on event monsterRemoved
             const monsterGroup = this.monsterGroup.getChildren();
 
             monsterGroup.forEach((monster) => {

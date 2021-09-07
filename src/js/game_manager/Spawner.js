@@ -103,7 +103,8 @@ export class Spawner {
         this.deleteObject(id);
     }
 
-    // This should be in the game manager?
+    // TODO: This should be in the game manager?
+    // Maybe this is more to initialize them AI, but for now... it's just moving.
     moveMonsters() {
         this.moveMonsterInterval = setInterval(() => {
             this.objectsCreated.forEach((monster) => {

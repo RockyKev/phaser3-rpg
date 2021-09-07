@@ -27,9 +27,10 @@ export class GameManager {
     }
 
     parseMapData() {
-        // The parseMapData method will be used to parse the layer data that was exported from Tiled, which will be used to generate the three layers. I
+        // The parseMapData method will be used to parse the layer data that was exported from Tiled, which will be used to generate the three layers. 
 
         // console.log(this.mapData); Will show all the objects made in Tiled.
+        console.log("mapdata", this.mapData)
 
         for (let layer of this.mapData) {
 
@@ -69,6 +70,55 @@ export class GameManager {
             }
         }
     }
+
+    setupSpawners() {
+        const monsterLimit = 4;
+        const chestLimit = 4;
+
+        console.log("this.locationsOfChests", this.locationsOfChests)
+
+        // TODO: WTF is this code?
+        Object.keys(this.locationsOfChests).forEach((key) => {
+            const config = {
+                spawnInterval: 3000,
+                limit: chestLimit,
+                objectType: SpawnerType.CHEST,
+                id: `chest-${key}`,
+            };
+            // console.log(this.locationsOfChests);
+
+            const spawner = new Spawner(
+                config,
+                this.locationsOfChests[key],
+                this.addChest.bind(this),
+                this.deleteChest.bind(this)
+            );
+
+            this.sceneSpawners[spawner.id] = spawner;
+        });
+
+        // monsters version
+        Object.keys(this.locationsOfMonsters).forEach((key) => {
+            const config = {
+                spawnInterval: 3000,
+                limit: monsterLimit,
+                objectType: SpawnerType.MONSTER,
+                id: `monster-${key}`,
+            };
+
+            const spawner = new Spawner(
+                config,
+                this.locationsOfMonsters[key],
+                this.addMonster.bind(this),
+                this.deleteMonster.bind(this),
+                this.moveMonsters.bind(this)
+            );
+
+            // console.log(spawner);
+            this.sceneSpawners[spawner.id] = spawner;
+        });
+    }
+
 
     setupEventListener() {
         // TODO: When is it a GameManager event, and when is it a GameScene event? 
@@ -150,53 +200,6 @@ export class GameManager {
 
     moveMonsters() {
         this.scene.events.emit('monsterMovement', this.sceneMonsters);
-    }
-
-    // The goal of this code is to declare all the spawners for monsters and chests
-    setupSpawners() {
-        const monsterLimit = 4;
-        const chestLimit = 4;
-
-        // TODO: WTF is this code?
-        Object.keys(this.locationsOfChests).forEach((key) => {
-            const config = {
-                spawnInterval: 3000,
-                limit: chestLimit,
-                objectType: SpawnerType.CHEST,
-                id: `chest-${key}`,
-            };
-            // console.log(this.locationsOfChests);
-
-            const spawner = new Spawner(
-                config,
-                this.locationsOfChests[key],
-                this.addChest.bind(this),
-                this.deleteChest.bind(this)
-            );
-
-            this.sceneSpawners[spawner.id] = spawner;
-        });
-
-        // monsters version
-        Object.keys(this.locationsOfMonsters).forEach((key) => {
-            const config = {
-                spawnInterval: 3000,
-                limit: monsterLimit,
-                objectType: SpawnerType.MONSTER,
-                id: `monster-${key}`,
-            };
-
-            const spawner = new Spawner(
-                config,
-                this.locationsOfMonsters[key],
-                this.addMonster.bind(this),
-                this.deleteMonster.bind(this),
-                this.moveMonsters.bind(this)
-            );
-
-            // console.log(spawner);
-            this.sceneSpawners[spawner.id] = spawner;
-        });
     }
 
     spawnPlayer() {

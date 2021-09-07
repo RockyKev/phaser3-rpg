@@ -1,9 +1,5 @@
 # Phaser 3 RPG
 
-
-## My notes about Phaser RPG.
-
-
 ## Related Repos
 
 Side-scroller: https://github.com/RockyKev/phaser3-platformer
@@ -16,16 +12,39 @@ Side-scroller: https://github.com/RockyKev/phaser3-platformer
 
 It has been updated to use ES modules. 
 
-## Tasks and : 
+## Tasks:
 
 [] - update and handle all the TODOS
 [] - change image to Link.
 [] - change map to temporary Zelda
 [] - properly use ES Modules and remove all the extra script calls. 
 
-## Lesson notes
+## Random Information
 
-## Lesson 30
+### How does Tiled work
+
+The Rogue-like version:
+Tiled and the `resources/assets/level/large_level.tmx` file.
+
+It's broken into five layers.
+
+* player_locations
+* monster_locations
+* chest_locations
+* blocked
+* bottom
+
+monster_locations - How this works:
+
+* It's a single tile graphic, that gets replaced.
+* There's a custom property `spawner: 1`. (Well, 1 to 6)
+* In the GameManager->parseMapData(): It groups all the spawners together. So 6 groups of spawners, that contain `x` `y` data. And it randomly selects which one to generate a monster to.
+
+
+
+
+
+### Lesson 30
 > A benefit of having the monsters in a group is, you will be able to use this runChildUpdate property that Phaser has. This property is set to false by default. However, if there is an update method defined on that class, Phaser will automatically run that method for you if you set runChildUpdate property to true.
 
 ```
