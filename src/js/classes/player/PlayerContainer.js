@@ -1,11 +1,11 @@
 import { Player } from './Player.js';
 
 const direction = {
-    RIGHT: 'RIGHT', 
-    LEFT: 'LEFT', 
-    UP: 'UP', 
-    DOWN: 'DOWN'
-}
+    RIGHT: 'RIGHT',
+    LEFT: 'LEFT',
+    UP: 'UP',
+    DOWN: 'DOWN',
+};
 export class PlayerContainer extends Phaser.GameObjects.Container {
     constructor({scene, x, y, key, frame, health, maxHealth, id, attackAudio}) {
         super(scene, x, y);
@@ -13,15 +13,15 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
         this.velocity = 400; // DEFAULT was 160 -- the velocity when moving our player
         this.currentDirection = direction.RIGHT;
         this.playerAttacking = false;
-        this.flipX = true; 
+        this.flipX = true;
         this.swordHit = false;
 
         // health and ID
         this.health = health;
-        this.maxHealth = maxHealth; 
-        this.id = id; 
+        this.maxHealth = maxHealth;
+        this.id = id;
 
-        this.attackAudio = attackAudio; 
+        this.attackAudio = attackAudio;
 
         // set the size of our container
         this.setSize(64, 64);
@@ -40,6 +40,43 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
         this.player = new Player(this.scene, 0, 0, key, frame);
         this.add(this.player);
 
+        // TODO: create Link animation
+        // https://phaser.io/examples/v3/view/animation/create-animation-from-sprite-sheet
+        this.scene.anims.create({
+            key: 'walkSide',
+            frames: this.scene.anims.generateFrameNames('link', {
+                suffix: '.png',
+                start: 18,
+                end: 24,
+            }),
+            frameRate: 7,
+            repeat: -1,
+        });
+
+        this.scene.anims.create({
+            key: 'walkUp',
+            frames: this.scene.anims.generateFrameNames('link', {
+                suffix: '.png',
+                start: 1,
+                end: 8,
+                zeroPad: 2,
+            }),
+            frameRate: 7,
+            repeat: -1,
+        });
+
+        this.scene.anims.create({
+            key: 'walkDown',
+            frames: this.scene.anims.generateFrameNames('link', {
+                suffix: '.png',
+                start: 9,
+                end: 17,
+                zeroPad: 2
+            }),
+            frameRate: 7,
+            repeat: -1,
+        });
+
         // create the weapon game object
         this.weapon = this.scene.add.image(40, 0, 'items', 4);
         this.scene.add.existing(this.weapon);
@@ -52,7 +89,6 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
     }
 
     update(cursors) {
-
         // handles movement
         this.updateMovement(cursors);
 
@@ -65,9 +101,8 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
         this.updateWeaponAnimation();
 
         // update player’s health bar
-        this.updateHealthBar();  
+        this.updateHealthBar();
     }
-
 
     updateMovement(cursors) {
         this.body.setVelocity(0);
@@ -80,57 +115,74 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
         };
 
         const weaponPosition = {
-            RIGHT: [40, 0], 
-            LEFT: [-40, 0], 
-            UP: [0, -40], 
-            DOWN: [0, 40]
-        }
+            RIGHT: [40, 0],
+            LEFT: [-40, 0],
+            UP: [0, -40],
+            DOWN: [0, 40],
+        };
 
         // MOVEMENT - Y direction
         if (key.PRESS_LEFT) {
             this.body.setVelocityX(-this.velocity);
-            this.currentDirection = direction.LEFT; 
-            this.weapon.setPosition(...weaponPosition.LEFT)
-            this.player.flipX = false;
+            this.currentDirection = direction.LEFT;
+            this.weapon.setPosition(...weaponPosition.LEFT);
         } else if (key.PRESS_RIGHT) {
             this.body.setVelocityX(this.velocity);
-            this.currentDirection = direction.RIGHT; 
-            this.weapon.setPosition(...weaponPosition.RIGHT)
-            this.player.flipX = true;
+            this.currentDirection = direction.RIGHT;
+            this.weapon.setPosition(...weaponPosition.RIGHT);
         }
 
         // MOVEMENT - X direction
         if (key.PRESS_UP) {
             this.body.setVelocityY(-this.velocity);
-            this.currentDirection = direction.UP; 
-            this.weapon.setPosition(...weaponPosition.UP)
+            this.currentDirection = direction.UP;
+            this.weapon.setPosition(...weaponPosition.UP);
         } else if (key.PRESS_DOWN) {
             this.body.setVelocityY(this.velocity);
-            this.currentDirection = direction.DOWN; 
-            this.weapon.setPosition(...weaponPosition.DOWN)
+            this.currentDirection = direction.DOWN;
+            this.weapon.setPosition(...weaponPosition.DOWN);
         }
 
+        // TODO: Organize the animations
+        if (key.PRESS_LEFT) {
+            this.player.flipX = false;
+            this.player.anims.play('walkSide', true);
+        } else if (key.PRESS_RIGHT) {
+            this.player.flipX = true;
+            this.player.anims.play('walkSide', true);
+        } else if (key.PRESS_UP) {
+            this.player.anims.play('walkUp', true);
+        } else if (key.PRESS_DOWN) {
+            this.player.anims.play('walkDown', true);
+        } else {
+            this.player.anims.stop();
+
+            // return to first frame
+            if (this.player.anims.currentAnim) {
+                this.player.anims.setCurrentFrame(this.player.anims.currentAnim.frames[0]);            
+            }
+
+        }
     }
 
     updateWeaponAnimation() {
         if (this.playerAttacking) {
-
             // Attack animation
-            this.weapon.angle = (this.weapon.flipX) ? (this.weapon.angle - 10) : (this.weapon.angle + 10)
-
+            this.weapon.angle = this.weapon.flipX
+                ? this.weapon.angle - 10
+                : this.weapon.angle + 10;
         } else {
-
             // X direction - moving with the weapon
             if (this.currentDirection === direction.DOWN) {
                 this.weapon.setAngle(-270);
             } else if (this.currentDirection === direction.UP) {
                 this.weapon.setAngle(-90);
             } else {
-                this.weapon.setAngle(0)
+                this.weapon.setAngle(0);
             }
 
             // Y direction - flipping the weapon
-            this.weapon.flipX = false; 
+            this.weapon.flipX = false;
             if (this.currentDirection === direction.LEFT) {
                 this.weapon.flipX = true;
             }
@@ -138,7 +190,6 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
     }
 
     initiateAttack(attackPressed) {
-
         if (attackPressed && !this.playerAttacking) {
             this.weapon.alpha = 1;
             this.playerAttacking = true;
@@ -150,7 +201,6 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
                 this.swordHit = false;
             }, [], this)
         }
- 
     }
 
     // health bar
@@ -164,15 +214,13 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
     }
 
     updateHealth(health) {
-        this.health = health; 
+        this.health = health;
         this.updateHealthBar();
     }
 
     respawn(playerObject) {
-        this.health = playerObject.health; 
+        this.health = playerObject.health;
         this.setPosition(playerObject.x, playerObject.y);
         this.updateHealthBar();
     }
-
-
 }

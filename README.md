@@ -14,8 +14,8 @@ It has been updated to use ES modules.
 
 ## Tasks:
 
-[] - update and handle all the TODOS
-[] - change image to Link.
+[x] - update and handle all the TODOS
+[x] - change image to Link and walk
 [] - change map to temporary Zelda
 [] - properly use ES Modules and remove all the extra script calls. 
 
@@ -58,6 +58,73 @@ update() {
 }
 ```
 
+### Using the cursor to switch between animations
+This is probably the best example of it live:
+https://labs.phaser.io/edit.html?src=src/tilemap/switching%20tilesets.js
+
+1. import the spritesheet
+
+```js
+    this.load.spritesheet('player', 'assets/sprites/spaceman.png', { frameWidth: 16, frameHeight: 16 });
+
+    // Note: If you're using an atlas, it's a bit different.
+    this.load.atlas('link', 'src/images/link-sheet.png', 'src/images/link-sheet.json');
+```
+
+2. Make sure you're using a type sprite, and not a image.
+
+Image doesn't have the animation manager. Makes them lighter.
+
+3. create the animation
+```js
+// for generic sprites
+this.anims.create({
+    key: 'left',
+    frames: this.anims.generateFrameNumbers('player', { start: 8, end: 9 }),
+    frameRate: 10,
+    repeat: -1
+});
+
+// For atlas
+this.anims.create({
+    key: 'walkSide',
+    frames: this.anims.generateFrameNames('link', {
+        suffix: '.png',
+        start: 18,
+        end: 24,
+    }),
+    frameRate: 7,
+    repeat: -1,
+});
+```
+
+4. Tie the movement to the animation
+
+In the example below, the player is `this.player`,  which is managing it's animation.
+
+```js
+if (key.PRESS_LEFT) {
+        this.player.flipX = false;
+        this.player.anims.play('walkSide', true);
+    } else if (key.PRESS_RIGHT) {
+        this.player.flipX = true;
+        this.player.anims.play('walkSide', true);
+    } else if (key.PRESS_UP) {
+        this.player.anims.play('walkUp', true);
+    } else if (key.PRESS_DOWN) {
+        this.player.anims.play('walkDown', true);
+    } else {
+        this.player.anims.stop();
+
+        // return to first frame
+        if (this.player.anims.currentAnim) {
+            this.player.anims.setCurrentFrame(this.player.anims.currentAnim.frames[0]);            
+        }
+
+    }
+
+```
+
 ## Key terms
 
 **Collider**
@@ -77,6 +144,16 @@ Scene
 Animation
 Tilemap 
 Container (in Phaser terms)
+
+**Sprite Animation**
+
+It's when you use a sprite sheet, and break them into a specific tile height/width that turns them into frames.
+Then run the frames.
+
+A code example: https://labs.phaser.io/edit.html?src=src/animation/chained%20animation.js
+
+
+https://www.thepolyglotdeveloper.com/2020/07/animate-spritesheets-phaser-game/
 
 **setPosition() vs this.physics.moveToObject()**
 In addition to using setPosition(), we can use this.physics.moveToObject() to move game objects.
@@ -102,7 +179,14 @@ The reason for that is, you are going to switch your player from an arcade image
 
 ## Random links
 
-### Tiled
+### Phaser Labs
+https://labs.phaser.io/index.html?dir=animation/&q=
+This is where the magic is
+
+The example repo is here: https://github.com/photonstorm/phaser3-examples/tree/master/public/assets
+
+
+### TOOL: Tiled
 Use Tiled -- https://www.mapeditor.org/
 https://medium.com/swlh/grid-based-movement-in-a-top-down-2d-rpg-with-phaser-3-e3a3486eb2fd
 Tiled > New Map > Tile Render order - Right down
@@ -118,6 +202,13 @@ Export as a JSON.
 
 How to use Tiled
 
+### TOOL: Atlas Packer and Animator tool
+https://gammafp.com/tools/
+
+### TOOL: Texture Packer
+http://free-tex-packer.com/
+https://free-tex-packer.com/app/
+Creates tiles/textures
 
 ### Phaser Editor 2D
 Phaser Editor: https://phasereditor2d.itch.io/ide

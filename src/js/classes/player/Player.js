@@ -1,4 +1,4 @@
-export class Player extends Phaser.Physics.Arcade.Image {
+export class Player extends Phaser.Physics.Arcade.Sprite {
   constructor(scene, x, y, key, frame) {
     super(scene, x, y, key, frame);
     this.scene = scene; // the scene this container will be added to
@@ -10,7 +10,6 @@ export class Player extends Phaser.Physics.Arcade.Image {
     this.setImmovable(true);
     this.setScale(2);
     this.scene.add.existing(this);
-
   } 
 }
 

@@ -179,17 +179,19 @@ export class GameScene extends Phaser.Scene {
     }
 
     createPlayer(playerObject) {
+ 
         this.player = new PlayerContainer({
             scene: this,
             x: playerObject.x * 2,
             y: playerObject.y * 2,
-            key: 'characters',
+            key: 'link',
             frame: 0,
             health: playerObject.health,
             maxHealth: playerObject.maxHealth,
             id: playerObject.id,
             attackAudio: this.playerAttackAudio,
         });
+
         // console.log(this.player);
     }
 
