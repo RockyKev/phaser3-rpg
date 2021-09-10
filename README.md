@@ -177,6 +177,52 @@ Finally, the spawner is just a mechanism to control it's spawn behavior. It also
 **Container VS direct image**
 The reason for that is, you are going to switch your player from an arcade image to a container. A container is preferred because now your player objects will be made of two separate sprites. The first will be the player itself, and the second will be the weapon. Instead of having to keep track of these separately, you can easily put them in the container and have that be your player. That way, you can reference both of those game objects relatively easily.
 
+## How to generate tile sets.
+
+This is so freakin' convoluted. WTF.
+
+Okay so:
+1. Get a tileset. Make sure it's like 24x24, 32x32, 64x64.... whatever it is it's even. 
+Use Photoshop or Photopea and turn on grids.
+Save that as a PNG or something with a transparent color.
+
+2. Use something like Tiled and import that PNG.
+Set the tile size to match whatever that tileset size is.
+
+Build the map.
+The generic pattern is: 
+A bottom layer (this is the floor)
+A blocked layer (anything that physically stops movement)
+
+Then object layers. (Player, monsters, chests...)
+
+The bottom/blocked layers have collision on them within Phaser.
+
+
+
+3. Now, export that jawn.
+
+So you'll get this nice json file.
+
+Inside is a `name` attribute. 
+It should be the same name as the file you import as a image.
+
+In the json:
+`"name":"tilesetPNG",`
+
+In the bootScene.js
+`this.load.image('tilesetPNG', 'src/levels/bs-zelda-extruded.png');`
+
+4. Here's where it gets crazy.
+So there's some weird stuff with tiles. Things don't line up?
+Instead, use `https://github.com/sporadic-labs/tile-extruder` to extrude your 32x32 or whatever size.
+If we're doing 32x32, the end result is to something like 34x34.
+
+
+4. Now import that extruded file as the image. Now shit just works?
+
+
+
 ## Random links
 
 ### Phaser Labs
@@ -202,6 +248,15 @@ Export as a JSON.
 
 How to use Tiled
 
+### Extrude your graphics
+https://github.com/sporadic-labs/tile-extruder
+SO the default graphics is 32x32. But then it gets extruded to 34x34.
+Then, like the readme of this package:
+```js
+this.tiles = this.map.addTilesetImage( this.tileSetName,  this.tileSetName, 32, 32, 1, 2);
+```
+
+
 ### TOOL: Atlas Packer and Animator tool
 https://gammafp.com/tools/
 
@@ -213,3 +268,6 @@ Creates tiles/textures
 ### Phaser Editor 2D
 Phaser Editor: https://phasereditor2d.itch.io/ide
 
+
+### Tutorials to check check check it out
+https://medium.com/@michaelwesthadley/modular-game-worlds-in-phaser-3-tilemaps-1-958fc7e6bbd6

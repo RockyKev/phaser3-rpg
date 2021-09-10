@@ -19,6 +19,7 @@ export class Map {
 
         // The first param is the json->tilesets.name 
         this.tiles = this.map.addTilesetImage( this.tileSetName,  this.tileSetName, 32, 32, 1, 2);
+        // this.tiles = this.map.addTilesetImage( this.tileSetName,  this.tileSetName, 32, 32, 0, 1);
         // this.tiles = this.map.addTilesetImage('tilesetPNG', 'tilesetPNG', 32, 32, 1, 2);
         
         // create our background (layer name within JSON)

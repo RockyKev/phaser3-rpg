@@ -19,7 +19,8 @@ export class BootScene extends Phaser.Scene {
         this.load.image('button2', 'src/images/ui/blue_button02.png');
 
         // load the map tileset image
-        this.load.image('tilesetPNG', 'src/levels/background-extruded.png');
+        // this.load.image('tilesetPNG', 'src/levels/background-extruded.png');
+        this.load.image('tilesetPNG', 'src/levels/bs-zelda-extruded.png');
     }
 
     loadSpriteSheets() {
@@ -51,11 +52,16 @@ export class BootScene extends Phaser.Scene {
     }
 
     loadTileMap() {
+        // this.load.tilemapTiledJSON(
+        //     'tilesetJSON',
+        //     'src/levels/large_level2.json'
+        // );
+
+
         this.load.tilemapTiledJSON(
             'tilesetJSON',
-            'src/levels/large_level2.json'
+            'src/levels/zelda_test2.json'
         );
-
     }
 
     create() {
