@@ -35,9 +35,15 @@
                  "gid":806,
                  "height":32,
                  "id":5,
-                 "name":"",
+                 "name":"testdoor1",
+                 "properties":[
+                        {
+                         "name":"goto",
+                         "type":"string",
+                         "value":"old_mans_cave"
+                        }],
                  "rotation":0,
-                 "type":"",
+                 "type":"warp",
                  "visible":true,
                  "width":32,
                  "x":1120,
@@ -47,9 +53,15 @@
                  "gid":806,
                  "height":32,
                  "id":6,
-                 "name":"",
+                 "name":"testdoor2",
+                 "properties":[
+                        {
+                         "name":"goto",
+                         "type":"string",
+                         "value":"monsters_cave"
+                        }],
                  "rotation":0,
-                 "type":"",
+                 "type":"warp",
                  "visible":true,
                  "width":32,
                  "x":64,
@@ -59,9 +71,15 @@
                  "gid":806,
                  "height":32,
                  "id":7,
-                 "name":"",
+                 "name":"testdoor3",
+                 "properties":[
+                        {
+                         "name":"goto",
+                         "type":"string",
+                         "value":"dungeon"
+                        }],
                  "rotation":0,
-                 "type":"",
+                 "type":"warp",
                  "visible":true,
                  "width":32,
                  "x":1920,
