@@ -18,10 +18,10 @@ export class GameManager {
         this.scene = scene;
         this.mapData = mapData;
 
-        this.sceneSpawners = {};
-        this.sceneChests = {};
-        this.sceneMonsters = {};
-        this.scenePlayers = {};
+        this.spawners = {};
+        this.InstancesOfChests = {};
+        this.InstancesOfMonsters = {};
+        this.InstancesOfPlayers = {};
 
         this.locationOfPlayer = [];
         this.locationOfChests = {};
@@ -88,8 +88,8 @@ export class GameManager {
         // The setupEventListener method will be used to create any event listeners that will need to be hooked up to the GameManager object, such as when a player picks up a chest.
 
         this.scene.events.on('pickUpChest', (chestId, playerId) => {
-            const thisChest = this.sceneChests[chestId];
-            const thePlayer = this.scenePlayers[playerId];
+            const thisChest = this.InstancesOfChests[chestId];
+            const thePlayer = this.InstancesOfPlayers[playerId];
 
             if (thisChest && thePlayer) {
 
@@ -99,14 +99,14 @@ export class GameManager {
                 this.scene.events.emit('updateUIGold', thePlayer.gold)
 
                 this.scene.events.emit('chestRemoved', chestId);
-                this.sceneSpawners[thisChest.spawnerId].removeObject(chestId);
+                this.spawners[thisChest.spawnerId].removeObject(chestId);
             }
 
         });
 
         this.scene.events.on('monsterAttacked', (monsterId, playerId) => {
-            const thisMonster = this.sceneMonsters[monsterId];
-            const thisPlayer = this.scenePlayers[playerId];
+            const thisMonster = this.InstancesOfMonsters[monsterId];
+            const thisPlayer = this.InstancesOfPlayers[playerId];
 
             // update the monsterInstance
             if (thisMonster) {
@@ -114,14 +114,14 @@ export class GameManager {
 
                 if (thisMonster.health <= 0) {
 
-                    console.log("this sceneSpawners", this.sceneSpawners)
+                    console.log("this spawners", this.spawners)
                     // update score
                     thisPlayer.updateGold(thisMonster.gold);
                     this.scene.events.emit('updateUIGold', thisPlayer.gold)
 
                     // remove it
                     this.scene.events.emit('monsterRemoved', monsterId);
-                    this.sceneSpawners[thisMonster.spawnerId].removeObject(monsterId);
+                    this.spawners[thisMonster.spawnerId].removeObject(monsterId);
 
                     // add bonus health to the player
                     thisPlayer.updateHealth(2);
@@ -151,9 +151,9 @@ export class GameManager {
         });
 
         this.scene.events.on('destroyEnemy', (monsterId) => {
-            if (this.sceneMonsters[monsterId]) {
-                const sceneMonsters = this.sceneMonsters[monsterId];
-                this.sceneSpawners[sceneMonsters.spawnerId].removeObject(
+            if (this.InstancesOfMonsters[monsterId]) {
+                const InstancesOfMonsters = this.InstancesOfMonsters[monsterId];
+                this.spawners[InstancesOfMonsters.spawnerId].removeObject(
                     monsterId
                 );
             }
@@ -184,7 +184,7 @@ export class GameManager {
                 this.deleteChest.bind(this)
             );
 
-            this.sceneSpawners[spawner.id] = spawner;
+            this.spawners[spawner.id] = spawner;
         });
 
         // monsters version
@@ -205,13 +205,13 @@ export class GameManager {
             );
 
             // console.log(spawner);
-            this.sceneSpawners[spawner.id] = spawner;
+            this.spawners[spawner.id] = spawner;
         });
     }
 
     spawnPlayer() {
         const player = new PlayerModel(this.locationOfPlayer);
-        this.scenePlayers[player.id] = player;
+        this.InstancesOfPlayers[player.id] = player;
 
         this.scene.events.emit('spawnPlayer', player);
     }
@@ -219,31 +219,31 @@ export class GameManager {
 
     // AUTOMATIC ACTIONS
     moveMonsters() {
-        this.scene.events.emit('monsterMovement', this.sceneMonsters);
+        this.scene.events.emit('monsterMovement', this.InstancesOfMonsters);
     }
     
     // METHODS THAT GET BINDED
-    // sceneChests
+    // InstancesOfChests
     addChest(chestId, chest) {
-        this.sceneChests[chestId] = chest;
+        this.InstancesOfChests[chestId] = chest;
         this.scene.events.emit('chestSpawned', chest);
         console.log({ chest });
     }
 
     deleteChest(chestId) {
-        delete this.sceneChests[chestId];
+        delete this.InstancesOfChests[chestId];
     }
 
-    // sceneMonsters
+    // InstancesOfMonsters
     addMonster(monsterId, monster) {
-        this.sceneMonsters[monsterId] = monster;
+        this.InstancesOfMonsters[monsterId] = monster;
         this.scene.events.emit('monsterSpawned', monster);
         // console.log({ monster });
         console.log("addMonster", monster );
     }
 
     deleteMonster(monsterId) {
-        delete this.sceneMonsters[monsterId];
+        delete this.InstancesOfMonsters[monsterId];
     }
 
 }

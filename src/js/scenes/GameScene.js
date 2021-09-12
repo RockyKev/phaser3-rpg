@@ -85,13 +85,7 @@ export class GameScene extends Phaser.Scene {
             volume: 0.2,
         };
 
-
-
         this.sfxGoldPickup = this.sound.add('goldSound', defaultOpts);
-        // this.sfxPlayerAttack = this.sound.add('playerAttack', {
-        //     loop: false,
-        //     volume: 0.01,
-        // });
         this.sfxPlayerAttack = this.sound.add('playerAttack', defaultOpts);
         this.sfxPlayerDamage = this.sound.add('playerDamage', defaultOpts);
         this.sfxPlayerDeath = this.sound.add('playerDeath', defaultOpts);
@@ -174,15 +168,15 @@ export class GameScene extends Phaser.Scene {
             this.player.respawn(playerObject);
         });
 
-        this.events.on('monsterMovement', (sceneMonsters) => {
+        this.events.on('monsterMovement', (InstancesOfMonsters) => {
             const monsterGroup = this.monsterGroup.getChildren();
 
             monsterGroup.forEach((monster) => {
-                if (sceneMonsters[monster.id]) {
+                if (InstancesOfMonsters[monster.id]) {
                     // https://photonstorm.github.io/phaser3-docs/Phaser.Physics.Arcade.ArcadePhysics.html#moveToObject__anchor
                     this.physics.moveToObject(
                         monster,
-                        sceneMonsters[monster.id],
+                        InstancesOfMonsters[monster.id],
                         40
                     );
                 }
