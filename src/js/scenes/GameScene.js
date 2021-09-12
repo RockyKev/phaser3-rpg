@@ -73,7 +73,7 @@ export class GameScene extends Phaser.Scene {
             triggerEvent.id = event.name;
 
             // create the 'trigger'
-            this.triggerEventsGroup.add(triggerEvent);
+            this.physicsGroupTriggerEvents.add(triggerEvent);
         }
 
         console.log('Scene THIS', this);
@@ -93,12 +93,12 @@ export class GameScene extends Phaser.Scene {
     }
 
     createGroups() {
-        this.chestGroup = this.physics.add.group();
-        this.monsterGroup = this.physics.add.group();
-        this.triggerEventsGroup = this.physics.add.group();
+        this.physicsGroupChests = this.physics.add.group();
+        this.physicsGroupMonsters = this.physics.add.group();
+        this.physicsGroupTriggerEvents = this.physics.add.group();
 
         // this feature causes update() to run automatically
-        this.monsterGroup.runChildUpdate = true;
+        this.physicsGroupMonsters.runChildUpdate = true;
     }
 
     createGameManager() {
@@ -120,10 +120,10 @@ export class GameScene extends Phaser.Scene {
         });
 
         this.events.on('chestRemoved', (chestId) => {
-            const chestGroup = this.chestGroup.getChildren();
+            const physicsGroupChests = this.physicsGroupChests.getChildren();
 
             // TODO: this is a perfect opt to filter. 
-            chestGroup.forEach((chest) => {
+            physicsGroupChests.forEach((chest) => {
                 if (chest.id === chestId) {
                     chest.makeInactive();
                 }
@@ -132,9 +132,9 @@ export class GameScene extends Phaser.Scene {
 
         this.events.on('monsterRemoved', (monsterId) => {
             // make monster inactive on event monsterRemoved
-            const monsterGroup = this.monsterGroup.getChildren();
+            const physicsGroupMonsters = this.physicsGroupMonsters.getChildren();
 
-            monsterGroup.forEach((monster) => {
+            physicsGroupMonsters.forEach((monster) => {
                 if (monster.id === monsterId) {
                     console.log(
                         `MONSTER DESTROYED: Comparison-> ${monster.id}->${monsterId}`
@@ -147,9 +147,9 @@ export class GameScene extends Phaser.Scene {
         });
 
         this.events.on('monsterUpdateHealth', (monsterId, health) => {
-            const monsterGroup = this.monsterGroup.getChildren();
+            const physicsGroupMonsters = this.physicsGroupMonsters.getChildren();
 
-            monsterGroup.forEach((monster) => {
+            physicsGroupMonsters.forEach((monster) => {
                 if (monster.id === monsterId) {
                     monster.updateHealth(health);
                 }
@@ -169,9 +169,9 @@ export class GameScene extends Phaser.Scene {
         });
 
         this.events.on('monsterMovement', (InstancesOfMonsters) => {
-            const monsterGroup = this.monsterGroup.getChildren();
+            const physicsGroupMonsters = this.physicsGroupMonsters.getChildren();
 
-            monsterGroup.forEach((monster) => {
+            physicsGroupMonsters.forEach((monster) => {
                 if (InstancesOfMonsters[monster.id]) {
                     // https://photonstorm.github.io/phaser3-docs/Phaser.Physics.Arcade.ArcadePhysics.html#moveToObject__anchor
                     this.physics.moveToObject(
@@ -200,12 +200,12 @@ export class GameScene extends Phaser.Scene {
         this.physics.add.collider(this.player, this.map.blockedLayer);
 
         // check for collisions between monster group and tiled block layer
-        this.physics.add.collider(this.monsterGroup, this.map.blockedLayer);
+        this.physics.add.collider(this.physicsGroupMonsters, this.map.blockedLayer);
 
         // check for collision between player's weapon and monster group
         this.physics.add.overlap(
             this.player.weapon,
-            this.monsterGroup,
+            this.physicsGroupMonsters,
             this.enemyOverlap,
             null,
             this
@@ -214,7 +214,7 @@ export class GameScene extends Phaser.Scene {
         // check for overlaps between player and chest game objects
         this.physics.add.overlap(
             this.player,
-            this.chestGroup,
+            this.physicsGroupChests,
             this.collectChest,
             null,
             this
@@ -224,7 +224,7 @@ export class GameScene extends Phaser.Scene {
         // ROCKY
         this.physics.add.overlap(
             this.player,
-            this.triggerEventsGroup,
+            this.physicsGroupTriggerEvents,
             this.triggerEventOverlap,
             null,
             this
@@ -324,7 +324,7 @@ export class GameScene extends Phaser.Scene {
     spawnChest(chestObject) {
         const location = [chestObject.x * 2, chestObject.y * 2];
 
-        let chest = this.chestGroup.getFirstDead();
+        let chest = this.physicsGroupChests.getFirstDead();
 
         if (!chest) {
             chest = new Chest({
@@ -337,7 +337,7 @@ export class GameScene extends Phaser.Scene {
                 id: chestObject.id,
             });
 
-            this.chestGroup.add(chest);
+            this.physicsGroupChests.add(chest);
         } else {
             chest.setPosition(location[0], location[1]);
             chest.makeActive();
@@ -345,7 +345,7 @@ export class GameScene extends Phaser.Scene {
     }
 
     spawnMonster(monsterObject) {
-        let monster = this.monsterGroup.getFirstDead();
+        let monster = this.physicsGroupMonsters.getFirstDead();
         // console.log({monster})
         // console.log({monsterObject});
 
@@ -361,7 +361,7 @@ export class GameScene extends Phaser.Scene {
                 maxHealth: monsterObject.maxHealth,
             });
 
-            this.monsterGroup.add(monster);
+            this.physicsGroupMonsters.add(monster);
         } else {
             monster.id = monsterObject.id;
             monster.health = monsterObject.health;

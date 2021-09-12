@@ -19,12 +19,12 @@ It has been updated to use ES modules.
 [x] - change map to temporary Zelda
 [x] - scale the map closer. Make it 50% bigger.
 [x] - properly use ES Modules and remove all the extra script calls. 
-[] - WAIT ON THIS: rename ID to instance ID 
 [x] - locationOfPlayer -> locationOfPlayer (and all the others)
 [x] - sfxGoldPickup -> to sfxGoldPickup (FUTURE: group them)
 [x] - rename gameManager->sceneMonsters to InstancesOfMonsters
-[] - rename chestGroup, monsterGroup -> physicsGroupChests, physicsGroupMonsters
+[x] - rename chestGroup, monsterGroup -> physicsGroupChests, physicsGroupMonsters
 [] - BUG: I don't think this many monsters are supposed to be generated. Currently generating 4 monsters per spawn. 
+[] - WAIT ON THIS: rename ID to instance ID 
 [] - BUG: you can't pick up new items that are generated. (pick up chest, then pick it up again and it will fail.)
 
 [] - add door transitions
