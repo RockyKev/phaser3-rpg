@@ -16,8 +16,18 @@ It has been updated to use ES modules.
 
 [x] - update and handle all the TODOS
 [x] - change image to Link and walk
-[] - change map to temporary Zelda
+[X] - change map to temporary Zelda
 [] - properly use ES Modules and remove all the extra script calls. 
+[] - add door transitions
+[x] - scale the map closer. Make it 50% bigger.
+[] - add enemies 
+[] - add proper attack damage
+[] - add actual attack graphic
+[] - Make enemies show up in generic spots, not randomized.
+[] - add camera to shift to screens.
+[] - make run button
+[] - create a 'options' page that pauses the game.
+[] - add water animation
 
 ## Random Information
 

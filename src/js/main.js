@@ -5,11 +5,14 @@ import { UIScene } from './scenes/UIScene.js';
 
 var config = {
     type: Phaser.AUTO,
-    // width: 800,
-    // height: 600,
-    width: 1400,
-    height: 800,
+    width: 1600 / 1.35,
+    height: 900 / 1.35,
+    // width: 1200,
+    // height: 700,
     scene: [BootScene, TitleScene, GameScene, UIScene],
+    scale: {
+        mode: Phaser.Scale.FIT,
+    },
     physics: {
         default: 'arcade',
         arcade: {
