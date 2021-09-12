@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from 'https://jspm.dev/uuid';
-import { randomNumber } from './utils.js';
+import { randomNumber } from './utils.js'; // TODO: Delete this
 
 export class MonsterModel {
     constructor({ x, y, gold, spawnerId, frame, health, attack }) {

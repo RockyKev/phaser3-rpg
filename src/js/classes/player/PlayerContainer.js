@@ -78,7 +78,7 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
         });
 
         // create the weapon game object
-        this.weapon = this.scene.add.image(40, 0, 'items', 4);
+        this.weapon = this.scene.add.image(40, 0, 'itemsSpriteSheet', 4);
         this.scene.add.existing(this.weapon);
         this.weapon.setScale(1.5);
         this.scene.physics.world.enable(this.weapon);

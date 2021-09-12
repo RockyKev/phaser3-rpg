@@ -16,18 +16,32 @@ It has been updated to use ES modules.
 
 [x] - update and handle all the TODOS
 [x] - change image to Link and walk
-[X] - change map to temporary Zelda
-[] - properly use ES Modules and remove all the extra script calls. 
-[] - add door transitions
+[x] - change map to temporary Zelda
 [x] - scale the map closer. Make it 50% bigger.
-[] - add enemies 
+[x] - properly use ES Modules and remove all the extra script calls. 
+[] - rename ID to instance ID
+
+[] - add door transitions
+[] - add events. When you walk to certain spots, there's a thing that tells you which territory you are in.
+[] - add dialog boxes. 
+[] - create the 'old man' scenario.
+
+[] - add enemies from Zelda.
+[] - add enemies on the map. Make enemies show up in generic spots, not randomized.
+[] - enemies who walk into you hurt you.
+
+[] - replace life with hearts. 
 [] - add proper attack damage
 [] - add actual attack graphic
-[] - Make enemies show up in generic spots, not randomized.
-[] - add camera to shift to screens.
+[] - add camera blur to edges like in Links Awakening. https://www.youtube.com/watch?v=fxb4VFDgPGY
+[] - add water animation
+
 [] - make run button
 [] - create a 'options' page that pauses the game.
-[] - add water animation
+[] - add a proper title screen.
+[] - transition levels
+[] - save state
+
 
 ## Random Information
 
@@ -134,6 +148,38 @@ if (key.PRESS_LEFT) {
     }
 
 ```
+
+
+### Tiled Layers: Layers Vs Objects
+
+So in Tiled, there are: 
+* layers - which are graphics.
+* objects - which are representatives of the respective object.
+
+Tiled does not save the 'tile' graphic. It only gives you the x,y value.
+
+When you pull it into the game - it's just data. 
+So you'll need to filter it yourself, then attach a graphic to it.
+
+For example:
+
+1. We import the JSON. The chest is on a `chest_locations` layer. 
+2. We also import a spritesheet called `itemsSpriteSheet`.
+3. We do filtering of that JSON to figure out where it goes.
+4. We then bring it into the game via the `chest.js` class, that is generated in the GameScene.
+
+```js
+chest = new Chest({
+        scene: this,
+        x: location[0],
+        y: location[1],
+        key: 'itemsSpriteSheet',
+        frame: 0,
+        coins: chestObject.gold,
+        id: chestObject.id,
+    });
+```
+
 
 ## Key terms
 

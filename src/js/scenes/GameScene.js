@@ -1,8 +1,8 @@
 import { PlayerContainer } from '../classes/player/PlayerContainer.js';
 import { Chest } from '../classes/Chest.js';
+import { Monster } from '../classes/Monster.js';
 import { Map } from '../classes/Map.js';
 import { GameManager } from '../game_manager/GameManager.js';
-import { Monster } from '../classes/Monster.js';
 
 export class GameScene extends Phaser.Scene {
     constructor() {
@@ -24,6 +24,43 @@ export class GameScene extends Phaser.Scene {
 
     update() {
         if (this.player) this.player.update(this.cursors);
+    }
+
+    createMap() {
+        // generate the map graphics
+        this.map = new Map({
+            scene: this,
+            tileMapkey: 'tilesetJSON',
+            tileSetName: 'tilesetPNG',
+            bottomLayerName: 'bottom',
+            blockedLayerName: 'blocked',
+        });
+
+
+    }
+
+    createAudio() {
+        const defaultOpts = {
+            loop: false,
+            volume: 0.2,
+        };
+
+        this.goldPickupAudio = this.sound.add('goldSound', defaultOpts);
+        this.playerAttackAudio = this.sound.add('playerAttack', {
+            loop: false,
+            volume: 0.01,
+        });
+        this.playerDamageAudio = this.sound.add('playerDamage', defaultOpts);
+        this.playerDeathAudio = this.sound.add('playerDeath', defaultOpts);
+        this.monsterDeathAudio = this.sound.add('enemyDeath', defaultOpts);
+    }
+
+    createGroups() {
+        this.chestGroup = this.physics.add.group();
+        this.monsterGroup = this.physics.add.group();
+
+        // this feature causes update() to run automatically
+        this.monsterGroup.runChildUpdate = true;
     }
 
     createGameManager() {
@@ -116,6 +153,12 @@ export class GameScene extends Phaser.Scene {
         this.gameManager.setup();
     }
 
+    // UTILS
+
+    createInput() {
+        this.cursors = this.input.keyboard.createCursorKeys();
+    }
+
     addCollisions() {
         // add a collider between the monster and the blocked layer. That way the monsters won’t be moving over the blocked tiles
         // check for collisions between player and wall objects
@@ -162,21 +205,8 @@ export class GameScene extends Phaser.Scene {
         }
     }
 
-    createAudio() {
-        const defaultOpts = {
-            loop: false,
-            volume: 0.2,
-        };
 
-        this.goldPickupAudio = this.sound.add('goldSound', defaultOpts);
-        this.playerAttackAudio = this.sound.add('playerAttack', {
-            loop: false,
-            volume: 0.01,
-        });
-        this.playerDamageAudio = this.sound.add('playerDamage', defaultOpts);
-        this.playerDeathAudio = this.sound.add('playerDeath', defaultOpts);
-        this.monsterDeathAudio = this.sound.add('enemyDeath', defaultOpts);
-    }
+    // ACTIONS
 
     createPlayer(playerObject) {
  
@@ -195,17 +225,6 @@ export class GameScene extends Phaser.Scene {
         // console.log(this.player);
     }
 
-    createGroups() {
-        this.chestGroup = this.physics.add.group();
-        this.monsterGroup = this.physics.add.group();
-
-        // this feature causes update() to run automatically
-        this.monsterGroup.runChildUpdate = true;
-    }
-
-    createInput() {
-        this.cursors = this.input.keyboard.createCursorKeys();
-    }
 
     collectChest(player, chest) {
         this.goldPickupAudio.play();
@@ -213,15 +232,6 @@ export class GameScene extends Phaser.Scene {
         this.events.emit('pickUpChest', chest.id, player.id);
     }
 
-    createMap() {
-        this.map = new Map({
-            scene: this,
-            tileMapkey: 'tilesetJSON',
-            tileSetName: 'tilesetPNG',
-            bottomLayerName: 'bottom',
-            blockedLayerName: 'blocked',
-        });
-    }
 
     spawnChest(chestObject) {
         const location = [chestObject.x * 2, chestObject.y * 2];
@@ -233,7 +243,7 @@ export class GameScene extends Phaser.Scene {
                 scene: this,
                 x: location[0],
                 y: location[1],
-                key: 'items',
+                key: 'itemsSpriteSheet',
                 frame: 0,
                 coins: chestObject.gold,
                 id: chestObject.id,
@@ -256,7 +266,7 @@ export class GameScene extends Phaser.Scene {
                 scene: this,
                 x: monsterObject.x,
                 y: monsterObject.y,
-                key: 'monsters',
+                key: 'monsterSpritesheet',
                 frame: monsterObject.frame,
                 id: monsterObject.id,
                 health: monsterObject.health,
@@ -268,7 +278,7 @@ export class GameScene extends Phaser.Scene {
             monster.id = monsterObject.id;
             monster.health = monsterObject.health;
             monster.maxHealth = monsterObject.maxHealth;
-            monster.setTexture('monsters', monsterObject.frame);
+            monster.setTexture('monsterSpritesheet', monsterObject.frame);
             monster.setPosition(monsterObject.x, monsterObject.y);
             monster.makeActive();
         }

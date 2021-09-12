@@ -2,7 +2,7 @@
 export class Map {
     constructor({scene, tileMapkey, tileSetName, bottomLayerName, blockedLayerName}) {
 
-        this.tileMapkey = 'tilesetJSON' || tileMapkey;
+        this.tileMapkey = tileMapkey;
         this.tileSetName = tileSetName; 
         this.bottomLayerName = bottomLayerName;
         this.blockedLayerName = blockedLayerName; 

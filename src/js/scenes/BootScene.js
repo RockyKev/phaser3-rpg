@@ -24,7 +24,7 @@ export class BootScene extends Phaser.Scene {
     }
 
     loadSpriteSheets() {
-        this.load.spritesheet('items', 'src/images/items.png', {
+        this.load.spritesheet('itemsSpriteSheet', 'src/images/items.png', {
             frameWidth: 32,
             frameHeight: 32,
         });
@@ -35,7 +35,7 @@ export class BootScene extends Phaser.Scene {
 
         this.load.atlas('link', 'src/images/link-sheet.png', 'src/images/link-sheet.json');
 
-        this.load.spritesheet('monsters', 'src/images/monsters.png', {
+        this.load.spritesheet('monsterSpritesheet', 'src/images/monsters.png', {
             frameWidth: 32,
             frameHeight: 32,
         });

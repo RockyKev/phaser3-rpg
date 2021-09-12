@@ -15,7 +15,7 @@ export class UIScene extends Phaser.Scene {
   setupUIElements() {
     // create the score text game object and coin icon
     this.scoreText = this.add.text(36, 8, 'Coins: 0', { fontSize: '16px', fill: '#fff' });
-    this.coinIcon = this.add.image(15, 15, 'items', 3);
+    this.coinIcon = this.add.image(15, 15, 'itemsSpriteSheet', 3);
 
     this.playerHealthBar = this.add.graphics();
   }

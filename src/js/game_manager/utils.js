@@ -4,10 +4,10 @@ export function randomNumber(min, max) {
 
 
 // enums
-export const SpawnerType = {
+export const SpawnerType = Object.freeze({
     MONSTER: 'MONSTER',
     CHEST: 'CHEST',
-};
+});
 
 
 // In Tiled, the location of an object refers to the location of its bottom left corner.

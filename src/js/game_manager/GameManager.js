@@ -4,6 +4,15 @@ import { SpawnerType } from './utils.js';
 
 // Goal of GameManager
 // This keeps track of all the elements and their IDs. If things aren't created, it makes it.
+
+// This can change based on map? Maybe iduno.
+const mapLayer = Object.freeze({
+    player: 'player_locations',
+    items: 'chest_locations',
+    monsters: 'monster_locations',
+    events: 'event_locations'
+})
+
 export class GameManager {
     constructor(scene, mapData) {
         this.scene = scene;
@@ -17,32 +26,34 @@ export class GameManager {
         this.locationsOfPlayer = [];
         this.locationsOfChests = {};
         this.locationsOfMonsters = {};
+        // this.locationsOfEvents = {};
     }
 
     setup() {
         this.parseMapData();
+        // this.generateEvents();
         this.setupEventListener();
         this.setupSpawners();
         this.spawnPlayer();
     }
 
+
     parseMapData() {
         // The parseMapData method will be used to parse the layer data that was exported from Tiled, which will be used to generate the three layers. 
 
         // console.log(this.mapData); Will show all the objects made in Tiled.
-        console.log("mapdata", this.mapData)
+        // console.log("mapdata", this.mapData)
 
         for (let layer of this.mapData) {
 
-            if (layer.name === 'player_locations') {
+            if (layer.name === mapLayer.player) {
                 
                 layer.objects.forEach((obj) => this.locationsOfPlayer.push([obj.x, obj.y]) );
 
-            } else if (layer.name === 'chest_locations') {
+            } else if (layer.name === mapLayer.items) {
                 // TODO: Maybe MAP?
                 layer.objects.forEach(
                     (obj) => {
-                    // const spawnProps = obj.properties.spawner; // TILED broke this
                     const spawnProps = obj.properties[0].value;
 
                     if (this.locationsOfChests[spawnProps]) {
@@ -54,7 +65,7 @@ export class GameManager {
 
                 })
 
-            } else if (layer.name === 'monster_locations') {
+            } else if (layer.name === mapLayer.monsters) {
 
                 layer.objects.forEach((obj) => {
                     const spawnProps = obj.properties[0].value;
@@ -70,55 +81,6 @@ export class GameManager {
             }
         }
     }
-
-    setupSpawners() {
-        const monsterLimit = 4;
-        const chestLimit = 4;
-
-        console.log("this.locationsOfChests", this.locationsOfChests)
-
-        // TODO: WTF is this code?
-        Object.keys(this.locationsOfChests).forEach((key) => {
-            const config = {
-                spawnInterval: 3000,
-                limit: chestLimit,
-                objectType: SpawnerType.CHEST,
-                id: `chest-${key}`,
-            };
-            // console.log(this.locationsOfChests);
-
-            const spawner = new Spawner(
-                config,
-                this.locationsOfChests[key],
-                this.addChest.bind(this),
-                this.deleteChest.bind(this)
-            );
-
-            this.sceneSpawners[spawner.id] = spawner;
-        });
-
-        // monsters version
-        Object.keys(this.locationsOfMonsters).forEach((key) => {
-            const config = {
-                spawnInterval: 3000,
-                limit: monsterLimit,
-                objectType: SpawnerType.MONSTER,
-                id: `monster-${key}`,
-            };
-
-            const spawner = new Spawner(
-                config,
-                this.locationsOfMonsters[key],
-                this.addMonster.bind(this),
-                this.deleteMonster.bind(this),
-                this.moveMonsters.bind(this)
-            );
-
-            // console.log(spawner);
-            this.sceneSpawners[spawner.id] = spawner;
-        });
-    }
-
 
     setupEventListener() {
         // TODO: When is it a GameManager event, and when is it a GameScene event? 
@@ -198,17 +160,66 @@ export class GameManager {
         });
     }
 
-    moveMonsters() {
-        this.scene.events.emit('monsterMovement', this.sceneMonsters);
+    setupSpawners() {
+        const monsterLimit = 4;
+        const chestLimit = 4;
+
+        console.log("this.locationsOfChests", this.locationsOfChests)
+
+        // TODO: WTF is this code? Potentially switch to maps or use for in 
+        // https://www.reddit.com/r/javascript/comments/8emf94/forin_vs_objectkeys/dxwecvs?utm_source=share&utm_medium=web2x&context=3
+        Object.keys(this.locationsOfChests).forEach((key) => {
+            const config = {
+                spawnInterval: 3000,
+                limit: chestLimit,
+                objectType: SpawnerType.CHEST,
+                id: `chest-${key}`,
+            };
+            // console.log(this.locationsOfChests);
+
+            const spawner = new Spawner(
+                config,
+                this.locationsOfChests[key],
+                this.addChest.bind(this),
+                this.deleteChest.bind(this)
+            );
+
+            this.sceneSpawners[spawner.id] = spawner;
+        });
+
+        // monsters version
+        Object.keys(this.locationsOfMonsters).forEach((key) => {
+            const config = {
+                spawnInterval: 3000,
+                limit: monsterLimit,
+                objectType: SpawnerType.MONSTER,
+                id: `monster-${key}`,
+            };
+
+            const spawner = new Spawner(
+                config,
+                this.locationsOfMonsters[key],
+                this.addMonster.bind(this),
+                this.deleteMonster.bind(this),
+                this.moveMonsters.bind(this)
+            );
+
+            // console.log(spawner);
+            this.sceneSpawners[spawner.id] = spawner;
+        });
     }
 
     spawnPlayer() {
-        // console.log('spawn player starting');
-
         const player = new PlayerModel(this.locationsOfPlayer);
         this.scenePlayers[player.id] = player;
 
         this.scene.events.emit('spawnPlayer', player);
+    }
+
+
+    // AUTOMATIC ACTIONS
+    moveMonsters() {
+        this.scene.events.emit('monsterMovement', this.sceneMonsters);
     }
     
     // METHODS THAT GET BINDED
@@ -227,7 +238,8 @@ export class GameManager {
     addMonster(monsterId, monster) {
         this.sceneMonsters[monsterId] = monster;
         this.scene.events.emit('monsterSpawned', monster);
-        console.log({ monster });
+        // console.log({ monster });
+        console.log("addMonster", monster );
     }
 
     deleteMonster(monsterId) {
