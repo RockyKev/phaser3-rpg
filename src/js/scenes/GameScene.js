@@ -36,7 +36,80 @@ export class GameScene extends Phaser.Scene {
             blockedLayerName: 'blocked',
         });
 
+        // TODO: migrate this to GameManager so it lives inder locationOfEvents
+        // generate the events layer
+        // console.log("maps", this);
+        this.locationsOfEvents = {};
 
+        const eventsLayer = this.map.map.objects.filter(
+            (objectLayer) => objectLayer.name === 'event_locations'
+        );
+        const events = eventsLayer[0].objects;
+
+        // console.log("eventsLayer", eventsLayer)
+        console.log('events', events);
+
+        for (const event of events) {
+            // create the graphic location
+            const eventProps = {
+                x: event.x,
+                y: event.y,
+                eventType: event.type,
+                eventAction: event.properties[0].name,
+                eventValue: event.properties[0].value,
+            };
+
+            this.locationsOfEvents[event.name] = eventProps;
+
+            // create the graphic
+            // x y is doubled -- imaage size is doubled too
+            let graphic = this.add.image(eventProps.x * 2, eventProps.y * 2, 'itemsSpriteSheet', 9);
+            graphic.setScale(2).setOrigin(0,1);
+            console.log("image should be made")
+
+
+            // create the 'trigger'
+
+
+        }
+
+
+
+        //layer = this.map.map.objects
+        //     else if (layer.name === mapLayer.events) {
+
+        //         layer.objects.forEach((obj) => {
+
+        //          // TODO: we might want to check the type of event.
+        //          // Event types SO FAR:
+        //          // warp - takes you to another place. Doors, warpgates, stairs.
+        //          // flag-character - sets a character flag
+        //          // flag-quest - sets a quest event flag
+        //          // flag-instance - sets a instance flag (resets after you leave the area)
+        //          // flag-world - sets a world flag (never resets)
+        //          // dialog - show text
+        //          // display - a visual effect.
+
+        //          const eventName = obj.name;
+
+        //          // console.log('events', eventName);
+        //          // console.log('events obj', obj);
+
+        //          const eventProps = {
+        //              x: obj.x,
+        //              y: obj.y,
+        //              eventType: obj.type,
+        //              eventAction: obj.properties[0].name,
+        //              eventValue: obj.properties[0].value
+        //          };
+
+        //          this.locationsOfEvents[eventName] = eventProps;
+
+        //      });
+
+        //      console.log('this.locationsOfEvents', this.locationsOfEvents);
+        console.log('maps', this);
+        //  }
     }
 
     createAudio() {
@@ -91,7 +164,6 @@ export class GameScene extends Phaser.Scene {
             });
         });
 
-  
         this.events.on('monsterRemoved', (monsterId) => {
             // make monster inactive on event monsterRemoved
             const monsterGroup = this.monsterGroup.getChildren();
@@ -134,7 +206,6 @@ export class GameScene extends Phaser.Scene {
             const monsterGroup = this.monsterGroup.getChildren();
 
             monsterGroup.forEach((monster) => {
-
                 if (sceneMonsters[monster.id]) {
                     // https://photonstorm.github.io/phaser3-docs/Phaser.Physics.Arcade.ArcadePhysics.html#moveToObject__anchor
                     this.physics.moveToObject(
@@ -143,7 +214,6 @@ export class GameScene extends Phaser.Scene {
                         40
                     );
                 }
-
             });
         });
 
@@ -205,11 +275,9 @@ export class GameScene extends Phaser.Scene {
         }
     }
 
-
     // ACTIONS
 
     createPlayer(playerObject) {
- 
         this.player = new PlayerContainer({
             scene: this,
             x: playerObject.x * 2,
@@ -225,13 +293,11 @@ export class GameScene extends Phaser.Scene {
         // console.log(this.player);
     }
 
-
     collectChest(player, chest) {
         this.goldPickupAudio.play();
 
         this.events.emit('pickUpChest', chest.id, player.id);
     }
-
 
     spawnChest(chestObject) {
         const location = [chestObject.x * 2, chestObject.y * 2];

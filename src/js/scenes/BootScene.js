@@ -24,7 +24,7 @@ export class BootScene extends Phaser.Scene {
     }
 
     loadSpriteSheets() {
-        this.load.spritesheet('itemsSpriteSheet', 'src/images/items.png', {
+        this.load.spritesheet('itemsSpriteSheet', 'src/images/items-2.png', {
             frameWidth: 32,
             frameHeight: 32,
         });

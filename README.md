@@ -278,6 +278,18 @@ If we're doing 32x32, the end result is to something like 34x34.
 4. Now import that extruded file as the image. Now shit just works?
 
 
+### Image Origins
+https://phasergames.com/how-to-set-an-image-anchor-point-of-origin-in-phaser-3/
+![](https://i.imgur.com/G4evbvz.png)
+
+### Extrude your graphics
+https://github.com/sporadic-labs/tile-extruder
+SO the default graphics is 32x32. But then it gets extruded to 34x34.
+Then, like the readme of this package:
+```js
+this.tiles = this.map.addTilesetImage( this.tileSetName,  this.tileSetName, 32, 32, 1, 2);
+```
+
 
 ## Random links
 
@@ -304,15 +316,6 @@ Export as a JSON.
 
 How to use Tiled
 
-### Extrude your graphics
-https://github.com/sporadic-labs/tile-extruder
-SO the default graphics is 32x32. But then it gets extruded to 34x34.
-Then, like the readme of this package:
-```js
-this.tiles = this.map.addTilesetImage( this.tileSetName,  this.tileSetName, 32, 32, 1, 2);
-```
-
-
 ### TOOL: Atlas Packer and Animator tool
 https://gammafp.com/tools/
 
@@ -327,3 +330,6 @@ Phaser Editor: https://phasereditor2d.itch.io/ide
 
 ### Tutorials to check check check it out
 https://medium.com/@michaelwesthadley/modular-game-worlds-in-phaser-3-tilemaps-1-958fc7e6bbd6
+
+### Random websites
+https://phasergames.com/phaser-3-snippets/
