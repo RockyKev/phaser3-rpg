@@ -19,8 +19,8 @@ It has been updated to use ES modules.
 [x] - change map to temporary Zelda
 [x] - scale the map closer. Make it 50% bigger.
 [x] - properly use ES Modules and remove all the extra script calls. 
-[] - rename ID to instance ID
-[] - locationsOfPlayer -> locationOfPlayer
+[] - WAIT ON THIS: rename ID to instance ID 
+[x] - locationOfPlayer -> locationOfPlayer (and all the others)
 [] - goldPickupAudio -> to audioGoldPickup (FUTURE: group them)
 [] - rename gameManager->sceneMonsters to InstancesOfMonsters
 [] - rename chestGroup, monsterGroup -> physicsGroupChests, physicsGroupMonsters
@@ -390,3 +390,4 @@ https://medium.com/@michaelwesthadley/modular-game-worlds-in-phaser-3-tilemaps-1
 
 ### Random websites
 https://phasergames.com/phaser-3-snippets/
+https://rexrainbow.github.io/phaser3-rex-notes/docs/site/
