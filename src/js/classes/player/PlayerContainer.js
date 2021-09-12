@@ -10,7 +10,7 @@ export class PlayerContainer extends Phaser.GameObjects.Container {
     constructor({scene, x, y, key, frame, health, maxHealth, id, attackAudio}) {
         super(scene, x, y);
         this.scene = scene; // the scene this container will be added to
-        this.velocity = 400; // DEFAULT was 160 -- the velocity when moving our player
+        this.velocity = 30 * 9; // DEFAULT was 160 -- the velocity when moving our player
         this.currentDirection = direction.RIGHT;
         this.playerAttacking = false;
         this.flipX = true;
