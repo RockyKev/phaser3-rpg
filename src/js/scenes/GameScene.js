@@ -40,7 +40,7 @@ export class GameScene extends Phaser.Scene {
 
 
         // TODO: migrate this to GameManager so it lives under locationOfEvents
-        this.locationsOfTriggerEvents = {};
+        this.locationOfTriggerEvents = {};
 
         const eventsLayer = this.map.map.objects.filter(
             (objectLayer) => objectLayer.name === 'event_locations'
@@ -59,7 +59,7 @@ export class GameScene extends Phaser.Scene {
                 eventValue: event.properties[0].value,
             };
 
-            this.locationsOfTriggerEvents[event.name] = eventProps;
+            this.locationOfTriggerEvents[event.name] = eventProps;
 
             // create the PhysicsGroup Object // x y is doubled -- imaage size is doubled too
             let triggerEvent = this.add.image(
@@ -85,14 +85,17 @@ export class GameScene extends Phaser.Scene {
             volume: 0.2,
         };
 
-        this.goldPickupAudio = this.sound.add('goldSound', defaultOpts);
-        this.playerAttackAudio = this.sound.add('playerAttack', {
-            loop: false,
-            volume: 0.01,
-        });
-        this.playerDamageAudio = this.sound.add('playerDamage', defaultOpts);
-        this.playerDeathAudio = this.sound.add('playerDeath', defaultOpts);
-        this.monsterDeathAudio = this.sound.add('enemyDeath', defaultOpts);
+
+
+        this.sfxGoldPickup = this.sound.add('goldSound', defaultOpts);
+        // this.sfxPlayerAttack = this.sound.add('playerAttack', {
+        //     loop: false,
+        //     volume: 0.01,
+        // });
+        this.sfxPlayerAttack = this.sound.add('playerAttack', defaultOpts);
+        this.sfxPlayerDamage = this.sound.add('playerDamage', defaultOpts);
+        this.sfxPlayerDeath = this.sound.add('playerDeath', defaultOpts);
+        this.sfxMonsterDeath = this.sound.add('enemyDeath', defaultOpts);
     }
 
     createGroups() {
@@ -143,7 +146,7 @@ export class GameScene extends Phaser.Scene {
                         `MONSTER DESTROYED: Comparison-> ${monster.id}->${monsterId}`
                     );
 
-                    this.monsterDeathAudio.play();
+                    this.sfxMonsterDeath.play();
                     monster.makeInactive();
                 }
             });
@@ -161,13 +164,13 @@ export class GameScene extends Phaser.Scene {
 
         this.events.on('playerUpdateHealth', (health) => {
             if (health < this.playerHealth) {
-                this.playerDeathAudio.play();
+                this.sfxPlayerDeath.play();
             }
             this.player.updateHealth(health);
         });
 
         this.events.on('playerRespawn', (playerObject) => {
-            this.playerDeathAudio.play();
+            this.sfxPlayerDeath.play();
             this.player.respawn(playerObject);
         });
 
@@ -251,7 +254,7 @@ export class GameScene extends Phaser.Scene {
 
         // find the locationOfEvents 
         const elementID = elementTouched.id; 
-        const elementData = this.locationsOfTriggerEvents[elementID];
+        const elementData = this.locationOfTriggerEvents[elementID];
         console.log("elementTouched", elementTouched);
 
         if (elementData) {
@@ -309,7 +312,7 @@ export class GameScene extends Phaser.Scene {
             health: playerObject.health,
             maxHealth: playerObject.maxHealth,
             id: playerObject.id,
-            attackAudio: this.playerAttackAudio,
+            attackAudio: this.sfxPlayerAttack,
         });
 
         // console.log(this.player);
@@ -317,7 +320,7 @@ export class GameScene extends Phaser.Scene {
 
     // TODO: refactor this into the playerOverlap function
     collectChest(player, chest) {
-        this.goldPickupAudio.play();
+        this.sfxGoldPickup.play();
 
         this.events.emit('pickUpChest', chest.id, player.id);
     }

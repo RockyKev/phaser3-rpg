@@ -23,9 +23,9 @@ export class GameManager {
         this.sceneMonsters = {};
         this.scenePlayers = {};
 
-        this.locationsOfPlayer = [];
-        this.locationsOfChests = {};
-        this.locationsOfMonsters = {};
+        this.locationOfPlayer = [];
+        this.locationOfChests = {};
+        this.locationOfMonsters = {};
         // this.locationsOfEvents = {};
     }
 
@@ -48,7 +48,7 @@ export class GameManager {
 
             if (layer.name === mapLayer.player) {
                 
-                layer.objects.forEach((obj) => this.locationsOfPlayer.push([obj.x, obj.y]) );
+                layer.objects.forEach((obj) => this.locationOfPlayer.push([obj.x, obj.y]) );
 
             } else if (layer.name === mapLayer.items) {
                 // TODO: Maybe MAP?
@@ -56,11 +56,11 @@ export class GameManager {
                     (obj) => {
                     const spawnProps = obj.properties[0].value;
 
-                    if (this.locationsOfChests[spawnProps]) {
-                    this.locationsOfChests[spawnProps].push([obj.x, obj.y]);
+                    if (this.locationOfChests[spawnProps]) {
+                    this.locationOfChests[spawnProps].push([obj.x, obj.y]);
 
                     } else {
-                        this.locationsOfChests[spawnProps] = [[obj.x, obj.y]];
+                        this.locationOfChests[spawnProps] = [[obj.x, obj.y]];
                     }
 
                 })
@@ -72,10 +72,10 @@ export class GameManager {
 
                     console.log('monster_locations', spawnProps);
 
-                    if (this.locationsOfMonsters[spawnProps]) {
-                        this.locationsOfMonsters[spawnProps].push([obj.x, obj.y]);
+                    if (this.locationOfMonsters[spawnProps]) {
+                        this.locationOfMonsters[spawnProps].push([obj.x, obj.y]);
                       } else {
-                        this.locationsOfMonsters[spawnProps] = [[obj.x, obj.y]];
+                        this.locationOfMonsters[spawnProps] = [[obj.x, obj.y]];
                       }
                 });
             }
@@ -164,22 +164,22 @@ export class GameManager {
         const monsterLimit = 4;
         const chestLimit = 4;
 
-        console.log("this.locationsOfChests", this.locationsOfChests)
+        console.log("this.locationOfChests", this.locationOfChests)
 
         // TODO: WTF is this code? Potentially switch to maps or use for in 
         // https://www.reddit.com/r/javascript/comments/8emf94/forin_vs_objectkeys/dxwecvs?utm_source=share&utm_medium=web2x&context=3
-        Object.keys(this.locationsOfChests).forEach((key) => {
+        Object.keys(this.locationOfChests).forEach((key) => {
             const config = {
                 spawnInterval: 3000,
                 limit: chestLimit,
                 objectType: SpawnerType.CHEST,
                 id: `chest-${key}`,
             };
-            // console.log(this.locationsOfChests);
+            // console.log(this.locationOfChests);
 
             const spawner = new Spawner(
                 config,
-                this.locationsOfChests[key],
+                this.locationOfChests[key],
                 this.addChest.bind(this),
                 this.deleteChest.bind(this)
             );
@@ -188,7 +188,7 @@ export class GameManager {
         });
 
         // monsters version
-        Object.keys(this.locationsOfMonsters).forEach((key) => {
+        Object.keys(this.locationOfMonsters).forEach((key) => {
             const config = {
                 spawnInterval: 3000,
                 limit: monsterLimit,
@@ -198,7 +198,7 @@ export class GameManager {
 
             const spawner = new Spawner(
                 config,
-                this.locationsOfMonsters[key],
+                this.locationOfMonsters[key],
                 this.addMonster.bind(this),
                 this.deleteMonster.bind(this),
                 this.moveMonsters.bind(this)
@@ -210,7 +210,7 @@ export class GameManager {
     }
 
     spawnPlayer() {
-        const player = new PlayerModel(this.locationsOfPlayer);
+        const player = new PlayerModel(this.locationOfPlayer);
         this.scenePlayers[player.id] = player;
 
         this.scene.events.emit('spawnPlayer', player);

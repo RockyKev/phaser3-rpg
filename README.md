@@ -21,7 +21,7 @@ It has been updated to use ES modules.
 [x] - properly use ES Modules and remove all the extra script calls. 
 [] - WAIT ON THIS: rename ID to instance ID 
 [x] - locationOfPlayer -> locationOfPlayer (and all the others)
-[] - goldPickupAudio -> to audioGoldPickup (FUTURE: group them)
+[] - sfxGoldPickup -> to audioGoldPickup (FUTURE: group them)
 [] - rename gameManager->sceneMonsters to InstancesOfMonsters
 [] - rename chestGroup, monsterGroup -> physicsGroupChests, physicsGroupMonsters
 [] - BUG: I don't think this many monsters are supposed to be generated. Currently generating 4 monsters per spawn. 
