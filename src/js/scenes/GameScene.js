@@ -14,9 +14,9 @@ export class GameScene extends Phaser.Scene {
     }
 
     create() {
+        this.createGroups();
         this.createMap();
         this.createAudio();
-        this.createGroups();
         this.createInput();
 
         this.createGameManager();
@@ -36,21 +36,21 @@ export class GameScene extends Phaser.Scene {
             blockedLayerName: 'blocked',
         });
 
-        // TODO: migrate this to GameManager so it lives inder locationOfEvents
-        // generate the events layer
-        // console.log("maps", this);
-        this.locationsOfEvents = {};
+
+
+
+        // TODO: migrate this to GameManager so it lives under locationOfEvents
+        this.locationsOfTriggerEvents = {};
 
         const eventsLayer = this.map.map.objects.filter(
             (objectLayer) => objectLayer.name === 'event_locations'
         );
         const events = eventsLayer[0].objects;
 
-        // console.log("eventsLayer", eventsLayer)
         console.log('events', events);
 
+        // Create the GameScene Object
         for (const event of events) {
-            // create the graphic location
             const eventProps = {
                 x: event.x,
                 y: event.y,
@@ -59,57 +59,24 @@ export class GameScene extends Phaser.Scene {
                 eventValue: event.properties[0].value,
             };
 
-            this.locationsOfEvents[event.name] = eventProps;
+            this.locationsOfTriggerEvents[event.name] = eventProps;
 
-            // create the graphic
-            // x y is doubled -- imaage size is doubled too
-            let graphic = this.add.image(eventProps.x * 2, eventProps.y * 2, 'itemsSpriteSheet', 9);
-            graphic.setScale(2).setOrigin(0,1);
+            // create the PhysicsGroup Object // x y is doubled -- imaage size is doubled too
+            let triggerEvent = this.add.image(
+                eventProps.x * 2, eventProps.y * 2, 
+                'itemsSpriteSheet', 
+                9);
+            triggerEvent.setScale(2).setOrigin(0,1);
             console.log("image should be made")
 
+            // This is using a ID so it can be reused with uuid-4 if it's like rupees or something.
+            triggerEvent.id = event.name;
 
             // create the 'trigger'
-
-
+            this.triggerEventsGroup.add(triggerEvent);
         }
 
-
-
-        //layer = this.map.map.objects
-        //     else if (layer.name === mapLayer.events) {
-
-        //         layer.objects.forEach((obj) => {
-
-        //          // TODO: we might want to check the type of event.
-        //          // Event types SO FAR:
-        //          // warp - takes you to another place. Doors, warpgates, stairs.
-        //          // flag-character - sets a character flag
-        //          // flag-quest - sets a quest event flag
-        //          // flag-instance - sets a instance flag (resets after you leave the area)
-        //          // flag-world - sets a world flag (never resets)
-        //          // dialog - show text
-        //          // display - a visual effect.
-
-        //          const eventName = obj.name;
-
-        //          // console.log('events', eventName);
-        //          // console.log('events obj', obj);
-
-        //          const eventProps = {
-        //              x: obj.x,
-        //              y: obj.y,
-        //              eventType: obj.type,
-        //              eventAction: obj.properties[0].name,
-        //              eventValue: obj.properties[0].value
-        //          };
-
-        //          this.locationsOfEvents[eventName] = eventProps;
-
-        //      });
-
-        //      console.log('this.locationsOfEvents', this.locationsOfEvents);
-        console.log('maps', this);
-        //  }
+        console.log('Scene THIS', this);
     }
 
     createAudio() {
@@ -131,6 +98,7 @@ export class GameScene extends Phaser.Scene {
     createGroups() {
         this.chestGroup = this.physics.add.group();
         this.monsterGroup = this.physics.add.group();
+        this.triggerEventsGroup = this.physics.add.group();
 
         // this feature causes update() to run automatically
         this.monsterGroup.runChildUpdate = true;
@@ -157,6 +125,7 @@ export class GameScene extends Phaser.Scene {
         this.events.on('chestRemoved', (chestId) => {
             const chestGroup = this.chestGroup.getChildren();
 
+            // TODO: this is a perfect opt to filter. 
             chestGroup.forEach((chest) => {
                 if (chest.id === chestId) {
                     chest.makeInactive();
@@ -230,20 +199,8 @@ export class GameScene extends Phaser.Scene {
     }
 
     addCollisions() {
-        // add a collider between the monster and the blocked layer. That way the monsters won’t be moving over the blocked tiles
-        // check for collisions between player and wall objects
-
         // check for collisions beteen player and tiled block layer
         this.physics.add.collider(this.player, this.map.blockedLayer);
-
-        // check for overlaps between player and chest game objects
-        this.physics.add.overlap(
-            this.player,
-            this.chestGroup,
-            this.collectChest,
-            null,
-            this
-        );
 
         // check for collisions between monster group and tiled block layer
         this.physics.add.collider(this.monsterGroup, this.map.blockedLayer);
@@ -256,6 +213,71 @@ export class GameScene extends Phaser.Scene {
             null,
             this
         );
+
+        // check for overlaps between player and chest game objects
+        this.physics.add.overlap(
+            this.player,
+            this.chestGroup,
+            this.collectChest,
+            null,
+            this
+        );
+
+        // check collision over player and event triggers
+        // ROCKY
+        this.physics.add.overlap(
+            this.player,
+            this.triggerEventsGroup,
+            this.triggerEventOverlap,
+            null,
+            this
+        );
+    }
+
+    // This can be used to deal with player overlapping with
+    // Will have to do a diff one for items, or with enemy as well
+    triggerEventOverlap(player, elementTouched) {
+
+
+        //          // TODO: we might want to check the type of event.
+        //          // Event types SO FAR:
+        //          // warp - takes you to another place. Doors, warpgates, stairs.
+        //          // flag-character - sets a character flag
+        //          // flag-quest - sets a quest event flag
+        //          // flag-instance - sets a instance flag (resets after you leave the area)
+        //          // flag-world - sets a world flag (never resets)
+        //          // dialog - show text
+        //          // display - a visual effect.
+
+        // find the locationOfEvents 
+        const elementID = elementTouched.id; 
+        const elementData = this.locationsOfTriggerEvents[elementID];
+        console.log("elementTouched", elementTouched);
+
+        if (elementData) {
+
+            // TODO: Move this to utils.js
+            const EventWarps = {
+                'goto': {
+                    'old_mans_cave': [1000,1000],
+                    'monsters_cave': [1500, 1500], 
+                    'dungeon': [2390, 2500]
+                },
+                'changeScene': {
+            
+                }
+            };
+    
+
+            if (elementData.eventType === 'warp') {
+                const action = elementData.eventAction;
+                const value = elementData.eventValue;
+                const [x, y] = EventWarps[action][value];
+                this.player.setPosition(x, y);
+
+            }
+        }
+
     }
 
     enemyOverlap(weapon, enemy) {
@@ -293,11 +315,14 @@ export class GameScene extends Phaser.Scene {
         // console.log(this.player);
     }
 
+    // TODO: refactor this into the playerOverlap function
     collectChest(player, chest) {
         this.goldPickupAudio.play();
 
         this.events.emit('pickUpChest', chest.id, player.id);
     }
+
+
 
     spawnChest(chestObject) {
         const location = [chestObject.x * 2, chestObject.y * 2];

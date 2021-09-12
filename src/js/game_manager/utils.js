@@ -10,6 +10,24 @@ export const SpawnerType = Object.freeze({
 });
 
 
+// Warps have a eventType, eventAction, eventValue 
+// This allows us to change warps on the fly without having to modify the TILED json. 
+// const [x, y] = EventWarps[eventAction][eventValue];
+// const [x, y] = EventWarps['goto']['old_mans_cave'];
+
+export const EventWarps = {
+    'goto': {
+        'old_mans_cave': [1000, 1000],
+        'monsters_cave': [1500, 1500], 
+        'dungeon': [2390, 2500]
+    },
+    'changeScene': {
+
+    }
+}
+
+
+
 // In Tiled, the location of an object refers to the location of its bottom left corner.
 // In Phaser 3, the default anchor point is the middle of the object.
 // This corrects it.
