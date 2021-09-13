@@ -26,17 +26,42 @@ export class GameManager {
         this.locationOfPlayer = [];
         this.locationOfChests = {};
         this.locationOfMonsters = {};
-        // this.locationsOfEvents = {};
+        this.locationOfTriggerEvents = {};
     }
 
     setup() {
         this.parseMapData();
-        // this.generateEvents();
         this.setupEventListener();
+        this.setupTriggerEvents();
         this.setupSpawners();
         this.spawnPlayer();
     }
 
+    setupTriggerEvents() {
+                // TODO: migrate this to GameManager so it lives under locationOfEvents
+
+                const eventsLayer = this.mapData.filter(
+                    (objectLayer) => objectLayer.name === 'event_locations'
+                );
+        
+                const events = eventsLayer[0].objects;
+        
+                // Create the GameScene Object
+                for (const event of events) {
+                    const eventProps = {
+                        x: event.x,
+                        y: event.y,
+                        eventType: event.type,
+                        eventAction: event.properties[0].name,
+                        eventValue: event.properties[0].value,
+                    };
+        
+                    this.locationOfTriggerEvents[event.name] = eventProps;
+
+                    this.scene.events.emit('spawnTriggerEvents', event);
+        
+                }
+    }
 
     parseMapData() {
         // The parseMapData method will be used to parse the layer data that was exported from Tiled, which will be used to generate the three layers. 

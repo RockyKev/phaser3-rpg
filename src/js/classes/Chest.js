@@ -9,7 +9,7 @@ export class Chest extends Phaser.Physics.Arcade.Image {
 
         // enable physics
         this.scene.physics.world.enable(this);
-        // add the player to our existing scene
+
         this.scene.add.existing(this);
 
         this.setScale(2);

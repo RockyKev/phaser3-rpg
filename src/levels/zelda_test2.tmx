@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.5" tiledversion="1.7.2" orientation="orthogonal" renderorder="right-down" width="64" height="44" tilewidth="32" tileheight="32" infinite="0" nextlayerid="7" nextobjectid="8">
+<map version="1.5" tiledversion="1.7.2" orientation="orthogonal" renderorder="right-down" width="64" height="44" tilewidth="32" tileheight="32" infinite="0" nextlayerid="7" nextobjectid="14">
  <editorsettings>
   <export target="zelda_test2.json" format="json"/>
  </editorsettings>
@@ -153,6 +153,12 @@
   <object id="7" name="testdoor3" type="warp" gid="806" x="1920" y="64" width="32" height="32">
    <properties>
     <property name="goto" value="dungeon"/>
+   </properties>
+  </object>
+  <object id="10" name="display-worldtext-evildungeon-starterzone" type="display" gid="196" x="1696" y="480" width="64" height="32">
+   <properties>
+    <property name="north" value="Evil Dungeon Area"/>
+    <property name="south" value="Starter Zone Area"/>
    </properties>
   </object>
  </objectgroup>

@@ -2,6 +2,7 @@ import { PlayerContainer } from '../classes/player/PlayerContainer.js';
 import { Chest } from '../classes/Chest.js';
 import { Monster } from '../classes/Monster.js';
 import { Map } from '../classes/Map.js';
+import { TriggerEvent } from '../classes/TriggerEvent.js';
 import { GameManager } from '../game_manager/GameManager.js';
 
 export class GameScene extends Phaser.Scene {
@@ -36,46 +37,6 @@ export class GameScene extends Phaser.Scene {
             blockedLayerName: 'blocked',
         });
 
-
-
-
-        // TODO: migrate this to GameManager so it lives under locationOfEvents
-        this.locationOfTriggerEvents = {};
-
-        const eventsLayer = this.map.map.objects.filter(
-            (objectLayer) => objectLayer.name === 'event_locations'
-        );
-        const events = eventsLayer[0].objects;
-
-        console.log('events', events);
-
-        // Create the GameScene Object
-        for (const event of events) {
-            const eventProps = {
-                x: event.x,
-                y: event.y,
-                eventType: event.type,
-                eventAction: event.properties[0].name,
-                eventValue: event.properties[0].value,
-            };
-
-            this.locationOfTriggerEvents[event.name] = eventProps;
-
-            // create the PhysicsGroup Object // x y is doubled -- imaage size is doubled too
-            let triggerEvent = this.add.image(
-                eventProps.x * 2, eventProps.y * 2, 
-                'itemsSpriteSheet', 
-                9);
-            triggerEvent.setScale(2).setOrigin(0,1);
-            console.log("image should be made")
-
-            // This is using a ID so it can be reused with uuid-4 if it's like rupees or something.
-            triggerEvent.id = event.name;
-
-            // create the 'trigger'
-            this.physicsGroupTriggerEvents.add(triggerEvent);
-        }
-
         console.log('Scene THIS', this);
     }
 
@@ -102,13 +63,14 @@ export class GameScene extends Phaser.Scene {
     }
 
     createGameManager() {
-        // TODO: When does an event appear in GameScenes VS GameManager?
-        // maybe when the scene needs to be cleaned.
-
         // TODO: Create a addEventListener method?
         this.events.on('spawnPlayer', (playerObject) => {
             this.createPlayer(playerObject);
             this.addCollisions();
+        });
+
+        this.events.on('spawnTriggerEvents', (event) => {
+            this.createTriggerEvents(event);
         });
 
         this.events.on('chestSpawned', (chest) => {
@@ -235,7 +197,6 @@ export class GameScene extends Phaser.Scene {
     // Will have to do a diff one for items, or with enemy as well
     triggerEventOverlap(player, elementTouched) {
 
-
         //          // TODO: we might want to check the type of event.
         //          // Event types SO FAR:
         //          // warp - takes you to another place. Doors, warpgates, stairs.
@@ -243,16 +204,14 @@ export class GameScene extends Phaser.Scene {
         //          // flag-quest - sets a quest event flag
         //          // flag-instance - sets a instance flag (resets after you leave the area)
         //          // flag-world - sets a world flag (never resets)
-        //          // dialog - show text
+        //          // dialog - show chatbox text
         //          // display - a visual effect.
+        //          // effect - damage dealing or healing
 
         // find the locationOfEvents 
-        const elementID = elementTouched.id; 
-        const elementData = this.locationOfTriggerEvents[elementID];
-        console.log("elementTouched", elementTouched);
+        const elementData = this.gameManager.locationOfTriggerEvents[elementTouched.id];
 
         if (elementData) {
-
             // TODO: Move this to utils.js
             const EventWarps = {
                 'goto': {
@@ -271,7 +230,6 @@ export class GameScene extends Phaser.Scene {
                 const value = elementData.eventValue;
                 const [x, y] = EventWarps[action][value];
                 this.player.setPosition(x, y);
-
             }
         }
 
@@ -310,6 +268,21 @@ export class GameScene extends Phaser.Scene {
         });
 
         // console.log(this.player);
+    }
+
+    createTriggerEvents(event) {
+        // TODO: this should be in GameScene
+        // create the PhysicsGroup Object // x y is doubled -- imaage size is doubled too
+        let triggerEvent = new TriggerEvent({
+            scene: this,
+            x: event.x * 2, 
+            y: event.y * 2, 
+            id: event.name,
+            key: 'itemsSpriteSheet',
+            frame: 9
+        });
+
+        this.physicsGroupTriggerEvents.add(triggerEvent);
     }
 
     // TODO: refactor this into the playerOverlap function

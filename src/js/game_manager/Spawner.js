@@ -88,8 +88,8 @@ export class Spawner {
             return false;
         });
 
-        // recursion
-        if (invalidLocation) return this.pickRandomLocation();
+     // recursion
+     if (invalidLocation) return this.pickRandomLocation();
 
         return location;
     }

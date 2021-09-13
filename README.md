@@ -1,9 +1,5 @@
 # Phaser 3 RPG
 
-## Related Repos
-
-Side-scroller: https://github.com/RockyKev/phaser3-platformer
-
 
 ## Structure
 - resources folder - placeholder for storing data
@@ -23,11 +19,13 @@ It has been updated to use ES modules.
 [x] - sfxGoldPickup -> to sfxGoldPickup (FUTURE: group them)
 [x] - rename gameManager->sceneMonsters to InstancesOfMonsters
 [x] - rename chestGroup, monsterGroup -> physicsGroupChests, physicsGroupMonsters
+
 [] - BUG: I don't think this many monsters are supposed to be generated. Currently generating 4 monsters per spawn. 
 [] - WAIT ON THIS: rename ID to instance ID 
 [] - BUG: you can't pick up new items that are generated. (pick up chest, then pick it up again and it will fail.)
+[] - move triggerEvents to the GameManager
 
-[] - add door transitions
+[x] - add event transitions. When you walk on a door, it takes you somewhere.
 [] - add events. When you walk to certain spots, there's a thing that tells you which territory you are in.
 [] - add dialog boxes. 
 [] - create the 'old man' scenario.
@@ -37,6 +35,7 @@ It has been updated to use ES modules.
 [] - enemies who walk into you hurt you.
 
 [] - replace life with hearts. 
+[] - replace coin with rupees. 
 [] - add spot where you can pick up rupees
 [] - add spot where you can pick up health
 [] - add proper attack damage
@@ -296,6 +295,8 @@ Create more spawn IDs.
 Right now, there's 3 spawn IDs (chest-1, chest-2, chest-3). So more make.
 
 
+
+
 ## Key terms
 
 **Collider**
@@ -347,6 +348,11 @@ Finally, the spawner is just a mechanism to control it's spawn behavior. It also
 
 **Container VS direct image**
 The reason for that is, you are going to switch your player from an arcade image to a container. A container is preferred because now your player objects will be made of two separate sprites. The first will be the player itself, and the second will be the weapon. Instead of having to keep track of these separately, you can easily put them in the container and have that be your player. That way, you can reference both of those game objects relatively easily.
+
+## Related Repos
+
+Side-scroller: https://github.com/RockyKev/phaser3-platformer
+
 
 ## Random links
 
