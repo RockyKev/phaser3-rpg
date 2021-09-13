@@ -19,7 +19,7 @@ export class GameScene extends Phaser.Scene {
         this.createMap();
         this.createAudio();
         this.createInput();
-
+        this.createEventListeners();
         this.createGameManager();
     }
 
@@ -62,15 +62,34 @@ export class GameScene extends Phaser.Scene {
         this.physicsGroupMonsters.runChildUpdate = true;
     }
 
-    createGameManager() {
-        // TODO: Create a addEventListener method?
+    createEventListeners() {
         this.events.on('spawnPlayer', (playerObject) => {
-            this.createPlayer(playerObject);
+            this.player = new PlayerContainer({
+                scene: this,
+                x: playerObject.x * 2,
+                y: playerObject.y * 2,
+                key: 'link',
+                frame: 0,
+                health: playerObject.health,
+                maxHealth: playerObject.maxHealth,
+                id: playerObject.id,
+                attackAudio: this.sfxPlayerAttack,
+            });
+
             this.addCollisions();
         });
 
         this.events.on('spawnTriggerEvents', (event) => {
-            this.createTriggerEvents(event);
+            let triggerEvent = new TriggerEvent({
+                scene: this,
+                x: event.x * 2,
+                y: event.y * 2,
+                id: event.name,
+                key: 'itemsSpriteSheet',
+                frame: 9,
+            });
+
+            this.physicsGroupTriggerEvents.add(triggerEvent);
         });
 
         this.events.on('chestSpawned', (chest) => {
@@ -84,7 +103,7 @@ export class GameScene extends Phaser.Scene {
         this.events.on('chestRemoved', (chestId) => {
             const physicsGroupChests = this.physicsGroupChests.getChildren();
 
-            // TODO: this is a perfect opt to filter. 
+            // TODO: this is a perfect opt to filter.
             physicsGroupChests.forEach((chest) => {
                 if (chest.id === chestId) {
                     chest.makeInactive();
@@ -94,7 +113,8 @@ export class GameScene extends Phaser.Scene {
 
         this.events.on('monsterRemoved', (monsterId) => {
             // make monster inactive on event monsterRemoved
-            const physicsGroupMonsters = this.physicsGroupMonsters.getChildren();
+            const physicsGroupMonsters =
+                this.physicsGroupMonsters.getChildren();
 
             physicsGroupMonsters.forEach((monster) => {
                 if (monster.id === monsterId) {
@@ -109,7 +129,8 @@ export class GameScene extends Phaser.Scene {
         });
 
         this.events.on('monsterUpdateHealth', (monsterId, health) => {
-            const physicsGroupMonsters = this.physicsGroupMonsters.getChildren();
+            const physicsGroupMonsters =
+                this.physicsGroupMonsters.getChildren();
 
             physicsGroupMonsters.forEach((monster) => {
                 if (monster.id === monsterId) {
@@ -131,7 +152,8 @@ export class GameScene extends Phaser.Scene {
         });
 
         this.events.on('monsterMovement', (InstancesOfMonsters) => {
-            const physicsGroupMonsters = this.physicsGroupMonsters.getChildren();
+            const physicsGroupMonsters =
+                this.physicsGroupMonsters.getChildren();
 
             physicsGroupMonsters.forEach((monster) => {
                 if (InstancesOfMonsters[monster.id]) {
@@ -144,7 +166,9 @@ export class GameScene extends Phaser.Scene {
                 }
             });
         });
+    }
 
+    createGameManager() {
         const scene = this;
         const mapData = this.map.map.objects;
         this.gameManager = new GameManager(scene, mapData);
@@ -152,7 +176,6 @@ export class GameScene extends Phaser.Scene {
     }
 
     // UTILS
-
     createInput() {
         this.cursors = this.input.keyboard.createCursorKeys();
     }
@@ -162,7 +185,10 @@ export class GameScene extends Phaser.Scene {
         this.physics.add.collider(this.player, this.map.blockedLayer);
 
         // check for collisions between monster group and tiled block layer
-        this.physics.add.collider(this.physicsGroupMonsters, this.map.blockedLayer);
+        this.physics.add.collider(
+            this.physicsGroupMonsters,
+            this.map.blockedLayer
+        );
 
         // check for collision between player's weapon and monster group
         this.physics.add.overlap(
@@ -183,7 +209,6 @@ export class GameScene extends Phaser.Scene {
         );
 
         // check collision over player and event triggers
-        // ROCKY
         this.physics.add.overlap(
             this.player,
             this.physicsGroupTriggerEvents,
@@ -196,7 +221,6 @@ export class GameScene extends Phaser.Scene {
     // This can be used to deal with player overlapping with
     // Will have to do a diff one for items, or with enemy as well
     triggerEventOverlap(player, elementTouched) {
-
         //          // TODO: we might want to check the type of event.
         //          // Event types SO FAR:
         //          // warp - takes you to another place. Doors, warpgates, stairs.
@@ -208,22 +232,20 @@ export class GameScene extends Phaser.Scene {
         //          // display - a visual effect.
         //          // effect - damage dealing or healing
 
-        // find the locationOfEvents 
-        const elementData = this.gameManager.locationOfTriggerEvents[elementTouched.id];
+        // find the locationOfEvents
+        const elementData =
+            this.gameManager.locationOfTriggerEvents[elementTouched.id];
 
         if (elementData) {
             // TODO: Move this to utils.js
             const EventWarps = {
-                'goto': {
-                    'old_mans_cave': [1000,1000],
-                    'monsters_cave': [1500, 1500], 
-                    'dungeon': [2390, 2500]
+                goto: {
+                    old_mans_cave: [1000, 1000],
+                    monsters_cave: [1500, 1500],
+                    dungeon: [2390, 2500],
                 },
-                'changeScene': {
-            
-                }
+                changeScene: {},
             };
-    
 
             if (elementData.eventType === 'warp') {
                 const action = elementData.eventAction;
@@ -232,7 +254,6 @@ export class GameScene extends Phaser.Scene {
                 this.player.setPosition(x, y);
             }
         }
-
     }
 
     enemyOverlap(weapon, enemy) {
@@ -254,45 +275,12 @@ export class GameScene extends Phaser.Scene {
 
     // ACTIONS
 
-    createPlayer(playerObject) {
-        this.player = new PlayerContainer({
-            scene: this,
-            x: playerObject.x * 2,
-            y: playerObject.y * 2,
-            key: 'link',
-            frame: 0,
-            health: playerObject.health,
-            maxHealth: playerObject.maxHealth,
-            id: playerObject.id,
-            attackAudio: this.sfxPlayerAttack,
-        });
-
-        // console.log(this.player);
-    }
-
-    createTriggerEvents(event) {
-        // TODO: this should be in GameScene
-        // create the PhysicsGroup Object // x y is doubled -- imaage size is doubled too
-        let triggerEvent = new TriggerEvent({
-            scene: this,
-            x: event.x * 2, 
-            y: event.y * 2, 
-            id: event.name,
-            key: 'itemsSpriteSheet',
-            frame: 9
-        });
-
-        this.physicsGroupTriggerEvents.add(triggerEvent);
-    }
-
     // TODO: refactor this into the playerOverlap function
     collectChest(player, chest) {
         this.sfxGoldPickup.play();
 
         this.events.emit('pickUpChest', chest.id, player.id);
     }
-
-
 
     spawnChest(chestObject) {
         const location = [chestObject.x * 2, chestObject.y * 2];
@@ -319,8 +307,6 @@ export class GameScene extends Phaser.Scene {
 
     spawnMonster(monsterObject) {
         let monster = this.physicsGroupMonsters.getFirstDead();
-        // console.log({monster})
-        // console.log({monsterObject});
 
         if (!monster) {
             monster = new Monster({

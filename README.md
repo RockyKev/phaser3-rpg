@@ -19,6 +19,7 @@ It has been updated to use ES modules.
 [x] - sfxGoldPickup -> to sfxGoldPickup (FUTURE: group them)
 [x] - rename gameManager->sceneMonsters to InstancesOfMonsters
 [x] - rename chestGroup, monsterGroup -> physicsGroupChests, physicsGroupMonsters
+[] - clean up gameScene's event listeners
 
 [] - BUG: I don't think this many monsters are supposed to be generated. Currently generating 4 monsters per spawn. 
 [] - WAIT ON THIS: rename ID to instance ID 
