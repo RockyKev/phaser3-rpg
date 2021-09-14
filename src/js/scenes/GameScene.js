@@ -39,7 +39,15 @@ export class GameScene extends Phaser.Scene {
 
         if (!this.debug) return
 
-        console.log("%cWE ARE IN DEBUG MODE",  'color: blue; font-size: x-large')
+
+        console.log("%cWE ARE IN DEBUG MODE",  'color: blue; font-size: x-large');
+        const debugText = (text) => {
+            console.log(`%c${text}`,  'color: blue; font-weight: bold');
+        }
+
+        debugText('Zoom: numpad 7 & numpad 9');
+        debugText('ShowSceneCode: Z');
+        debugText('Full HP + GOLD: X')
 
         // https://labs.phaser.io/edit.html?src=src/camera/move%20camera%20with%20keys.js
         const cameraControlConfig = {
@@ -56,6 +64,21 @@ export class GameScene extends Phaser.Scene {
         }
         this.cameraControl = new Phaser.Cameras.Controls.SmoothedKeyControl(cameraControlConfig);
 
+        // https://labs.phaser.io/edit.html?src=src/input/keyboard/keydown.js
+        this.input.keyboard.on('keydown-Z', function (event) {
+            console.log('showing this scene');
+            console.log(this.scene);
+        });
+    
+        this.input.keyboard.on('keydown-X', function (event) {
+            console.log('Full HP + Gold');
+
+            const playerID = Object.entries(this.scene.gameManager.InstancesOfPlayers)[0][0];
+            this.scene.events.emit('pickUpHealth', 10, playerID);
+            this.scene.events.emit('pickUpMoney', 1000, playerID);
+            console.log({player})
+            
+        });
 
     }
 

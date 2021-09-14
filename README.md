@@ -38,10 +38,10 @@ It has been updated to use ES modules.
 
 ### Debug features (MON)
 [x] - Have a camera unlock button.
-[] - Have a 'console.log this' button.
+[x] - Have a 'console.log this' button.
 [] - Create a battle room. Switches release enemies.
 [] - Create a debug room. Contains each of the event triggers. 
-[] - Have a full-health button/1000 rupees button.
+[x] - Have a full-health button/1000 rupees button.
 
 ### Scene Transitions (WEDS)
 [x] - add event transitions. When you walk on a door, it takes you somewhere.
