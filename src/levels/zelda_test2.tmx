@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.5" tiledversion="1.7.2" orientation="orthogonal" renderorder="right-down" width="64" height="44" tilewidth="32" tileheight="32" infinite="0" nextlayerid="7" nextobjectid="14">
+<map version="1.5" tiledversion="1.7.2" orientation="orthogonal" renderorder="right-down" width="64" height="44" tilewidth="32" tileheight="32" infinite="0" nextlayerid="7" nextobjectid="15">
  <editorsettings>
   <export target="zelda_test2.json" format="json"/>
  </editorsettings>
@@ -139,7 +139,7 @@
 764,764,764,764,731,678,661,680,724,764,767,764,764,766,764,764,764,764,764,764,764,764,764,764,766,764,764,764,764,764,764,764,764,764,764,764,764,767,764,764,764,764,767,767,764,764,764,764,764,764,764,766,764,764,764,764,764,764,765,764,764,764,764,764
 </data>
  </layer>
- <objectgroup id="6" name="event_locations">
+ <objectgroup id="6" name="event_locations" locked="1">
   <object id="5" name="testdoor1" type="warp" gid="806" x="1120" y="1120" width="32" height="32">
    <properties>
     <property name="goto" value="old_mans_cave"/>
@@ -165,12 +165,8 @@
  <objectgroup id="3" name="player_locations" visible="0" locked="1">
   <object id="1" gid="193" x="1194.86" y="1251.68" width="32" height="32"/>
  </objectgroup>
- <objectgroup id="4" name="monster_locations" visible="0" locked="1">
-  <object id="2" gid="192" x="1393.42" y="1294.23" width="32" height="32">
-   <properties>
-    <property name="spawner" type="int" value="2"/>
-   </properties>
-  </object>
+ <objectgroup id="4" name="monster_locations">
+  <object id="14" name="moblin" gid="202" x="1856" y="1088" width="32" height="32"/>
  </objectgroup>
  <objectgroup id="5" name="chest_locations" visible="0" locked="1">
   <object id="3" gid="230" x="1205.5" y="1320.82" width="32" height="32">

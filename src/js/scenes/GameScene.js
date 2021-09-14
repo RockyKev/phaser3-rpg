@@ -12,6 +12,8 @@ export class GameScene extends Phaser.Scene {
 
     init() {
         this.scene.launch('Ui');
+
+        this.debug = true;
     }
 
     create() {
@@ -21,10 +23,40 @@ export class GameScene extends Phaser.Scene {
         this.createInput();
         this.createEventListeners();
         this.createGameManager();
+        this.createDebugKeys();
     }
 
-    update() {
+    update(time, delta) {
         if (this.player) this.player.update(this.cursors);
+
+        if (this.debug) {
+            this.cameraControl.update(delta);
+        }
+
+    }
+
+    createDebugKeys() {
+
+        if (!this.debug) return
+
+        console.log("%cWE ARE IN DEBUG MODE",  'color: blue; font-size: x-large')
+
+        // https://labs.phaser.io/edit.html?src=src/camera/move%20camera%20with%20keys.js
+        const cameraControlConfig = {
+            // left: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.NUMPAD_FOUR),
+            // right: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.NUMPAD_SIX), 
+            // up: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.NUMPAD_EIGHT), 
+            // down: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.NUMPAD_TWO), 
+            zoomIn: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.NUMPAD_SEVEN),
+            zoomOut: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.NUMPAD_NINE),
+            acceleration: 0.06,
+            drag: 0.0005,
+            maxSpeed: 1.0,
+            camera: this.cameras.main,
+        }
+        this.cameraControl = new Phaser.Cameras.Controls.SmoothedKeyControl(cameraControlConfig);
+
+
     }
 
     createMap() {
