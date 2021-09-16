@@ -188,16 +188,11 @@ export class GameManager {
                     console.log('monster_locations', obj);
 
                     this.spawnMonsters(obj);
-                    // if (this.locationOfMonsters[obj.id]) {
-                    //     this.locationOfMonsters[obj.id].push([obj.x, obj.y]);
-                    //   } else {
-                    //     this.locationOfMonsters[obj.id] = [[obj.x, obj.y]];
-                    //   }
                 });
             }
         }
     }
-    monsterSpawned
+
     spawnMonsters(monster) {
         const monsterLimit = 4;
         // monsters version
@@ -209,11 +204,9 @@ export class GameManager {
             type: monster.type
         };
 
-
-
         // generate monster's location
         // TODO: Do we need this anymore?
-        this.locationOfMonsters[monster.id] = [monster.x, monster.y];
+        // this.locationOfMonsters[monster.id] = [monster.x, monster.y];
 
         // generate Instance of Monster
         console.log('We are generating a monster with new Spawner');
@@ -225,9 +218,6 @@ export class GameManager {
             moveObject: this.moveMonsters.bind(this),
         });
 
-        // get the graphic
-
-        // console.log(spawner);
         this.spawners[spawner.id] = spawner;
     }
 

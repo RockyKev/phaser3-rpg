@@ -7,18 +7,6 @@ import { randomNumber, SpawnerType } from './utils.js';
 // The spawner-id keeps track of the entity.
 // add/remove functions are bound to the element.
 
-// TODO: Make this not suck so bad
-// assuming there's 16 tiles per row. 
-const row = (x) => 16 * x;
-const monsterFrame = {
-    peahat:  row(1) + 1,
-    tektite: row(2) + 1,
-    octorok: row(3) + 1,
-    moblin: row(6) + 1,
-    lynel: row(10) + 1,
-    armos: row(11) + 1
-};
-
 export class Spawner {
 
     // TODO: Remove spawnlocations?
@@ -60,7 +48,8 @@ export class Spawner {
     }
 
     spawnChest() {
-        const location = this.pickRandomLocation();
+        // const location = this.pickRandomLocation();
+        const location = this.spawnLocations;
         const gold = randomNumber(10, 20);
 
         const chest = new ChestModel({x: location[0], y: location[1], gold: gold, spawnerId: this.id})
@@ -71,7 +60,19 @@ export class Spawner {
     }
 
     spawnMonster() {
-        // const location = this.pickRandomLocation();
+        // TODO: Make this not suck so bad
+        // assuming there's 16 tiles per row. 
+        const row = (x) => 16 * x;
+        const monsterFrame = {
+            peahat:  row(1) + 1,
+            tektite: row(2) + 1,
+            octorok: row(3) + 1,
+            moblin: row(6) + 1,
+            lynel: row(10) + 1,
+            armos: row(11) + 1
+        };
+
+        
         console.log("We are in spawner.js-> SpawnMonster")
         const location = this.spawnLocations;
 
@@ -87,31 +88,11 @@ export class Spawner {
             attack: 1,
         });
 
-        console.log("in spawnMonster")
         this.objectsCreated.push(monster);
         this.addObject(monster.spawnerId, monster);
     }
 
-    pickRandomLocation() {
-        // TODO: This code smells
-        const location =
-            this.spawnLocations[
-                Math.floor(Math.random() * this.spawnLocations.length)
-            ];
 
-        const invalidLocation = this.objectsCreated.some((obj) => {
-            if (obj.x === location[0] && obj.y === location[1]) {
-                return true;
-            }
-
-            return false;
-        });
-
-     // recursion
-     if (invalidLocation) return this.pickRandomLocation();
-
-        return location;
-    }
 
     removeObject(id) {
         // this grabs the delete function that's passed into here. (this.deleteObject)

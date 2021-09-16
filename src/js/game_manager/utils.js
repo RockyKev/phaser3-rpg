@@ -10,6 +10,28 @@ export const SpawnerType = Object.freeze({
 });
 
 
+// Unused
+function pickRandomLocation() {
+        // TODO: This code smells
+        const location =
+            this.spawnLocations[
+                Math.floor(Math.random() * this.spawnLocations.length)
+            ];
+
+        const invalidLocation = this.objectsCreated.some((obj) => {
+            if (obj.x === location[0] && obj.y === location[1]) {
+                return true;
+            }
+
+            return false;
+        });
+
+     // recursion
+     if (invalidLocation) return this.pickRandomLocation();
+
+        return location;
+}
+
 // Warps have a eventType, eventAction, eventValue 
 // This allows us to change warps on the fly without having to modify the TILED json. 
 // const [x, y] = EventWarps[eventAction][eventValue];

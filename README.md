@@ -86,8 +86,9 @@ It has been updated to use ES modules.
 [] - WAIT ON THIS: rename ID to instance ID 
 [] - BUG: you can't pick up new items that are generated. (pick up chest, then pick it up again and it will fail.)
 [] - move triggerEvents to the GameManager
+[] - Run through all TODO items again.
 
-[] - update phaser
+[x] - update phaser
 
 ## Random Information
 
