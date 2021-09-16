@@ -7,9 +7,24 @@ import { randomNumber, SpawnerType } from './utils.js';
 // The spawner-id keeps track of the entity.
 // add/remove functions are bound to the element.
 
+// TODO: Make this not suck so bad
+// assuming there's 16 tiles per row. 
+const row = (x) => 16 * x;
+const monsterFrame = {
+    peahat:  row(1) + 1,
+    tektite: row(2) + 1,
+    octorok: row(3) + 1,
+    moblin: row(6) + 1,
+    lynel: row(10) + 1,
+    armos: row(11) + 1
+};
+
 export class Spawner {
-    constructor(config, spawnLocations, addObject, deleteObject, moveObjects) {
+
+    // TODO: Remove spawnlocations?
+    constructor({config, spawnLocations, addObject, deleteObject, moveObject}) {
         this.id = config.id;
+        this.type = config.type;
         this.spawnInterval = config.spawnInterval;
         this.spawnLimit = config.limit;
         this.spawnLocations = spawnLocations;
@@ -17,7 +32,7 @@ export class Spawner {
 
         this.addObject = addObject;
         this.deleteObject = deleteObject;
-        this.moveObjects = moveObjects;
+        this.moveObject = moveObject;
 
         this.objectsCreated = [];
 
@@ -26,7 +41,7 @@ export class Spawner {
 
     start() {
         this.interval = setInterval(() => {
-            if (this.objectsCreated.length < this.spawnLimit) {
+            if (this.objectsCreated.length <= this.spawnLimit) {
                 this.spawnObjectBasedOnType();
             }
         }, this.spawnInterval);
@@ -37,7 +52,6 @@ export class Spawner {
     }
 
     spawnObjectBasedOnType() {
-        // console.log("in determineSpawnType", this.objectType)
         if (this.objectType === SpawnerType.CHEST) {
             this.spawnChest();
         } else if (this.objectType === SpawnerType.MONSTER) {
@@ -57,20 +71,25 @@ export class Spawner {
     }
 
     spawnMonster() {
-        const location = this.pickRandomLocation();
+        // const location = this.pickRandomLocation();
+        console.log("We are in spawner.js-> SpawnMonster")
+        const location = this.spawnLocations;
 
         const monster = new MonsterModel({
             x: location[0],
             y: location[1],
             gold: randomNumber(10, 20),
             spawnerId: this.id,
-            frame: randomNumber(0, 20),
+            type: this.type,
+            // frame: randomNumber(0, 20),
+            frame: monsterFrame[this.type],
             health: randomNumber(3, 5),
             attack: 1,
         });
 
+        console.log("in spawnMonster")
         this.objectsCreated.push(monster);
-        this.addObject(monster.id, monster);
+        this.addObject(monster.spawnerId, monster);
     }
 
     pickRandomLocation() {
@@ -111,7 +130,7 @@ export class Spawner {
                 monster.move();
             });
 
-            this.moveObjects();
+            this.moveObject();
         }, 1000);
     }
 }

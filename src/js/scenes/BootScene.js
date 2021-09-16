@@ -35,11 +35,15 @@ export class BootScene extends Phaser.Scene {
 
         this.load.atlas('link', 'src/images/link-sheet.png', 'src/images/link-sheet.json');
 
-        this.load.spritesheet('monsterSpritesheet', 'src/images/monsters.png', {
+        // this.load.spritesheet('monsterSpritesheet', 'src/images/monsters.png', {
+        //     frameWidth: 32,
+        //     frameHeight: 32,
+        // });
+
+        this.load.spritesheet('monsterSpritesheet', 'src/images/link-enemy-spritesheet.png', {
             frameWidth: 32,
             frameHeight: 32,
         });
-
 
     }
 

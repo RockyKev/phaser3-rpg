@@ -39,7 +39,6 @@ export class GameScene extends Phaser.Scene {
 
         if (!this.debug) return
 
-
         console.log("%cWE ARE IN DEBUG MODE",  'color: blue; font-size: x-large');
         const debugText = (text) => {
             console.log(`%c${text}`,  'color: blue; font-weight: bold');

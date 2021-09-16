@@ -19,7 +19,7 @@ export class Monster extends Phaser.Physics.Arcade.Image {
 
         // add the monster to the existing scenes
         this.scene.add.existing(this);
-        this.setOrigin(0);
+        this.setOrigin(0, 1);
 
         this.createHealthBar();
     }

@@ -163,7 +163,7 @@
                  "type":"moblin",
                  "visible":true,
                  "width":32,
-                 "x":1856.66666666667,
+                 "x":1856.67,
                  "y":1044
                 }, 
                 {
@@ -386,9 +386,9 @@
                  "gid":9,
                  "height":32,
                  "id":35,
-                 "name":"lynel",
+                 "name":"enemy",
                  "rotation":0,
-                 "type":"",
+                 "type":"lynel",
                  "visible":true,
                  "width":32,
                  "x":1280,

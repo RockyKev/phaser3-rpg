@@ -23,8 +23,8 @@ It has been updated to use ES modules.
 
 ### Enemies are working (MON/TUES)
 [x] - add enemies from Zelda as sprites. 
-[] - Enemies should be showing on the map.
-[] - Enemies should be diverse.
+[x] - Enemies should be showing on the map.
+[x] - Enemies should be diverse.
 [] - Enemies should have movement behavior.
 [] - Enemies should have alert behaviors.
 [] - Enemies have attack behaviors. (projectile, move erratically, chase)
