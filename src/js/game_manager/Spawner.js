@@ -28,11 +28,7 @@ export class Spawner {
     }
 
     start() {
-        this.interval = setInterval(() => {
-            if (this.objectsCreated.length <= this.spawnLimit) {
-                this.spawnObjectBasedOnType();
-            }
-        }, this.spawnInterval);
+        this.spawnObjectBasedOnType();
 
         if (this.objectType === SpawnerType.MONSTER) {
             this.moveMonsters();

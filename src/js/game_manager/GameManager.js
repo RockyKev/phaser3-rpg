@@ -194,7 +194,7 @@ export class GameManager {
     }
 
     spawnMonsters(monster) {
-        const monsterLimit = 4;
+        const monsterLimit = 1;
         // monsters version
         const config = {
             spawnInterval: 3000,
@@ -304,8 +304,8 @@ export class GameManager {
     addMonster(monsterId, monster) {
         this.InstancesOfMonsters[monsterId] = monster;
         this.scene.events.emit('monsterSpawned', monster);
-        // console.log({ monster });
-        console.log('addMonster', monster);
+        
+        console.log('GameManager.js->addMonster', monster);
     }
 
     deleteMonster(monsterId) {
