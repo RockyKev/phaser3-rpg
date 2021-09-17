@@ -93,9 +93,9 @@ export class GameManager {
             } else if (layer.name === mapLayer.monsters) {
 
                 layer.objects.forEach((obj) => {
-                    const spawnProps = obj.properties[0].value;
+                    const spawnProps = obj.id;
 
-                    console.log('monster_locations', spawnProps);
+                    // console.log('monster_locations', spawnProps);
 
                     if (this.locationOfMonsters[spawnProps]) {
                         this.locationOfMonsters[spawnProps].push([obj.x, obj.y]);
@@ -186,7 +186,7 @@ export class GameManager {
     }
 
     setupSpawners() {
-        const monsterLimit = 4;
+        const monsterLimit = 1;
         const chestLimit = 4;
 
         console.log("this.locationOfChests", this.locationOfChests)
@@ -214,12 +214,29 @@ export class GameManager {
 
         // monsters version
         Object.keys(this.locationOfMonsters).forEach((key) => {
+
             const config = {
                 spawnInterval: 3000,
                 limit: monsterLimit,
+                // type: this.locationOfMonsters[key][0][2],
                 objectType: SpawnerType.MONSTER,
                 id: `monster-${key}`,
             };
+
+            // const spawnLocation = [ this.locationOfMonsters[key][0][0], this.locationOfMonsters[key][0][1] ]
+            // console.log("in ojloop", this.locationOfMonsters[key]);
+            // console.log("in ojloop - spawnLocation", spawnLocation);
+            
+
+
+            // const spawner = new Spawner(
+            //     config,
+            //     spawnLocation,
+            //     this.addMonster.bind(this),
+            //     this.deleteMonster.bind(this),
+            //     this.moveMonsters.bind(this)
+            // );
+
 
             const spawner = new Spawner(
                 config,

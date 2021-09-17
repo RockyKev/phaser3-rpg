@@ -12,9 +12,11 @@ export class GameScene extends Phaser.Scene {
 
     init() {
         this.scene.launch('Ui');
+        this.debug = true;
     }
 
     create() {
+        this.createDebugKeys();
         this.createGroups();
         this.createMap();
         this.createAudio();
@@ -25,6 +27,54 @@ export class GameScene extends Phaser.Scene {
 
     update() {
         if (this.player) this.player.update(this.cursors);
+    }
+
+
+    
+    createDebugKeys() {
+
+        if (!this.debug) return
+
+        console.log("%cWE ARE IN DEBUG MODE",  'color: blue; font-size: x-large');
+        const debugText = (text) => {
+            console.log(`%c${text}`,  'color: blue; font-weight: bold');
+        }
+
+        debugText('Zoom: numpad 7 & numpad 9');
+        debugText('ShowSceneCode: Z');
+        debugText('Full HP + GOLD: X')
+
+        // https://labs.phaser.io/edit.html?src=src/camera/move%20camera%20with%20keys.js
+        const cameraControlConfig = {
+            // left: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.NUMPAD_FOUR),
+            // right: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.NUMPAD_SIX), 
+            // up: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.NUMPAD_EIGHT), 
+            // down: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.NUMPAD_TWO), 
+            zoomIn: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.NUMPAD_SEVEN),
+            zoomOut: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.NUMPAD_NINE),
+            acceleration: 0.06,
+            drag: 0.0005,
+            maxSpeed: 1.0,
+            camera: this.cameras.main,
+        }
+        this.cameraControl = new Phaser.Cameras.Controls.SmoothedKeyControl(cameraControlConfig);
+
+        // https://labs.phaser.io/edit.html?src=src/input/keyboard/keydown.js
+        this.input.keyboard.on('keydown-Z', function (event) {
+            console.log('showing this scene');
+            console.log(this.scene);
+        });
+    
+        this.input.keyboard.on('keydown-X', function (event) {
+            console.log('Full HP + Gold');
+
+            const playerID = Object.entries(this.scene.gameManager.InstancesOfPlayers)[0][0];
+            this.scene.events.emit('pickUpHealth', 10, playerID);
+            this.scene.events.emit('pickUpMoney', 1000, playerID);
+            console.log({player})
+            
+        });
+
     }
 
     createMap() {
