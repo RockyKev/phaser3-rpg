@@ -39,11 +39,6 @@ export class Spawner {
     }
 
     start() {
-        // this.interval = setInterval(() => {
-        //     if (this.objectsCreated.length < this.spawnLimit) {
-        //         this.spawnObjectBasedOnType();
-        //     }
-        // }, this.spawnInterval);
 
         this.spawnObjectBasedOnType();
 
@@ -73,22 +68,7 @@ export class Spawner {
     }
 
     spawnMonster() {
-        // const location = this.pickRandomLocation();
-        // console.log("spawnMonster-location", location);
-        // console.log("spawnMonster-spawnLocations", this.spawnLocations );
         const location = this.spawnLocations[0];
-
-        // const location = this.spawnLocations;
-        // const monster = new MonsterModel({
-        //     x: location[0],
-        //     y: location[1],
-        //     gold: randomNumber(10, 20),
-        //     spawnerId: this.id,
-        //     frame: randomNumber(0, 20),
-        //     health: randomNumber(3, 5),
-        //     attack: 1,
-        // });
-
 
         const monster = new MonsterModel({
             x: location[0],
