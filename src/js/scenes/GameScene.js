@@ -12,11 +12,11 @@ export class GameScene extends Phaser.Scene {
 
     init() {
         this.scene.launch('Ui');
-
         this.debug = true;
     }
 
     create() {
+
         this.createGroups();
         this.createMap();
         this.createAudio();
@@ -32,7 +32,6 @@ export class GameScene extends Phaser.Scene {
         if (this.debug) {
             this.cameraControl.update(delta);
         }
-
     }
 
     createDebugKeys() {
@@ -362,8 +361,6 @@ export class GameScene extends Phaser.Scene {
     }
 
     spawnMonster(monsterObject) {
-
-        // creating the monster + graphic, and adding it to the physics group
         let monster = new Monster({
             scene: this,
             x: monsterObject.x,
@@ -375,8 +372,6 @@ export class GameScene extends Phaser.Scene {
             maxHealth: monsterObject.maxHealth,
         });
 
-        monster.makeActive();
         this.physicsGroupMonsters.add(monster);
-
     }
 }

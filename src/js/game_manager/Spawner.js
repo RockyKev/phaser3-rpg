@@ -7,8 +7,8 @@ import { randomNumber, SpawnerType } from './utils.js';
 // The spawner-id keeps track of the entity.
 // add/remove functions are bound to the element.
 
-export class Spawner {
 
+export class Spawner {
     // TODO: Remove spawnlocations?
     constructor({config, spawnLocations, addObject, deleteObject, moveObject}) {
         this.id = config.id;
@@ -44,8 +44,8 @@ export class Spawner {
     }
 
     spawnChest() {
-        // const location = this.pickRandomLocation();
-        const location = this.spawnLocations;
+        const location = this.spawnLocations[0];
+
         const gold = randomNumber(10, 20);
 
         const chest = new ChestModel({x: location[0], y: location[1], gold: gold, spawnerId: this.id})
@@ -68,9 +68,9 @@ export class Spawner {
             armos: row(11) + 1
         };
 
-        
-        console.log("We are in spawner.js-> SpawnMonster")
-        const location = this.spawnLocations;
+
+
+        const location = this.spawnLocations[0];
 
         const monster = new MonsterModel({
             x: location[0],
@@ -79,7 +79,7 @@ export class Spawner {
             spawnerId: this.id,
             type: this.type,
             // frame: randomNumber(0, 20),
-            frame: monsterFrame[this.type],
+            frame: monsterFrame[this.type],    
             health: randomNumber(3, 5),
             attack: 1,
         });
@@ -87,7 +87,6 @@ export class Spawner {
         this.objectsCreated.push(monster);
         this.addObject(monster.spawnerId, monster);
     }
-
 
 
     removeObject(id) {

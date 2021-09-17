@@ -179,14 +179,10 @@ export class GameManager {
                     }
                 });
             } else if (layer.name === mapLayer.monsters) {
-                // WTF are we doing this?
-                // pass them right into the spawners
-
                 layer.objects.forEach((obj) => {
                     // const spawnProps = obj.properties[0].value;
 
                     console.log('monster_locations', obj);
-
                     this.spawnMonsters(obj);
                 });
             }
@@ -196,14 +192,16 @@ export class GameManager {
     spawnMonsters(monster) {
         const monsterLimit = 1;
         // monsters version
+
         const config = {
             spawnInterval: 3000,
             limit: monsterLimit,
             objectType: SpawnerType.MONSTER,
             id: `monster-${monster.id}`,
-            type: monster.type
+            type: monster.type,
         };
-
+  
+  
         // generate monster's location
         // TODO: Do we need this anymore?
         // this.locationOfMonsters[monster.id] = [monster.x, monster.y];
@@ -243,13 +241,6 @@ export class GameManager {
                 addObject: this.addChest.bind(this),
                 deleteObject: this.deleteChest.bind(this),
             });
-
-            // const spawner = new Spawner(
-            //     config,
-            //     this.locationOfChests[key],
-            //     this.addChest.bind(this),
-            //     this.deleteChest.bind(this)
-            // );
 
             this.spawners[spawner.id] = spawner;
         });
@@ -304,8 +295,6 @@ export class GameManager {
     addMonster(monsterId, monster) {
         this.InstancesOfMonsters[monsterId] = monster;
         this.scene.events.emit('monsterSpawned', monster);
-        
-        console.log('GameManager.js->addMonster', monster);
     }
 
     deleteMonster(monsterId) {

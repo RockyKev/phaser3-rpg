@@ -48,6 +48,28 @@ export const EventWarps = {
     }
 }
 
+// Unused
+function pickRandomLocation() {
+    // TODO: This code smells
+    const location =
+        this.spawnLocations[
+            Math.floor(Math.random() * this.spawnLocations.length)
+        ];
+
+    const invalidLocation = this.objectsCreated.some((obj) => {
+        if (obj.x === location[0] && obj.y === location[1]) {
+            return true;
+        }
+
+        return false;
+    });
+
+ // recursion
+ if (invalidLocation) return this.pickRandomLocation();
+
+    return location;
+}
+
 
 
 // In Tiled, the location of an object refers to the location of its bottom left corner.
