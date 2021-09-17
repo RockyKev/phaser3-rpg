@@ -19,37 +19,76 @@ It has been updated to use ES modules.
 [x] - sfxGoldPickup -> to sfxGoldPickup (FUTURE: group them)
 [x] - rename gameManager->sceneMonsters to InstancesOfMonsters
 [x] - rename chestGroup, monsterGroup -> physicsGroupChests, physicsGroupMonsters
-[] - clean up gameScene's event listeners
+[x] - clean up gameScene's event listeners
 
+### Enemies are working (MON/TUES)
+[x] - add enemies from Zelda as sprites. 
+[x] - Enemies should be showing on the map.
+[x] - Enemies should be diverse.
+[] - Enemies should have movement behavior.
+[] - Enemies should have alert behaviors.
+[] - Enemies have attack behaviors. (projectile, move erratically, chase)
+[] - Enemies have different HP 
+[] - Enemies collide should hurt.
+[] - Enemies when attacked should have invincible state.
+[] - Enemies should only trigger when you're near them. have enemies not move/interact unless they're in view.
+[] - Enemies have movement graphics. enemy animations work correctly based on movement position.
+[] - enemies 'poof' when they die. 
+[] - Enemies drop hearts, rupees, bombs, or arrows. 
+
+### Debug features (MON)
+[x] - Have a camera unlock button.
+[x] - Have a 'console.log this' button.
+[] - Create a battle room. Switches release enemies.
+[] - Create a debug room. Contains each of the event triggers. 
+[x] - Have a full-health button/1000 rupees button.
+
+### Scene Transitions (WEDS)
+[x] - add event transitions. When you walk on a door, it takes you somewhere.
+[] - Door transitions. So screen does a Bond effect zooming in and out.
+[] - When you walk on certain spots, there's text that tells you the territory.
+[] - There's a signpost with a dialog box.
+[] - Walking into the cave is the old man scenario.
+[] - Walking to the dungeon shows another cave.
+
+### UI Updates (THURS)
+[] - replace life with hearts.
+[] - Replace coins with rupees.
+[] - create a 'options' page that pauses the game.
+[] - There's a inventory menu now, where you can select between bombs, or arrows. That's mapped to a different key.
+[] - You can buy something from the other cave - which properly deducts rupees.
+[] - There's a title screen.
+
+### Item updates (FRI)
+[] - you can pick up hearts.
+[] - you can fire arrows.
+[] - you can use bombs. 
+[] - There's a spot where you can pick up rupees.
+[] - There's a spot where you can pick up health.
+
+### Link Updates (SAT)
+[] - Link properly attacks
+[] - Shield properly deflects. 
+[] - Link gains invincibility flashing when hit.
+[] - When link dies, screen fades to black and returns to title screen.
+
+### Game Functions and Added stuff
+[] - add music
+[] - add sound effects when attacking
+[] - add camera blur to edges like in Links Awakening. https://www.youtube.com/watch?v=fxb4VFDgPGY
+[] - add water animation
+[] - make run button
+[] - transition levels
+[] - save state
+[] - The game auto-saves during cave transitions. It saves all the flags of the character.
+### Follow-up bugs
 [] - BUG: I don't think this many monsters are supposed to be generated. Currently generating 4 monsters per spawn. 
 [] - WAIT ON THIS: rename ID to instance ID 
 [] - BUG: you can't pick up new items that are generated. (pick up chest, then pick it up again and it will fail.)
 [] - move triggerEvents to the GameManager
+[] - Run through all TODO items again.
 
-[x] - add event transitions. When you walk on a door, it takes you somewhere.
-[] - add events. When you walk to certain spots, there's a thing that tells you which territory you are in.
-[] - add dialog boxes. 
-[] - create the 'old man' scenario.
-
-[] - add enemies from Zelda.
-[] - add enemies on the map. Make enemies show up in generic spots, not randomized.
-[] - enemies who walk into you hurt you.
-
-[] - replace life with hearts. 
-[] - replace coin with rupees. 
-[] - add spot where you can pick up rupees
-[] - add spot where you can pick up health
-[] - add proper attack damage
-[] - add actual attack graphic
-[] - add camera blur to edges like in Links Awakening. https://www.youtube.com/watch?v=fxb4VFDgPGY
-[] - add water animation
-
-[] - make run button
-[] - create a 'options' page that pauses the game.
-[] - add a proper title screen.
-[] - transition levels
-[] - save state
-
+[x] - update phaser
 
 ## Random Information
 
@@ -395,6 +434,11 @@ Phaser Editor: https://phasereditor2d.itch.io/ide
 ### Tutorials to check check check it out
 https://medium.com/@michaelwesthadley/modular-game-worlds-in-phaser-3-tilemaps-1-958fc7e6bbd6
 
+How to have enemy move towards you
+https://stackoverflow.com/questions/67708864/how-do-i-make-it-so-an-enemy-sprite-follows-the-player-sprite-in-phaser-3
+
 ### Random websites
 https://phasergames.com/phaser-3-snippets/
 https://rexrainbow.github.io/phaser3-rex-notes/docs/site/
+
+
