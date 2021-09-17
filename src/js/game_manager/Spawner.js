@@ -9,8 +9,9 @@ import { randomNumber, SpawnerType } from './utils.js';
 
 
 export class Spawner {
-    // TODO: Remove spawnlocations?
-    constructor({config, spawnLocations, addObject, deleteObject, moveObject}) {
+    // constructor(config, spawnLocations, addObject, deleteObject, moveObject) {
+        constructor({config, spawnLocations, addObject, deleteObject, moveObject}) {
+
         this.id = config.id;
         this.type = config.type;
         this.spawnInterval = config.spawnInterval;
@@ -28,6 +29,7 @@ export class Spawner {
     }
 
     start() {
+
         this.spawnObjectBasedOnType();
 
         if (this.objectType === SpawnerType.MONSTER) {
@@ -36,6 +38,7 @@ export class Spawner {
     }
 
     spawnObjectBasedOnType() {
+        // console.log("in determineSpawnType", this.objectType)
         if (this.objectType === SpawnerType.CHEST) {
             this.spawnChest();
         } else if (this.objectType === SpawnerType.MONSTER) {
@@ -44,8 +47,8 @@ export class Spawner {
     }
 
     spawnChest() {
+        // const location = this.pickRandomLocation();
         const location = this.spawnLocations[0];
-
         const gold = randomNumber(10, 20);
 
         const chest = new ChestModel({x: location[0], y: location[1], gold: gold, spawnerId: this.id})
@@ -69,7 +72,6 @@ export class Spawner {
         };
 
 
-
         const location = this.spawnLocations[0];
 
         const monster = new MonsterModel({
@@ -84,8 +86,10 @@ export class Spawner {
             attack: 1,
         });
 
+
+
         this.objectsCreated.push(monster);
-        this.addObject(monster.spawnerId, monster);
+        this.addObject(monster.id, monster);
     }
 
 

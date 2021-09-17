@@ -312,8 +312,6 @@ export class GameScene extends Phaser.Scene {
     enemyOverlap(weapon, enemy) {
         // callbacks have two params. The initial collider and what it's hitting (sword -> enemy)
         // weapon doesn't need to be triggered.
-        console.log("in enemyOverlap")
-
         if (this.player.playerAttacking && !this.player.swordHit) {
             this.player.swordHit = true;
 
