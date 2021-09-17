@@ -9,7 +9,9 @@ import { randomNumber, SpawnerType } from './utils.js';
 
 
 export class Spawner {
-    constructor(config, spawnLocations, addObject, deleteObject, moveObjects) {
+    // constructor(config, spawnLocations, addObject, deleteObject, moveObject) {
+        constructor({config, spawnLocations, addObject, deleteObject, moveObject}) {
+
         this.id = config.id;
         this.type = config.type;
         this.spawnInterval = config.spawnInterval;
@@ -19,7 +21,7 @@ export class Spawner {
 
         this.addObject = addObject;
         this.deleteObject = deleteObject;
-        this.moveObjects = moveObjects;
+        this.moveObject = moveObject;
 
         this.objectsCreated = [];
 
@@ -127,7 +129,7 @@ export class Spawner {
                 monster.move();
             });
 
-            this.moveObjects();
+            this.moveObject();
         }, 1000);
     }
 }

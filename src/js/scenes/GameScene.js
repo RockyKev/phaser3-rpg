@@ -16,17 +16,23 @@ export class GameScene extends Phaser.Scene {
     }
 
     create() {
-        this.createDebugKeys();
+
         this.createGroups();
         this.createMap();
         this.createAudio();
         this.createInput();
         this.createEventListeners();
         this.createGameManager();
+        this.createDebugKeys();
     }
 
-    update() {
+    update(time, delta) {
         if (this.player) this.player.update(this.cursors);
+
+        
+        if (this.debug) {
+            this.cameraControl.update(delta);
+        }
     }
 
 
