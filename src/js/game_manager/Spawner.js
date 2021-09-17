@@ -47,7 +47,8 @@ export class Spawner {
     }
 
     spawnChest() {
-        const location = this.pickRandomLocation();
+        // const location = this.pickRandomLocation();
+        const location = this.spawnLocations[0];
         const gold = randomNumber(10, 20);
 
         const chest = new ChestModel({x: location[0], y: location[1], gold: gold, spawnerId: this.id})
@@ -91,26 +92,6 @@ export class Spawner {
         this.addObject(monster.id, monster);
     }
 
-    pickRandomLocation() {
-        // TODO: This code smells
-        const location =
-            this.spawnLocations[
-                Math.floor(Math.random() * this.spawnLocations.length)
-            ];
-
-        const invalidLocation = this.objectsCreated.some((obj) => {
-            if (obj.x === location[0] && obj.y === location[1]) {
-                return true;
-            }
-
-            return false;
-        });
-
-     // recursion
-     if (invalidLocation) return this.pickRandomLocation();
-
-        return location;
-    }
 
     removeObject(id) {
         // this grabs the delete function that's passed into here. (this.deleteObject)

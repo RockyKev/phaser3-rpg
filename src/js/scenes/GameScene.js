@@ -362,28 +362,42 @@ export class GameScene extends Phaser.Scene {
     }
 
     spawnMonster(monsterObject) {
-        let monster = this.physicsGroupMonsters.getFirstDead();
+        let monster = new Monster({
+            scene: this,
+            x: monsterObject.x,
+            y: monsterObject.y,
+            key: 'monsterSpritesheet',
+            frame: monsterObject.frame,
+            id: monsterObject.id,
+            health: monsterObject.health,
+            maxHealth: monsterObject.maxHealth,
+        });
 
-        if (!monster) {
-            monster = new Monster({
-                scene: this,
-                x: monsterObject.x,
-                y: monsterObject.y,
-                key: 'monsterSpritesheet',
-                frame: monsterObject.frame,
-                id: monsterObject.id,
-                health: monsterObject.health,
-                maxHealth: monsterObject.maxHealth,
-            });
+        // monster.makeActive();
+        this.physicsGroupMonsters.add(monster);
 
-            this.physicsGroupMonsters.add(monster);
-        } else {
-            monster.id = monsterObject.id;
-            monster.health = monsterObject.health;
-            monster.maxHealth = monsterObject.maxHealth;
-            monster.setTexture('monsterSpritesheet', monsterObject.frame);
-            monster.setPosition(monsterObject.x, monsterObject.y);
-            monster.makeActive();
-        }
+        // let monster = this.physicsGroupMonsters.getFirstDead();
+
+        // if (!monster) {
+        //     monster = new Monster({
+        //         scene: this,
+        //         x: monsterObject.x,
+        //         y: monsterObject.y,
+        //         key: 'monsterSpritesheet',
+        //         frame: monsterObject.frame,
+        //         id: monsterObject.id,
+        //         health: monsterObject.health,
+        //         maxHealth: monsterObject.maxHealth,
+        //     });
+
+        //     this.physicsGroupMonsters.add(monster);
+        // } else {
+        //     monster.id = monsterObject.id;
+        //     monster.health = monsterObject.health;
+        //     monster.maxHealth = monsterObject.maxHealth;
+        //     monster.setTexture('monsterSpritesheet', monsterObject.frame);
+        //     monster.setPosition(monsterObject.x, monsterObject.y);
+        //     monster.makeActive();
+        // }
     }
 }
