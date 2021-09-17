@@ -63,69 +63,6 @@ export class GameManager {
                 }
     }
 
-    parseMapData() {
-        // The parseMapData method will be used to parse the layer data that was exported from Tiled, which will be used to generate the three layers. 
-
-        // console.log(this.mapData); Will show all the objects made in Tiled.
-        // console.log("mapdata", this.mapData)
-
-        for (let layer of this.mapData) {
-
-            if (layer.name === mapLayer.player) {
-                
-                layer.objects.forEach((obj) => this.locationOfPlayer.push([obj.x, obj.y]) );
-
-            } else if (layer.name === mapLayer.items) {
-                // TODO: Maybe MAP?
-                layer.objects.forEach(
-                    (obj) => {
-                    const spawnProps = obj.properties[0].value;
-
-                    if (this.locationOfChests[spawnProps]) {
-                    this.locationOfChests[spawnProps].push([obj.x, obj.y]);
-
-                    } else {
-                        this.locationOfChests[spawnProps] = [[obj.x, obj.y]];
-                    }
-
-                })
-
-            } else if (layer.name === mapLayer.monsters) {
-
-                layer.objects.forEach((obj) => {
-                    this.spawnMonsters(obj);
-                });
-
-            }
-        }
-    }
-
-    spawnMonsters(monster) {
-        // ORIGINAL
-           const monsterLimit = 1;
-   
-           const config = {
-               spawnInterval: 3000,
-               limit: monsterLimit,
-               objectType: SpawnerType.MONSTER,
-               id: `monster-${monster.id}`,
-               type: monster.type
-           };
-           const spawner = new Spawner(
-               config,
-               [[monster.x, monster.y]],
-               this.addMonster.bind(this),
-               this.deleteMonster.bind(this),
-               this.moveMonsters.bind(this)
-           );
-
-
-           // console.log(spawner);
-           this.spawners[spawner.id] = spawner;
-   
-       }
-   
-
     setupEventListener() {
         // TODO: When is it a GameManager event, and when is it a GameScene event? 
 
@@ -204,6 +141,71 @@ export class GameManager {
         });
     }
 
+
+    parseMapData() {
+        // The parseMapData method will be used to parse the layer data that was exported from Tiled, which will be used to generate the three layers. 
+
+        // console.log(this.mapData); Will show all the objects made in Tiled.
+        // console.log("mapdata", this.mapData)
+
+        for (let layer of this.mapData) {
+
+            if (layer.name === mapLayer.player) {
+                
+                layer.objects.forEach((obj) => this.locationOfPlayer.push([obj.x, obj.y]) );
+
+            } else if (layer.name === mapLayer.items) {
+                // TODO: Maybe MAP?
+                layer.objects.forEach(
+                    (obj) => {
+                    const spawnProps = obj.properties[0].value;
+
+                    if (this.locationOfChests[spawnProps]) {
+                    this.locationOfChests[spawnProps].push([obj.x, obj.y]);
+
+                    } else {
+                        this.locationOfChests[spawnProps] = [[obj.x, obj.y]];
+                    }
+
+                })
+
+            } else if (layer.name === mapLayer.monsters) {
+
+                layer.objects.forEach((obj) => {
+                    this.spawnMonsters(obj);
+                });
+
+            }
+        }
+    }
+
+    spawnMonsters(monster) {
+        // ORIGINAL
+           const monsterLimit = 1;
+   
+           const config = {
+               spawnInterval: 3000,
+               limit: monsterLimit,
+               objectType: SpawnerType.MONSTER,
+               id: `monster-${monster.id}`,
+               type: monster.type
+           };
+           const spawner = new Spawner(
+               config,
+               [[monster.x, monster.y]],
+               this.addMonster.bind(this),
+               this.deleteMonster.bind(this),
+               this.moveMonsters.bind(this)
+           );
+
+
+           // console.log(spawner);
+           this.spawners[spawner.id] = spawner;
+   
+       }
+   
+
+ 
     setupSpawners() {
         const monsterLimit = 1;
         const chestLimit = 4;

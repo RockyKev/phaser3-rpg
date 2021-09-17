@@ -7,18 +7,6 @@ import { randomNumber, SpawnerType } from './utils.js';
 // The spawner-id keeps track of the entity.
 // add/remove functions are bound to the element.
 
-// TODO: Make this not suck so bad
-// assuming there's 16 tiles per row. 
-const row = (x) => 16 * x;
-const monsterFrame = {
-    peahat:  row(1) + 1,
-    tektite: row(2) + 1,
-    octorok: row(3) + 1,
-    moblin: row(6) + 1,
-    lynel: row(10) + 1,
-    armos: row(11) + 1
-};
-
 
 export class Spawner {
     constructor(config, spawnLocations, addObject, deleteObject, moveObjects) {
@@ -68,6 +56,19 @@ export class Spawner {
     }
 
     spawnMonster() {
+        // TODO: Make this not suck so bad
+        // assuming there's 16 tiles per row. 
+        const row = (x) => 16 * x;
+        const monsterFrame = {
+            peahat:  row(1) + 1,
+            tektite: row(2) + 1,
+            octorok: row(3) + 1,
+            moblin: row(6) + 1,
+            lynel: row(10) + 1,
+            armos: row(11) + 1
+        };
+
+
         const location = this.spawnLocations[0];
 
         const monster = new MonsterModel({
