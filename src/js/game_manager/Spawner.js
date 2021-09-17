@@ -67,8 +67,9 @@ export class Spawner {
             tektite: row(2) + 1,
             octorok: row(3) + 1,
             moblin: row(6) + 1,
-            lynel: row(10) + 1,
-            armos: row(11) + 1
+            lynel: row(9) + 1,
+            armos: row(11) + 1,
+            leever: row(8) + 1
         };
 
 
@@ -80,7 +81,6 @@ export class Spawner {
             gold: randomNumber(10, 20),
             spawnerId: this.id,
             type: this.type,
-            // frame: randomNumber(0, 20),
             frame: monsterFrame[this.type],    
             health: randomNumber(3, 5),
             attack: 1,
@@ -102,15 +102,28 @@ export class Spawner {
         this.deleteObject(id);
     }
 
-    // TODO: This should be in the game manager?
+    // TODO: This is more like ACTION FUNCTION
     // Maybe this is more to initialize them AI, but for now... it's just moving.
     moveMonsters() {
         this.moveMonsterInterval = setInterval(() => {
             this.objectsCreated.forEach((monster) => {
+
+          
+                // THIS IS SAYING - In ModelMonster.js -> run their behavior function.
                 monster.move();
             });
 
+            // THIS IS SAYING
+            // get each PhysicsGroupMonsters and move them to GameManager->InstanceOfMonsters's destination
+
+            // this.scene.events.emit('monsterMovement', this.InstancesOfMonsters);
+            // physicsGroupMonsters.forEach((monster) => {
+            //     if (InstancesOfMonsters[monster.id]) {
+            //         // https://photonstorm.github.io/phaser3-docs/Phaser.Physics.Arcade.ArcadePhysics.html#moveToObject__anchor
+            //         this.physics.moveToObject( monster, InstancesOfMonsters[monster.id], 40 );
+            //     }
+            // });
             this.moveObject();
-        }, 1000);
+        }, 4000);
     }
 }

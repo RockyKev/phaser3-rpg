@@ -197,13 +197,6 @@ export class GameManager {
             id: `monster-${monster.id}`,
             type: monster.type,
         };
-        // const spawner = new Spawner(
-        //     config,
-        //     [[monster.x, monster.y]],
-        //     this.addMonster.bind(this),
-        //     this.deleteMonster.bind(this),
-        //     this.moveMonsters.bind(this)
-        // );
 
         const spawner = new Spawner({
             config: config,

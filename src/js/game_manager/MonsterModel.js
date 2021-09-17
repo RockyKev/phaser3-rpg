@@ -2,7 +2,7 @@ import { v4 as uuidv4 } from 'https://jspm.dev/uuid';
 import { randomNumber } from './utils.js'; // TODO: Delete this
 
 export class MonsterModel {
-    constructor({ x, y, gold, spawnerId, frame, health, attack }) {
+    constructor({ x, y, gold, spawnerId, type, frame, health, attack }) {
         this.id = `${spawnerId}-${uuidv4()}`;
 
         this.spawnerId = spawnerId;
@@ -10,6 +10,7 @@ export class MonsterModel {
         this.x = x * 2;
         this.y = y * 2;
         this.gold = gold;
+        this.type = type;
         this.frame = frame;
         this.health = health;
         this.maxHealth = health;
@@ -22,6 +23,7 @@ export class MonsterModel {
     }
 
     move() {    
+        console.log("in Monster Model", this)
         const distance = 64;
 
         // object literal version
