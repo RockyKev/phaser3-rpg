@@ -92,20 +92,89 @@ export class GameManager {
 
             } else if (layer.name === mapLayer.monsters) {
 
+                // layer.objects.forEach((obj) => {
+                //     const spawnProps = obj.id;
+
+                //     // console.log('monster_locations', spawnProps);
+
+                //     if (this.locationOfMonsters[spawnProps]) {
+                //         this.locationOfMonsters[spawnProps].push([obj.x, obj.y]);
+                //       } else {
+                //         this.locationOfMonsters[spawnProps] = [[obj.x, obj.y]];
+                //       }
+                // });
+                console.log("AM I BEING REPEATED?")
                 layer.objects.forEach((obj) => {
-                    const spawnProps = obj.id;
-
-                    // console.log('monster_locations', spawnProps);
-
-                    if (this.locationOfMonsters[spawnProps]) {
-                        this.locationOfMonsters[spawnProps].push([obj.x, obj.y]);
-                      } else {
-                        this.locationOfMonsters[spawnProps] = [[obj.x, obj.y]];
-                      }
+                    this.spawnMonsters(obj);
                 });
+
             }
         }
     }
+
+    spawnMonsters(monster) {
+        // ORIGINAL
+           const monsterLimit = 1;
+   
+           const config = {
+               spawnInterval: 3000,
+               limit: monsterLimit,
+               objectType: SpawnerType.MONSTER,
+               id: `monster-${monster.id}`,
+               type: monster.type
+           };
+   
+           console.log("config", config)
+        //    this.locationOfMonsters[monster.id] = [[monster.x, monster.y]];
+
+           const spawner = new Spawner(
+               config,
+               [[monster.x, monster.y]],
+               this.addMonster.bind(this),
+               this.deleteMonster.bind(this),
+               this.moveMonsters.bind(this)
+           );
+   
+           // console.log(spawner);
+           this.spawners[spawner.id] = spawner;
+   
+   
+      
+   
+               // NEW VERSION!!!!
+   
+           // monsters version
+           // const config = {
+           //     spawnInterval: 3000,
+           //     limit: monsterLimit,
+           //     objectType: SpawnerType.MONSTER,
+           //     id: `monster-${monster.id}`,
+           //     type: monster.type
+           // };
+   
+           // generate monster's location
+           // TODO: Do we need this anymore?
+           // this.locationOfMonsters[monster.id] = [monster.x, monster.y];
+   
+           // generate Instance of Monster
+           // console.log('We are generating a monster with new Spawner');
+           // const spawner = new Spawner({
+           //     config: config,
+           //     spawnLocations: [monster.x, monster.y],
+           //     addObject: this.addMonster.bind(this),
+           //     deleteObject: this.deleteMonster.bind(this),
+           //     moveObject: this.moveMonsters.bind(this),
+           // });
+   
+      
+   
+   
+           // this.spawners[spawner.id] = spawner;
+   
+   
+   
+       }
+   
 
     setupEventListener() {
         // TODO: When is it a GameManager event, and when is it a GameScene event? 
@@ -213,43 +282,44 @@ export class GameManager {
         });
 
         // monsters version
-        Object.keys(this.locationOfMonsters).forEach((key) => {
+        // Object.keys(this.locationOfMonsters).forEach((key) => {
 
-            const config = {
-                spawnInterval: 3000,
-                limit: monsterLimit,
-                // type: this.locationOfMonsters[key][0][2],
-                objectType: SpawnerType.MONSTER,
-                id: `monster-${key}`,
-            };
+        //     const config = {
+        //         spawnInterval: 3000,
+        //         limit: monsterLimit,
+        //         // type: this.locationOfMonsters[key][0][2],
+        //         objectType: SpawnerType.MONSTER,
+        //         id: `monster-${key}`,
+        //     };
 
-            // const spawnLocation = [ this.locationOfMonsters[key][0][0], this.locationOfMonsters[key][0][1] ]
-            // console.log("in ojloop", this.locationOfMonsters[key]);
-            // console.log("in ojloop - spawnLocation", spawnLocation);
+        //     // const spawnLocation = [ this.locationOfMonsters[key][0][0], this.locationOfMonsters[key][0][1] ]
+        //     // console.log("in ojloop", this.locationOfMonsters[key]);
+        //     // console.log("in ojloop - spawnLocation", spawnLocation);
             
 
 
-            // const spawner = new Spawner(
-            //     config,
-            //     spawnLocation,
-            //     this.addMonster.bind(this),
-            //     this.deleteMonster.bind(this),
-            //     this.moveMonsters.bind(this)
-            // );
+        //     // const spawner = new Spawner(
+        //     //     config,
+        //     //     spawnLocation,
+        //     //     this.addMonster.bind(this),
+        //     //     this.deleteMonster.bind(this),
+        //     //     this.moveMonsters.bind(this)
+        //     // );
 
 
-            const spawner = new Spawner(
-                config,
-                this.locationOfMonsters[key],
-                this.addMonster.bind(this),
-                this.deleteMonster.bind(this),
-                this.moveMonsters.bind(this)
-            );
+        //     const spawner = new Spawner(
+        //         config,
+        //         this.locationOfMonsters[key],
+        //         this.addMonster.bind(this),
+        //         this.deleteMonster.bind(this),
+        //         this.moveMonsters.bind(this)
+        //     );
 
-            // console.log(spawner);
-            this.spawners[spawner.id] = spawner;
-        });
+        //     // console.log(spawner);
+        //     this.spawners[spawner.id] = spawner;
+        // });
     }
+
 
     spawnPlayer() {
         const player = new PlayerModel(this.locationOfPlayer);
